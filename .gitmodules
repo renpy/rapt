@@ -1,0 +1,3 @@
+[submodule "python-for-android"]
+	path = python-for-android
+	url = git@github.com:renpytom/python-for-android.git

@@ -1,0 +1,6 @@
+android-sdk/
+android-ndk-r8c
+android-sdk
+dist
+.classpath
+.project
