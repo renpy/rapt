@@ -15,18 +15,20 @@ export ANDROIDAPI=9
 
 # Build the python-for-android distro.
 try cd "$ROOT/python-for-android"
-try ./distribute.sh -d "$DISTRO" -m "android pygame pyjnius"
+echo | try ./distribute.sh -d "$DISTRO" -m "android pygame pyjnius"
 
 # Move the built distro to $DISTROROOT.
 DISTROROOT="$ROOT/dist/$DISTRO"
 
 try cd "$ROOT"
-try mkdir "$ROOT/dist"
+try mkdir -p "$ROOT/dist"
 
 if [ -e "$DISTROROOT" ]; then
     try rm -Rf "$DISTROROOT"
 fi
 
 try mv "$ROOT/python-for-android/dist/$DISTRO" "$DISTROROOT"
-try cd "$DISTROROOT"
+
+try ./copy_scripts.sh "$DISTROROOT"
+
 

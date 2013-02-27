@@ -4,3 +4,6 @@ android-sdk
 dist
 .classpath
 .project
+
+*.pyc
+*.pyo

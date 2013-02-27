@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="appName">{{config.name}}</string>
+<string name="iconName">{{config.icon_name}}</string>
+{% if private_version %}
+<string name="private_version">{{ private_version }}</string>
+{% endif %}
+{% if public_version %}
+<string name="public_version">{{ public_version }}</string>
+{% endif %}
+</resources>
