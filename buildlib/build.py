@@ -4,9 +4,7 @@ import sys
 sys.path.insert(0, 'buildlib/jinja2.egg')
 sys.path.insert(0, 'buildlib')
 
-# import zlib
-# zlib.Z_DEFAULT_COMPRESSION = 9
-
+import re
 import tarfile
 import os
 import shutil
@@ -27,31 +25,81 @@ if not RENPY and sys.version_info.major == 2 and sys.version_info.minor == 7:
 else:
     PYTHON = None
 
-# Files and extensions we should not package.
-BLACKLIST_FILES = [
-    "icon.ico",
-    "icon.icns",
-    "android-icon.png",
-    "android-presplash.png",
-    "launcherinfo.py",
-    ".nomedia",
-    ".android.json",
-    ]
+class PatternList(object):
+    """
+    Used to load in the blacklist and whitelist patterns.
+    """
+    
+    def __init__(self, *args):
+        self.patterns = [ ]
+    
+        for i in args:
+            self.load(i)
 
-BLACKLIST_EXTENSIONS = [
-    "~",
-    ".bak",
-    ".rpy",
-    ".swp",
-    ".pyc",
-    ]
+    def match(self, s):
+        """
+        Matches the patterns against s. Returns true if they match, False
+        otherwise.
+        """
+        
+        slash_s = "/" + s
+        
+        for p in self.patterns:
+            if p.match(s):
+                return True
+            if p.match(slash_s):
+                return  True
+            
+        return False
+    
+    
+    def load(self, fn):
+        
+        with open(fn, "r") as f:
+            for l in f:
+                l = l.strip()
+                if not l:
+                    continue
+                
+                if l.startswith("#"):
+                    continue
+                
+                self.patterns.append(self.compile(l))
+    
+    def compile(self, pattern):
+        """
+        Compiles a pattern into a regex object.
+        """
+    
+        regexp = ""
+    
+        while pattern:
+            if pattern.startswith("**"):
+                regexp += r'.*'
+                pattern = pattern[2:]
+            elif pattern[0] == "*":
+                regexp += r'[^/]*'
+                pattern = pattern[1:]
+            elif pattern[0] == '[':
+                regexp += r'['
+                pattern = pattern[1:]
+                
+                while pattern and pattern[0] != ']':
+                    regexp += pattern[0]
+                    pattern = pattern[1:]
+                    
+                pattern = pattern[1:]
+                regexp += ']'
+                
+            else:
+                regexp += re.escape(pattern[0])
+                pattern = pattern[1:]
+                
+        regexp += "$"
+        
+        return re.compile(regexp, re.I)
 
-BLACKLIST_DIRS = [
-    ".hg",
-    ".git",
-    ".bzr",
-    ".svn",
-    ]
+        
 
 # Used by render.
 environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates'))
@@ -82,8 +130,39 @@ def make_tar(fn, source_dirs):
     Make a zip file `fn` from the contents of source_dis.
     """
 
+    def include(fn):
+        rv = True
+        
+        if blacklist.match(fn):
+            rv = False
+            
+        if whitelist.match(fn):
+            rv = True
+            
+        return rv
+
     # zf = zipfile.ZipFile(fn, "w")
     tf = tarfile.open(fn, "w:gz")
+    
+    added = set()
+    
+    def add(fn, relfn):
+        
+        adds = [ ]
+        
+        while relfn:
+            adds.append((fn, relfn))
+            fn = os.path.dirname(fn)
+            relfn = os.path.dirname(relfn)
+            
+        adds.reverse()
+        
+        for fn, relfn in adds:
+           
+            if relfn not in added:
+                added.add(relfn)
+                tf.add(fn, relfn, recursive=False)
+    
     
     for sd in source_dirs:
 
@@ -91,36 +170,23 @@ def make_tar(fn, source_dirs):
             compile_dir(sd)
     
         sd = os.path.abspath(sd)    
-    
-        for dir, dirs, files in os.walk(sd): #@ReservedAssignment
-            for bd in BLACKLIST_DIRS:
-                if bd in dirs:
-                    dirs.remove(bd)
 
-            for fn in dirs:
-                fn = os.path.join(dir, fn)
+        for dir, dirs, files in os.walk(sd): #@ReservedAssignment
+
+            for _fn in dirs:
+                fn = os.path.join(dir, _fn)
                 relfn = os.path.relpath(fn, sd)
-                tf.add(fn, relfn, recursive=False)
+                
+                if include(relfn):
+                    add(fn, relfn)
 
             for fn in files:        
                 fn = os.path.join(dir, fn)
                 relfn = os.path.relpath(fn, sd)
 
-                bl = False
-                for e in BLACKLIST_EXTENSIONS:
-                    if relfn.endswith(e):
-                        bl = True
+                if include(relfn):
+                    add(fn, relfn)
 
-                if bl:
-                    continue
-
-                if relfn in BLACKLIST_FILES:
-                    continue
-
-                tf.add(fn, relfn)
-
-    # TODO: Fix me.
-    # tf.writestr(".nomedia", "")
     tf.close()
 
 def join_and_check(base, sub):
@@ -134,10 +200,7 @@ def join_and_check(base, sub):
     
     return None
     
-def build_core(iface, directory, commands):
-
-    global BLACKLIST_DIRS
-    global BLACKLIST_FILES
+def build(iface, directory, commands):
 
     if not os.path.isdir(directory):
         iface.fail("{} is not a directory.".format(directory))
@@ -145,25 +208,18 @@ def build_core(iface, directory, commands):
     if RENPY and not os.path.isdir(os.path.join(directory, "game")):
         iface.fail("{} does not contain a Ren'Py game.".format(directory))
 
+    
     config = configure.Configuration(directory)
     if config.package is None:
         iface.fail("Run configure before attempting to build the app.")
 
-    if not config.include_sqlite:
-        BLACKLIST_DIRS += ['sqlite3']
-        BLACKLIST_FILES += ['_sqlite3.so']
-        shelve_lib('libsqlite3.so')
 
-    if not config.include_pil:
-        BLACKLIST_DIRS += ['PIL']
-        BLACKLIST_FILES += ['_imaging.so','_imagingft.so','_imagingmath.so']
+    global blacklist
+    global whitelist
     
-    if not RENPY and not config.source:
-        if not PYTHON:
-            iface.fail("Can't compile Python source, and not including python source. Giving up.")
-            
-        BLACKLIST_EXTENSIONS.append(".py")
-    
+    blacklist = PatternList("blacklist.txt")
+    whitelist = PatternList("whitelist.txt")
+        
     if RENPY:
         manifest_extra = '<uses-feature android:glEsVersion="0x00020000" />'        
         default_icon = "templates/renpy-icon.png"
@@ -286,30 +342,4 @@ def build_core(iface, directory, commands):
         iface.success("It looks like the build succeeded.")
     except:
         iface.fail("The build seems to have failed.")
-
-
-def shelve_lib(lfn):
-    for root, _dirs, files in os.walk('libs'):
-        for fn in files:
-            if fn == lfn:
-                shelf_dir = os.path.join('.shelf', root)
-                if not os.path.exists(shelf_dir):
-                    os.makedirs(shelf_dir)
-                shutil.move(os.path.join(root,fn), shelf_dir)
-
-
-def unshelve_libs():
-    if os.path.exists('.shelf'):
-        for root, _dirs, files in os.walk('.shelf'):
-            for fn in files:
-                lib_dir = root[len('.shelf/'):]
-                shutil.move(os.path.join(root,fn), lib_dir)
-        shutil.rmtree('.shelf')
-
-
-def build(iface, directory, commands):
-    try:
-        build_core(iface, directory, commands)
-    finally:
-        unshelve_libs()
 

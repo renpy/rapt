@@ -22,3 +22,5 @@ rm -Rf templates
 try cp -a "$ROOT/buildlib" . 
 try cp -a "$ROOT/android.py" . 
 try cp -a "$ROOT/templates" . 
+try cp -a "$ROOT/whitelist.txt" . 
+try cp -a "$ROOT/blacklist.txt" .
