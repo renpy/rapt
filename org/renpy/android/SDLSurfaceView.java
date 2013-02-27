@@ -633,7 +633,8 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 		}
 
 		nativeSetMultitouchUsed();
-        nativeInit();
+		nativeSetMouseUsed();
+		nativeInit();
 
 		mPause = PAUSE_STOP_ACK;
 
