@@ -50,6 +50,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import android.graphics.Color;
 import android.content.res.Resources;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 
 
 public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
@@ -613,10 +616,23 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 		Log.w(TAG, "Done");
 		waitForStart();
 
+        // Figure out the APK path.
+        String apkFilePath;
+        ApplicationInfo appInfo;
+        PackageManager packMgmr = mActivity.getApplication().getPackageManager();
+
+        try {
+            appInfo = packMgmr.getApplicationInfo(mActivity.getPackageName(), 0);
+            apkFilePath = appInfo.sourceDir;
+        } catch (NameNotFoundException e) {
+            apkFilePath = "";
+        }
+		
         nativeResize(mWidth, mHeight);
         nativeInitJavaCallbacks();
         nativeSetEnv("ANDROID_PRIVATE", mFilesDirectory);
         nativeSetEnv("ANDROID_ARGUMENT", mArgument);
+        nativeSetEnv("ANDROID_APK", apkFilePath);
         nativeSetEnv("PYTHONOPTIMIZE", "2");
         nativeSetEnv("PYTHONHOME", mFilesDirectory);
         nativeSetEnv("PYTHONPATH", mArgument + ":" + mFilesDirectory + "/lib");
