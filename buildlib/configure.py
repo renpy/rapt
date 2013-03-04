@@ -51,7 +51,7 @@ def set_version(config, value):
     
 def configure(interface, directory):
 
-    renpy = os.path.exists("private/renpy")
+    renpy = os.path.exists("renpy")
         
     config = Configuration(directory)
     config.name = interface.input("""What is the full name of your application? This name will appear in the list of installed applications.""", config.name)

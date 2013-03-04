@@ -16,11 +16,8 @@ import configure
 
 import plat
 
-# Are we doing a Ren'Py build?
-RENPY = os.path.exists("private/renpy")
-
 # If we have python 2.7, record the path to it.
-if not RENPY and sys.version_info.major == 2 and sys.version_info.minor == 7:
+if sys.version_info.major == 2 and sys.version_info.minor == 7:
     PYTHON = sys.executable
 else:
     PYTHON = None
@@ -189,6 +186,30 @@ def make_tar(fn, source_dirs):
 
     tf.close()
 
+def make_tree(src, dest):
+    
+    def ignore(dir, files):
+        
+        rv = [ ]
+        
+        for basename in files:
+            fn = os.path.join(dir, basename)
+            relfn = os.path.relpath(fn, src)
+            
+            ignore = False
+        
+            if blacklist.match(relfn):
+                ignore = True
+            if whitelist.match(relfn):
+                ignore = False
+                
+            if ignore:
+                rv.append(basename)
+
+        return rv
+        
+    shutil.copytree(src, dest, ignore=ignore)
+
 def join_and_check(base, sub):
     """
     If base/sub is a directory, returns the joined path. Otherwise, return None.
@@ -201,6 +222,11 @@ def join_and_check(base, sub):
     return None
     
 def build(iface, directory, commands):
+
+    # Are we doing a Ren'Py build?
+
+    global RENPY
+    RENPY = os.path.exists("renpy")
 
     if not os.path.isdir(directory):
         iface.fail("{} is not a directory.".format(directory))
@@ -292,13 +318,17 @@ def build(iface, directory, commands):
         shutil.rmtree("assets")
     
     if assets_dir is not None:
-        shutil.copytree(assets_dir, "assets")
+        make_tree(assets_dir, "assets")
     else:
         os.mkdir("assets")
 
     # Copy in the Ren'Py common assets.
-    if os.path.exists("engine-assets/common"):
-        shutil.copytree("engine-assets/common", "assets/common")
+    if os.path.exists("renpy/common"):
+
+        if os.path.isdir("assets/common"):
+            shutil.rmtree("assets/common")
+        
+        make_tree("renpy/common", "assets/common")
 
         # Ren'Py uses a lot of names that don't work as assets. Auto-rename
         # them.
