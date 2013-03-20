@@ -73,9 +73,9 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         "uniform sampler2D sTexture;\n" +
         "void main() {\n" +
         "  gl_FragColor = texture2D(sTexture, vTextureCoord);\n" +
-
         "}\n";
-	private static class ConfigChooser implements GLSurfaceView.EGLConfigChooser {
+
+    private static class ConfigChooser implements GLSurfaceView.EGLConfigChooser {
 
 		public ConfigChooser(int r, int g, int b, int a, int depth, int stencil) {
 			mRedSize = r;
@@ -710,7 +710,13 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         if (muMVPMatrixHandle == -1) {
             throw new RuntimeException("Could not get attrib location for uMVPMatrix");
         }
-
+        
+        muTextureUnitHandle = GLES20.glGetUniformLocation(mProgram, "sTexture");
+        checkGlError("glGetUniformLocation sTexture");
+        if (muTextureUnitHandle == -1) {
+        	throw new RuntimeException("Could not get attrib location for sTexture");
+        }
+        
         // Create our texture. This has to be done each time the
         // surface is created.
 
@@ -721,15 +727,16 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureID);
 
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER,
-                GLES20.GL_NEAREST);
+                GLES20.GL_LINEAR);
+        
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
                 GLES20.GL_TEXTURE_MAG_FILTER,
                 GLES20.GL_LINEAR);
 
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S,
-                GLES20.GL_REPEAT);
+                GLES20.GL_CLAMP_TO_EDGE);
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
-                GLES20.GL_REPEAT);
+                GLES20.GL_CLAMP_TO_EDGE);
 
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
 
@@ -781,6 +788,10 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mMVPMatrix, 0);
 
         GLES20.glUniformMatrix4fv(muMVPMatrixHandle, 1, false, mMVPMatrix, 0);
+
+        GLES20.glUniform1i(muTextureUnitHandle, 0);
+        checkGlError("set texture unit");
+        
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
         checkGlError("glDrawArrays");
 		mEgl.eglSwapBuffers(mEglDisplay, mEglSurface);
@@ -1066,6 +1077,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
     private float[] mVMatrix = new float[16];
     private int mProgram;
     private int mTextureID;
+    private int muTextureUnitHandle;
     private int muMVPMatrixHandle;
     private int maPositionHandle;
     private int maTextureHandle;
