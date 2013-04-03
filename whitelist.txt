@@ -111,3 +111,5 @@
 
 /main.py
 
+/game/*.py
+
