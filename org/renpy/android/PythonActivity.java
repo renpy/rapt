@@ -185,7 +185,7 @@ public class PythonActivity extends Activity implements Runnable {
         if (! data_version.equals(disk_version)) {
             Log.v("python", "Extracting " + resource + " assets.");
 
-            recursiveDelete(target);
+            // recursiveDelete(target);
             target.mkdirs();
 
             AssetExtract ae = new AssetExtract(this);
