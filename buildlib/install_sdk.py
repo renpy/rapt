@@ -137,6 +137,12 @@ def get_packages(interface):
     if not os.path.exists("android-sdk/platform-tools"):
         packages.append("platform-tools")
     
+    if not os.path.exists("android-sdk/extras/google/play_licensing"):
+        packages.append("extra-google-play_licensing")
+
+    if not os.path.exists("android-sdk/extras/google/play_apk_expansion"):
+        packages.append("extra-google-play_apk_expansion")
+    
     # TODO: Install the play_ libraries, and maybe update them.
     
     if not packages:
@@ -147,6 +153,23 @@ def get_packages(interface):
     
     if not run(plat.android, "update", "sdk", "-u", "-a", "-t", ",".join(packages)):
         interface.fail("I was unable to install the required Android packages.")
+
+    interface.info("I'm updating the library packages.")
+    
+    if "extra-google-play_apk_expansion" in packages:
+        with open("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties", "r") as f:
+            data = f.read()
+            
+        data = data.replace("../market_licensing", "../../play_licensing/library")
+        
+        with open("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties", "w") as f:
+            f.write(data)
+            
+    run(plat.android, "update", "project", "-p", "android-sdk/extras/google/play_licensing/library")
+    run(plat.android, "update", "project", "-p", "android-sdk/extras/google/play_apk_expansion/downloader_library")
+        
+    if os.path.exists("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9"):
+        shutil.rmtree("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9")
         
     interface.success("I've finished installing the required Android packages.")
     
