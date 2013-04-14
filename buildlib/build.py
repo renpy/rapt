@@ -220,6 +220,25 @@ def join_and_check(base, sub):
         return rv
     
     return None
+
+
+def change_R(fn, package):
+    """
+    Changes the package of the R class in fn.
+    """
+    
+    lines = [ ]
+    
+    with open(fn, "r") as f:
+        for l in f:
+            
+            if re.match(r'import .*\.R;', l):
+                l = "import " + package + ".R;\n"
+        
+            lines.append(l)
+            
+    with open(fn, "w") as f:
+        f.write(''.join(lines))
     
 def build(iface, directory, commands):
 
@@ -307,10 +326,18 @@ def build(iface, directory, commands):
     except:
         pass
         
+    iface.info("Updating source code.")
+    
+    change_R("src/org/renpy/android/DownloaderActivity.java", config.package)
+    
     iface.info("Updating build files.")
         
     # Update the project to a recent version.
-    subprocess.call([plat.android, "update", "project", "-p", '.', '-t', 'android-8', '-n', versioned_name])
+    subprocess.call([plat.android, "update", "project", "-p", '.', '-t', 'android-8', '-n', versioned_name,
+        # "--library", "android-sdk/extras/google/play_licensing/library",
+        "--library", "android-sdk/extras/google/play_apk_expansion/downloader_library",
+        ])
+
 
     iface.info("Creating assets directory.")
 
