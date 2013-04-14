@@ -130,9 +130,14 @@ def get_packages(interface):
 
     if not os.path.exists("android-sdk/platforms/android-8"):
         packages.append("android-8")
+
+    if not os.path.exists("android-sdk/platforms/android-15"):
+        packages.append("android-15")
         
     if not os.path.exists("android-sdk/platform-tools"):
         packages.append("platform-tools")
+    
+    # TODO: Install the play_ libraries, and maybe update them.
     
     if not packages:
         interface.success("The required Android packages are already installed.")
