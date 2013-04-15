@@ -10,6 +10,7 @@ import os
 import shutil
 import subprocess
 import time
+import zipfile
 
 import jinja2
 import configure
@@ -222,23 +223,37 @@ def join_and_check(base, sub):
     return None
 
 
-def change_R(fn, package):
+def edit_file(fn, pattern, line):
     """
-    Changes the package of the R class in fn.
+    Replaces lines in `fn` that begin with `pattern` with `line`. `line`
+    should not end with a newline - we add it.
     """
-    
+
     lines = [ ]
     
     with open(fn, "r") as f:
         for l in f:
             
-            if re.match(r'import .*\.R;', l):
-                l = "import " + package + ".R;\n"
-        
+            if re.match(pattern, l):
+                l = line + "\n"
+                
             lines.append(l)
             
     with open(fn, "w") as f:
         f.write(''.join(lines))
+    
+def zip_directory(zf, dirname):
+    """
+    Zips up the directory with `dirname`. `zf` is the file to place the
+    contents of the directory into.
+    """
+    
+    for dirname, dirs, files in os.walk(dirname):
+        for fn in files:
+            fn = os.path.join(dirname, fn)
+            zf.write(fn)
+    
+            
     
 def build(iface, directory, commands):
 
@@ -328,7 +343,7 @@ def build(iface, directory, commands):
         
     iface.info("Updating source code.")
     
-    change_R("src/org/renpy/android/DownloaderActivity.java", config.package)
+    edit_file("src/org/renpy/android/DownloaderActivity.java", r'import .*\.R;', 'import {}.R;'.format(config.package))
     
     iface.info("Updating build files.")
         
@@ -370,6 +385,33 @@ def build(iface, directory, commands):
                 
                 os.rename(old, new)
 
+
+    if config.expansion:
+        iface.info("Creating expansion file.")
+        expansion_file = "main.{}.{}.obb".format(config.numeric_version, config.package)
+
+        zf = zipfile.ZipFile(expansion_file, "w", zipfile.ZIP_STORED)
+        zip_directory(zf, "assets")
+        zf.close()
+
+        # Delete and re-make the assets directory.
+        shutil.rmtree("assets")
+        os.mkdir("assets")
+        
+        # Write the file size into DownloaderActivity.
+        file_size = os.path.getsize(expansion_file)
+        
+        edit_file("src/org/renpy/android/DownloaderActivity.java", 
+            r'    private int fileVersion =', 
+            '    private int fileVersion = {};'.format(config.numeric_version))
+
+        edit_file("src/org/renpy/android/DownloaderActivity.java", 
+            r'    private int fileSize =', 
+            '    private int fileSize = {};'.format(file_size))
+        
+    else:
+        expansion_file = None
+
     iface.info("Packaging internal data.")
 
     private_dirs = [ 'private' ]
@@ -400,3 +442,12 @@ def build(iface, directory, commands):
     except:
         iface.fail("The build seems to have failed.")
 
+
+    if (expansion_file is not None) and ("install" in commands):
+        iface.info("Uploading expansion file.")
+        
+        dest = "/mnt/sdcard/{}".format(expansion_file)
+
+        subprocess.check_call([ plat.adb, "push", expansion_file, dest ])
+        
+        iface.success("Uploaded the expansion file.")

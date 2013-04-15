@@ -16,6 +16,7 @@ class Configuration(object):
         self.include_sqlite = False
         self.layout = None
         self.source = False
+        self.expansion = False
         
         try:
             with file(os.path.join(directory, ".android.json"), "r") as f:
@@ -82,6 +83,11 @@ This should be an integer number, and the value should increase between versions
             ("landscape", "In landscape mode."),
             ("portrait", "In portrait mode."),
         ], config.orientation)
+
+    config.expansion = interface.choice("Would you like to create an expansion APK?", [
+        (False, "No. Size limit of 50 MB on Google Play, but can be sideloaded elsewhere."),
+        (True, "Yes. No size limit, but won't work outside of Google Play.")
+        ], config.expansion)
 
     if not renpy:
 
