@@ -40,7 +40,8 @@ public class PythonActivity extends Activity implements Runnable {
     // The SDLSurfaceView we contain.
     public static SDLSurfaceView mView = null;
 	public static PythonActivity mActivity = null;
-
+	public static String mExpansionFile = null;
+	
     // Did we launch our thread?
     private boolean mLaunchedThread = false;
 
@@ -66,7 +67,7 @@ public class PythonActivity extends Activity implements Runnable {
 
         resourceManager = new ResourceManager(this);
         externalStorage = new File(Environment.getExternalStorageDirectory(), getPackageName());
-
+        
         // Figure out the directory where the game is. If the game was
         // given to us via an intent, then we use the scheme-specific
         // part of that intent to determine the file to launch. We
@@ -208,8 +209,12 @@ public class PythonActivity extends Activity implements Runnable {
 
     }
 
-    public void run() {
 
+    public void run() {
+    
+    	// Record the expansion file, if any.
+        mExpansionFile = getIntent().getStringExtra("expansionFile");
+    
         unpackData("private", getFilesDir());
         unpackData("public", externalStorage);
 

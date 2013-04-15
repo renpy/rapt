@@ -41,10 +41,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.os.Environment;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.zip.CRC32;
+import java.io.File;
 
 /**
  * This is sample code for a project built against the downloader library. It
@@ -87,66 +89,43 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
                 R.string.text_button_pause;
         mPauseButton.setText(stringResourceID);
     }
+    
+    private int fileVersion = 0;
+    private int fileSize = 0;
 
-    /**
-     * This is a little helper class that demonstrates simple testing of an
-     * Expansion APK file delivered by Market. You may not wish to hard-code
-     * things such as file lengths into your executable... and you may wish to
-     * turn this code off during application development.
-     */
-    private static class XAPKFile {
-        public final boolean mIsMain;
-        public final int mFileVersion;
-        public final long mFileSize;
-
-        XAPKFile(boolean isMain, int fileVersion, long fileSize) {
-            mIsMain = isMain;
-            mFileVersion = fileVersion;
-            mFileSize = fileSize;
-        }
+    boolean checkExpansionFile(String filename) {
+    	File f = new File(filename);
+    	
+    	if (f.length() == fileSize) {
+    		return true;
+    	}
+    	
+    	return false;
     }
+    
 
     /**
-     * Here is where you place the data that the validator will use to determine
-     * if the file was delivered correctly. This is encoded in the source code
-     * so the application can easily determine whether the file has been
-     * properly delivered without having to talk to the server. If the
-     * application is using LVL for licensing, it may make sense to eliminate
-     * these checks and to just rely on the server.
+     * Gets the path to the expansion file, if it exists on the system. 
+     * If not, return null;
      */
-    private static final XAPKFile[] xAPKS = {
-            new XAPKFile(
-                    true, // true signifies a main file
-                    3, // the version of the APK that the file was uploaded
-                       // against
-                    687801613L // the length of the file in bytes
-            ),
-            new XAPKFile(
-                    false, // false signifies a patch file
-                    4, // the version of the APK that the patch file was uploaded
-                       // against
-                    512860L // the length of the patch file in bytes
-            )            
-    };
-
-    /**
-     * Go through each of the APK Expansion files defined in the structure above
-     * and determine if the files are present and match the required size. Free
-     * applications should definitely consider doing this, as this allows the
-     * application to be launched for the first time without having a network
-     * connection present. Paid applications that use LVL should probably do at
-     * least one LVL check that requires the network to be present, so this is
-     * not as necessary.
-     * 
-     * @return true if they are present.
-     */
-    boolean expansionFilesDelivered() {
-        for (XAPKFile xf : xAPKS) {
-            String fileName = Helpers.getExpansionAPKFileName(this, xf.mIsMain, xf.mFileVersion);
-            if (!Helpers.doesFileExist(this, fileName, xf.mFileSize, false))
-                return false;
+    String getExpansionFile() {
+        String fileName = Helpers.getExpansionAPKFileName(this, true, fileVersion);
+        
+        {
+        	String fullFileName = "/mnt/sdcard/" + fileName;
+        	if (checkExpansionFile(fullFileName)) {
+        		return fullFileName;
+        	}
         }
-        return true;
+
+        {
+        	String fullFileName = Helpers.generateSaveFileName(this, fileName);
+        	if (checkExpansionFile(fullFileName)) {
+        		return fullFileName;
+        	}
+        }
+        
+        return null;
     }
 
     /**
@@ -221,12 +200,15 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        
+        String expansionFile = getExpansionFile();
+        
         /**
          * Before we do anything, are the files we expect already here and
          * delivered (presumably by Market) For free titles, this is probably
          * worth doing. (so no Market request is necessary)
          */
-        if (!expansionFilesDelivered()) {
+        if (expansionFile == null) {
 
             try {
                 Intent launchIntent = DownloaderActivity.this.getIntent();
@@ -263,7 +245,24 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
                 Log.e(LOG_TAG, "Cannot find own package! MAYDAY!");
                 e.printStackTrace();
             }
+            
+            
+            expansionFile = getExpansionFile();
         }
+        
+        
+        // Launch PythonActivity
+        Intent pythonIntent = new Intent(this, PythonActivity.class);
+        pythonIntent.setAction("android.intent.action.MAIN");
+
+        if (expansionFile != null) {
+        	pythonIntent.putExtra("expansionFile", expansionFile);
+        }
+
+        		
+		this.startActivity(pythonIntent);
+        this.finish();
+        
     }
 
     /**

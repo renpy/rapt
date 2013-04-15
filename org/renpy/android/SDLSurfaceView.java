@@ -267,7 +267,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
     // The activity we're a part of.
-    private static Activity mActivity;
+    private static PythonActivity mActivity;
 
     // Have we started yet?
     public boolean mStarted = false;
@@ -342,7 +342,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 
 		SDLSurfaceView.instance = this;
 
-        mActivity = act;
+        mActivity = (PythonActivity) act;
         mResourceManager = new ResourceManager(act);
 
         SurfaceHolder holder = getHolder();
@@ -629,6 +629,11 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         nativeSetEnv("ANDROID_PRIVATE", mFilesDirectory);
         nativeSetEnv("ANDROID_ARGUMENT", mArgument);
         nativeSetEnv("ANDROID_APK", apkFilePath);
+
+        if (mActivity.mExpansionFile != null) {
+        	nativeSetEnv("ANDROID_EXPANSION", mActivity.mExpansionFile);
+        }
+        
         nativeSetEnv("PYTHONOPTIMIZE", "2");
         nativeSetEnv("PYTHONHOME", mFilesDirectory);
         nativeSetEnv("PYTHONPATH", mArgument + ":" + mFilesDirectory + "/lib");
