@@ -21,7 +21,8 @@ package org.renpy.android;
  */
 public class DownloaderService extends com.google.android.vending.expansion.downloader.impl.DownloaderService {
     // stuff for LVL -- MODIFY FOR YOUR APPLICATION!
-    private static final String BASE64_PUBLIC_KEY = "REPLACE THIS WITH YOUR PUBLIC KEY";
+    private static final String BASE64_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0a/6jX8bEmMMHnPwmq3ttX+oZx5x2byQ6rNAdWWrQ2ivz/SeAbsXr66yEVLSYpFCLnRVypFC6EAZwqWLsRAFBZGgK0D5FkPZ9yQIQiUE1++MrgBDq4lRjf3EeRomRPpAM+y2dCNtZPGy0bXsjYSEeGk77vhUDwOVkC5GMUbKqgZf5TjwEWlgUKuZHjX1XfJrzXS8XoGBz+23crkF0ISOdh1eRYd7aMXt2QEPi6rNmI35BhQamGpBdjlFrCIOpZCS9UBcvV3JNAHiilJUt48NV4x+aC+pZDy/lgT/hcBacLbS6TLetrVLl+94KQLIBbuF2XaGUEkBqFa8Razig/hnpQIDAQAB";
+    
     // used by the preference obfuscater
     private static final byte[] SALT = new byte[] {
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
