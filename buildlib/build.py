@@ -451,3 +451,7 @@ def build(iface, directory, commands):
         subprocess.check_call([ plat.adb, "push", expansion_file, dest ])
         
         iface.success("Uploaded the expansion file.")
+
+    if expansion_file is not None:
+        os.rename(expansion_file, "bin/" + expansion_file)
+        

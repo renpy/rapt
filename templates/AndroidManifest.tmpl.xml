@@ -18,19 +18,41 @@
               android:screenOrientation="{{ config.orientation }}"
               android:windowSoftInputMode="stateAlwaysHidden"
             >
-
+{% if not config.expansion %}
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-
+{% endif %}
     </activity>      
+
+{% if config.expansion %}
+       <activity
+           android:label="@string/iconName"
+           android:name="org.renpy.android.DownloaderActivity" >
+           <intent-filter >
+               <action android:name="android.intent.action.MAIN" />
+               <category android:name="android.intent.category.LAUNCHER" />
+           </intent-filter>
+       </activity>
+
+       <service android:name="org.renpy.android.DownloaderService" />
+       <receiver android:name="org.renpy.android.DownloaderAlarmReceiver" />
+{% endif %}
   </application>
 
   <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="8"/>
   <uses-permission android:name="android.permission.WAKE_LOCK" /> 
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+  {% if config.expansion %}
+    <uses-permission android:name="com.android.vending.CHECK_LICENSE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  {% endif %}
+  
+  
   {% for perm in config.permissions %}
   <uses-permission android:name="android.permission.{{ perm }}" />
   {% endfor %}
