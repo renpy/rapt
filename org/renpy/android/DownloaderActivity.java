@@ -41,6 +41,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.os.Environment;
 
 import java.io.DataInputStream;
@@ -93,10 +94,16 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
     private int fileVersion = 0;
     private int fileSize = 0;
 
-    boolean checkExpansionFile(String filename) {
+    boolean checkExpansionFile(String filename, boolean checkLength) {
     	File f = new File(filename);
     	
+    	Log.i("DownloaderActivity", "Checking expansion file " + filename + " " + f.length());
+    	
     	if (f.length() == fileSize) {
+    		return true;
+    	}
+    	
+    	if ((! checkLength) && f.exists()) {
     		return true;
     	}
     	
@@ -108,19 +115,19 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
      * Gets the path to the expansion file, if it exists on the system. 
      * If not, return null;
      */
-    String getExpansionFile() {
+    String getExpansionFile(boolean checkLength) {
         String fileName = Helpers.getExpansionAPKFileName(this, true, fileVersion);
         
         {
         	String fullFileName = "/mnt/sdcard/" + fileName;
-        	if (checkExpansionFile(fullFileName)) {
+        	if (checkExpansionFile(fullFileName, checkLength)) {
         		return fullFileName;
         	}
         }
 
         {
         	String fullFileName = Helpers.generateSaveFileName(this, fileName);
-        	if (checkExpansionFile(fullFileName)) {
+        	if (checkExpansionFile(fullFileName, checkLength)) {
         		return fullFileName;
         	}
         }
@@ -192,6 +199,33 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
     }
 
     /**
+     * This triggers off an intent that starts python.
+     */
+    public void startPython() {
+
+    	String expansionFile = getExpansionFile(false);
+        Log.i("DownloaderActivity", "DownloaderActivity thinks expansionFile is" + expansionFile);
+
+        if (expansionFile == null) {
+        	Toast.makeText(this, "Could not find expansion file. Giving up.", Toast.LENGTH_LONG).show();
+        	return;
+        }
+        
+        // Launch PythonActivity
+        Intent pythonIntent = new Intent(this, PythonActivity.class);
+        pythonIntent.setAction("android.intent.action.MAIN");
+
+        if (expansionFile != null) {
+        	pythonIntent.putExtra("expansionFile", expansionFile);
+        }
+        		
+		this.startActivity(pythonIntent);
+        this.finish();
+    	
+    }
+    
+    
+    /**
      * Called when the activity is first create; we wouldn't create a layout in
      * the case where we have the file and are moving to another activity
      * without downloading.
@@ -201,7 +235,7 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
         super.onCreate(savedInstanceState);
 
         
-        String expansionFile = getExpansionFile();
+        String expansionFile = getExpansionFile(true);
         
         /**
          * Before we do anything, are the files we expect already here and
@@ -241,28 +275,16 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
                     return;
                 } // otherwise, download not needed so we fall through to
                   // starting the movie
+                
+                Log.i("DownloaderActivity", "Download not required.");
+                
             } catch (NameNotFoundException e) {
                 Log.e(LOG_TAG, "Cannot find own package! MAYDAY!");
                 e.printStackTrace();
             }
-            
-            
-            expansionFile = getExpansionFile();
-        }
-        
-        
-        // Launch PythonActivity
-        Intent pythonIntent = new Intent(this, PythonActivity.class);
-        pythonIntent.setAction("android.intent.action.MAIN");
-
-        if (expansionFile != null) {
-        	pythonIntent.putExtra("expansionFile", expansionFile);
         }
 
-        		
-		this.startActivity(pythonIntent);
-        this.finish();
-        
+        startPython();
     }
 
     /**
@@ -359,6 +381,9 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
                 showDashboard = false;
                 paused = false;
                 indeterminate = false;
+                
+                startPython();
+                
                 return;
             default:
                 paused = true;
