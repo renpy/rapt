@@ -94,7 +94,7 @@ public class RenPySound {
             if (filename[0] != null) {
                 updateVolume();
 
-                if (prepared[0]) {                
+                if (prepared[0]) {
                     player[0].start();
                 }
             }
@@ -104,7 +104,7 @@ public class RenPySound {
          * Stop playback on this channel.
          */
         synchronized void stop() {
-            player[0].reset();
+        	player[0].reset();
             player[1].reset();
 
             filename[0] = null;

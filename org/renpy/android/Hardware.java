@@ -32,7 +32,7 @@ public class Hardware {
      // The context.
      static Context context;
      static View view;
-
+     	
      /**
       * Vibrate for s seconds.
       */

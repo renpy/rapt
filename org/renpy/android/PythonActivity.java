@@ -114,8 +114,8 @@ public class PythonActivity extends Activity implements Runnable {
         mView = new SDLSurfaceView(
             this,
             mPath.getAbsolutePath());
-
         Hardware.view = mView;
+
         setContentView(mView);
     }
 
