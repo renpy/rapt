@@ -36,7 +36,13 @@ try mv "$ROOT/python-for-android/dist/$DISTRO" "$DISTROROOT"
 
 try ./copy_scripts.sh "$DISTROROOT"
 
+# Build the documentation.
+try cd "$ROOT/doc"
+try make html
+try cp -a "_build/html" "$DISTROROOT/doc"
+
 if [ "$1" != "" ]; then
-    cd "$ROOT/dist"
-    tar cjf "pgs4a-$1.tar.bz2" "pgs4a-$1"
+        
+    try cd "$ROOT/dist"
+    try tar cjf "pgs4a-$1.tar.bz2" "pgs4a-$1"
 fi
