@@ -4,7 +4,12 @@ try () {
     "$@" || exit 1
 }
 
-DISTRO=pgs4a
+
+if [ "$1" != "" ]; then
+    DISTRO="pgs4a-$1"    
+else
+    DISTRO=pgs4a
+fi
 
 ROOT=$(dirname $(readlink -f $0))
 
@@ -31,4 +36,7 @@ try mv "$ROOT/python-for-android/dist/$DISTRO" "$DISTROROOT"
 
 try ./copy_scripts.sh "$DISTROROOT"
 
-
+if [ "$1" != "" ]; then
+    cd "$ROOT/dist"
+    tar cjf "pgs4a-$1.tar.bz2" "pgs4a-$1"
+fi

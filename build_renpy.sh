@@ -4,7 +4,13 @@ try () {
     "$@" || exit 1
 }
 
-DISTRO=renpy
+if [ "$1" != "" ]; then
+    DISTRO="rapt-$1"    
+else
+    DISTRO=renpy
+fi
+
+
 
 export ROOT=$(dirname $(readlink -f $0))
 
@@ -22,7 +28,7 @@ try ./run.sh the_question compile
 
 # Build the python-for-android distro.
 try cd "$ROOT/python-for-android"
-try ./distribute.sh -d "$DISTRO" -m "pygame android renpy pyjnius"
+try ./distribute.sh -d "$DISTRO" -m "android pygame renpy pyjnius"
 
 # Move the built distro to $DISTROROOT.
 DISTROROOT="$ROOT/dist/$DISTRO"
@@ -49,3 +55,8 @@ try cp "$RENPYROOT/renpy.py" "$DISTROROOT/private/main.py"
 try ./copy_scripts.sh "$DISTROROOT"
 
 echo Done adding renpy.
+
+if [ "$1" != "" ]; then
+    cd "$ROOT/dist"
+    tar cjf "rapt-$1.tar.bz2" "rapt-$1"
+fi
