@@ -85,8 +85,8 @@ This should be an integer number, and the value should increase between versions
         ], config.orientation)
 
     config.expansion = interface.choice("Would you like to create an expansion APK?", [
-        (False, "No. Size limit of 50 MB on Google Play, but can be sideloaded elsewhere."),
-        (True, "Yes. No size limit, but won't work outside of Google Play.")
+        (False, "No. Size limit of 50 MB on Google Play, but can be distributed through other store and sideloaded."),
+        (True, "Yes. 2 GB size limit, but won't work outside of Google Play.")
         ], config.expansion)
 
     if not renpy:

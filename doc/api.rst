@@ -79,7 +79,7 @@ storage, reducing initial startup time.
     Returns a read-only file-like object that can access an asset.
 
    
-android_mixer
+android.mixer
 -------------
    
 .. module:: android.mixer

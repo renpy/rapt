@@ -3,6 +3,25 @@
 Changelog
 =========
 
+Pygame Subset for Android 0.9.6
+-------------------------------
+
+PGS4A now supports Expansion APKs when used in conjunction with the
+Google Play store. This increases the maximum package size from
+50 MB to 2 GB. (Sideloaders or users of other app stores should
+continue to produce a monolithic package.)
+
+PGS4A is now based on a slightly modified python-for-android, which in
+turn was originally based on PGS4A. 
+
+PGS4A now uses and requires Android 2.2 and OpenGL ES 2.
+
+`PyJNIus <https://github.com/kivy/pyjnius>`_ is included, allowing
+access to more Android functionality. (PyJNIus integration with
+PGS4A has not been tested.)
+
+
+
 Pygame Subset for Android 0.9.5
 -------------------------------
 

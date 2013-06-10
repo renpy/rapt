@@ -170,7 +170,7 @@ Sound and Music
 
 Although not used here, a big difference between the Pygame Subset and
 Pygame is the handling of sound and music. In Pygame Subset, sound
-playback is handled by the :mod:`android_mixer` module.
+playback is handled by the :mod:`android.mixer` module.
 
 
 Hardware Support
