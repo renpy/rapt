@@ -26,6 +26,8 @@ export ANDROIDAPI=9
 try cd $RENPYROOT
 try ./run.sh the_question compile
 
+rm -Rf "$RENPYROOT/module/build/lib.android"
+
 # Build the python-for-android distro.
 try cd "$ROOT/python-for-android"
 try ./distribute.sh -d "$DISTRO" -m "android pygame renpy pyjnius"
@@ -57,6 +59,7 @@ try ./copy_scripts.sh "$DISTROROOT"
 echo Done adding renpy.
 
 if [ "$1" != "" ]; then
-    cd "$ROOT/dist"
-    tar cjf "rapt-$1.tar.bz2" "rapt-$1"
+    try cd "$ROOT/dist"
+    try tar cjf "rapt-$1.tar.bz2" "rapt-$1"
+    try zip -9r "rapt-$1.zip" "rapt-$1"
 fi

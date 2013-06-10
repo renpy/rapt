@@ -45,4 +45,5 @@ if [ "$1" != "" ]; then
         
     try cd "$ROOT/dist"
     try tar cjf "pgs4a-$1.tar.bz2" "pgs4a-$1"
+    try zip -9r "pgs4a-$1.zip" "pgs4a-$1"
 fi
