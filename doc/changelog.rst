@@ -3,7 +3,8 @@
 Changelog
 =========
 
-Pygame Subset for Android 0.9.6
+
+Pygame Subset for Android 0.9.5
 -------------------------------
 
 PGS4A now supports Expansion APKs when used in conjunction with the
@@ -19,11 +20,6 @@ PGS4A now uses and requires Android 2.2 and OpenGL ES 2.
 `PyJNIus <https://github.com/kivy/pyjnius>`_ is included, allowing
 access to more Android functionality. (PyJNIus integration with
 PGS4A has not been tested.)
-
-
-
-Pygame Subset for Android 0.9.5
--------------------------------
 
 The webbrowser module can now open URLs using the Android intents system.
 

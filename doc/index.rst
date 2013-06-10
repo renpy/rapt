@@ -17,10 +17,7 @@ The Pygame Subset for Android can be downloaded at:
 
     http://pygame.renpy.org/dl
 
-Please see the :ref:`changelog` for a list of changes between versions. The source code and bug tracker can
-be found on launchpad, at:
-
-    https://launchpad.net/pgs4a
+Please see the :ref:`changelog` for a list of changes between versions. 
 
 Support
 -------
@@ -55,6 +52,7 @@ The Pygame Subset for Android is by:
 
 It integrates code from an number of projects, including:
 
+* `Python-for-android <http://python-for-android.readthedocs.org/en/latest/>`_
 * `Pygame <http://www.pygame.org/>`_
 * `SDL <http://www.libsdl.org>`_ (including `Pelya's Android port
   <http://www.anddev.org/code-snippets-for-android-f33/sdl-port-for-android-sdk-ndk-1-6-t9218.html>`_)
