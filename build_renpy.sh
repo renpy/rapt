@@ -55,6 +55,8 @@ try cp "$RENPYROOT/renpy.py" "$DISTROROOT/private/main.py"
 
 # Copy the build scripts.
 try ./copy_scripts.sh "$DISTROROOT"
+try cp "whitelist-renpy.txt" "$DISTROROOT/whitelist.txt"
+try cp "blacklist-renpy.txt" "$DISTROROOT/blacklist.txt"
 
 echo Done adding renpy.
 

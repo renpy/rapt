@@ -6,16 +6,22 @@
 /.nomedia
 /.android.json
 /project.json
+/log.txt
+/errors.txt
+/traceback.txt
+/tmp
 
 /lib
 /include
 
 **~
 **.bak
+**.rpy
+**.swp
 **.pyc
+**.py
 
 **/.hg**
 **/.git**
 **/.bzr**
 **/.svn**
-
