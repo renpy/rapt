@@ -617,6 +617,8 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         ApplicationInfo appInfo;
         PackageManager packMgmr = mActivity.getApplication().getPackageManager();
 
+        Log.i(TAG, "package name = " + mActivity.getPackageName());
+        
         try {
             appInfo = packMgmr.getApplicationInfo(mActivity.getPackageName(), 0);
             apkFilePath = appInfo.sourceDir;
@@ -624,6 +626,8 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
             apkFilePath = "";
         }
 		
+        Log.i(TAG, "ANDROID_APK = " + apkFilePath);
+        
         nativeResize(mWidth, mHeight);
         nativeInitJavaCallbacks();
         nativeSetEnv("ANDROID_PRIVATE", mFilesDirectory);
