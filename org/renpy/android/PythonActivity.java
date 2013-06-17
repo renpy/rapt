@@ -48,7 +48,8 @@ public class PythonActivity extends Activity implements Runnable {
     private ResourceManager resourceManager;
 
     // The path to the directory contaning our external storage.
-    private File externalStorage;
+    File externalStorage;
+    File oldExternalStorage;
 
     // The path to the directory containing the game.
     private File mPath = null;
@@ -66,7 +67,8 @@ public class PythonActivity extends Activity implements Runnable {
         getWindowManager().getDefaultDisplay().getMetrics(Hardware.metrics);
 
         resourceManager = new ResourceManager(this);
-        externalStorage = new File(Environment.getExternalStorageDirectory(), getPackageName());
+        oldExternalStorage = new File(Environment.getExternalStorageDirectory(), getPackageName());
+        externalStorage = getExternalFilesDir(null);
         
         // Figure out the directory where the game is. If the game was
         // given to us via an intent, then we use the scheme-specific
@@ -158,6 +160,12 @@ public class PythonActivity extends Activity implements Runnable {
      */
     public void unpackData(final String resource, File target) {
 
+    	/**
+    	 * Delete main.pyo unconditionally. This fixes a problem where we have
+    	 * a main.py newer than main.pyo, but start.c won't run it.
+    	 */
+    	new File(target, "main.pyo").delete();
+    	
         // The version of data in memory and on disk.
         String data_version = resourceManager.getString(resource + "_version");
         String disk_version = null;
