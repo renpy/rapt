@@ -281,7 +281,7 @@ def build(iface, directory, commands):
     whitelist = PatternList("whitelist.txt")
         
     if RENPY:
-        manifest_extra = '<uses-feature android:glEsVersion="0x00020000" />'        
+        manifest_extra = None        
         default_icon = "templates/renpy-icon.png"
         default_presplash = "templates/renpy-presplash.jpg"
 
