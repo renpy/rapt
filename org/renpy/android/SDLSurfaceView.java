@@ -39,6 +39,7 @@ import android.view.MotionEvent;
 import android.view.KeyEvent;
 import android.net.Uri;
 import android.os.PowerManager;
+import android.graphics.PixelFormat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -347,7 +348,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
-        holder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
+        holder.setFormat(PixelFormat.RGBA_8888);
 
         mFilesDirectory = mActivity.getFilesDir().getAbsolutePath();
         mArgument = argument;
@@ -870,8 +871,9 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         // Make the new surface current.
         boolean rv = mEgl.eglMakeCurrent(
             mEglDisplay, mEglSurface, mEglSurface, mEglContext);
-		if (!rv) {
-			mEglSurface = null;
+
+        if (!rv) {
+            mEglSurface = null;
 			return false;
 		}
 
