@@ -20,5 +20,4 @@ try cd "$D"
 try cp "$ROOT/local.properties" .
 
 # ./android.py configure /home/tom/ab/renpy/the_question
-#try ./android.py build /home/tom/ab/renpy/the_question debug install
-try ./android.py build /home/tom/ab/renpy/andtesting release install
+try ./android.py build /home/tom/ab/renpy/tutorial debug install

@@ -21,7 +21,7 @@ export RENPY_PYARGS="-OO"
 export ANDROIDSDK="$ROOT/android-sdk"
 export ANDROIDNDK="$ROOT/android-ndk-r8c"
 export ANDROIDNDKVER=r8c
-export ANDROIDAPI=9
+export ANDROIDAPI=8
 
 try cd $RENPYROOT
 try ./run.sh the_question compile
