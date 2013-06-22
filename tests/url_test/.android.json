@@ -1,0 +1,1 @@
+{"orientation": "landscape", "include_pil": false, "icon_name": "URL Test", "include_sqlite": false, "permissions": ["INTERNET", "VIBRATE"], "layout": "internal", "name": "URL Test", "package": "org.renpy.ut", "source": true, "version": "1.0", "numeric_version": "100"}

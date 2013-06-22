@@ -1,0 +1,3 @@
+title=Slide Puzzle
+author=Al Sweigert
+orientation=portrait

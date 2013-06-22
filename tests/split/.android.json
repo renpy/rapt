@@ -1,0 +1,1 @@
+{"layout": "split", "orientation": "landscape", "package": "com.domain.split", "include_pil": false, "name": "Split", "icon_name": "Split", "version": "1.0", "permissions": ["INTERNET", "VIBRATE"], "include_sqlite": false, "numeric_version": "100"}

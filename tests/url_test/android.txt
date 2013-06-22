@@ -1,0 +1,4 @@
+title=Color Touch
+author=Pygame Subset for Android
+api=1
+orientation=portrait

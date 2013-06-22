@@ -1,0 +1,1 @@
+{"orientation": "portrait", "include_pil": false, "icon_name": "Color Touch", "include_sqlite": false, "permissions": ["INTERNET", "VIBRATE"], "layout": "internal", "name": "Color Touch", "package": "org.renpy.ct", "source": false, "version": "1.0", "numeric_version": "100"}

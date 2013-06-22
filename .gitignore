@@ -7,3 +7,11 @@ dist
 
 *.pyc
 *.pyo
+apache-ant/
+bin/
+dl/
+doc/_build/
+extras
+local.properties
+renpy
+build_moonlight.sh

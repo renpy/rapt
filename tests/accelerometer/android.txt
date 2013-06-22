@@ -1,0 +1,3 @@
+title=Accelerometer Test
+author=Pygame Subset for Android
+orientation=portrait

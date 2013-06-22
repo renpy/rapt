@@ -1,0 +1,1 @@
+{"layout": "internal", "orientation": "portrait", "package": "org.renpy.sp", "include_pil": false, "name": "Slide Puzzle", "source": false, "icon_name": "Slide Puzzle", "version": "1.0", "permissions": ["INTERNET", "VIBRATE"], "include_sqlite": false, "numeric_version": "100"}

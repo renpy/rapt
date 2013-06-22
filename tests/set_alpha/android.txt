@@ -1,0 +1,3 @@
+title=Set Alpha Test
+author=Pygame Subset for Android
+orientation=portrait

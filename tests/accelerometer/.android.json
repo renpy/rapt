@@ -1,0 +1,1 @@
+{"layout": "internal", "orientation": "portrait", "package": "org.renpy.at", "include_pil": false, "name": "Accelerometer Test", "icon_name": "AT", "version": "1.0", "permissions": ["INTERNET", "VIBRATE"], "include_sqlite": false, "numeric_version": "100"}
