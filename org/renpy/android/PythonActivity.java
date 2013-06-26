@@ -70,6 +70,8 @@ public class PythonActivity extends Activity implements Runnable {
         oldExternalStorage = new File(Environment.getExternalStorageDirectory(), getPackageName());
         externalStorage = getExternalFilesDir(null);
         
+        Intent intent = getIntent();
+        
         // Figure out the directory where the game is. If the game was
         // given to us via an intent, then we use the scheme-specific
         // part of that intent to determine the file to launch. We
@@ -77,7 +79,7 @@ public class PythonActivity extends Activity implements Runnable {
         //
         // Otherwise, we use the public data, if we have it, or the
         // private data if we do not.
-        if (getIntent().getAction().equals("org.renpy.LAUNCH")) {
+        if (intent != null && intent.getAction() != null && intent.getAction().equals("org.renpy.LAUNCH")) {
             mPath = new File(getIntent().getData().getSchemeSpecificPart());
 
             Project p = Project.scanDirectory(mPath);
