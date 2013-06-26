@@ -11,7 +11,7 @@ class Configuration(object):
         self.version = None
         self.numeric_version = None
         self.orientation = None
-        self.permissions = [ "INTERNET", "VIBRATE" ]        
+        self.permissions = [ "VIBRATE" ]        
         self.include_pil = False
         self.include_sqlite = False
         self.layout = None
@@ -101,7 +101,7 @@ This should be an integer number, and the value should increase between versions
 
         permissions = " ".join(config.permissions)
         permissions = interface.input("""\
-What permissions should your application have? Possible permissions are:
+What permissions should your application have? Possible permissions include:
 
 INTERNET (network access), VIBRATE (vibration control).
     
@@ -110,6 +110,22 @@ Please enter a space-separated list of permissions.""", permissions)
     
         config.include_sqlite = interface.yesno("Do you want to include SQLite3 with your application?", config.include_sqlite)
         config.include_pil = interface.yesno("Do you want to include the Python Imaging Library (PIL) with your application?", config.include_pil)
+        
+    if renpy:
+        
+        if not config.expansion:
+            internet = "INTERNET" in config.permissions
+            internet = interface.yesno("Do you want to allow the app to access the Internet?", internet)
+        else:
+            internet = False # included in template.
+            
+        permissions = [ i for i in config.permissions if i not in [ "INTERNET" ] ]
+        
+        if internet:
+            permissions.append("INTERNET")
+            
+        config.permissions = permissions
+        
         
     config.save(directory)
     
