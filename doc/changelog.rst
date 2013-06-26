@@ -3,6 +3,15 @@
 Changelog
 =========
 
+Pygame Subset for Android 0.9.6
+-------------------------------
+
+This release patches Python to work with .apk files distributed
+through the Amazon App Store, which are subtly different from
+standard apk files.
+
+This release fixes support for pre-2.3 Android devices.
+
 
 Pygame Subset for Android 0.9.5
 -------------------------------
