@@ -1,11 +1,16 @@
 #!/bin/bash
 
-./build_pgs4a.sh 
+try () {
+    "$@" || exit 1
+}
 
+try ./build_pgs4a.sh 
+
+ROOT=$(dirname $(readlink -f $0))
 D=dist/pgs4a
 
-ln -s /tmp/android-sdk "$D"
-ln -s /tmp/apache-ant "$D"
+try ln -s "$ROOT/android-sdk" "$D"
+try ln -s "$ROOT/apache-ant" "$D"
 
 cd "$D"
 
