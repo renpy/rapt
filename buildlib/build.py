@@ -432,6 +432,14 @@ def build(iface, directory, commands):
     shutil.copy(join_and_check(directory, "android-icon.png") or default_icon, "res/drawable/icon.png")
     shutil.copy(join_and_check(directory, "android-presplash.jpg") or default_presplash, "res/drawable/presplash.jpg")
 
+    ouya_icon = join_and_check(directory, "ouya-icon.png") or join_and_check(directory, "ouya_icon.png")
+    
+    if ouya_icon:
+        if not os.path.exists("res/drawable-xhdpi"):
+            os.mkdir("res/drawable-xhdpi")
+            
+        shutil.copy(ouya_icon, "res/drawable-xhdpi/ouya_icon.png")
+
     # Build.
     iface.info("I'm using Ant to build the package.")
 
