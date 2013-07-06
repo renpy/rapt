@@ -22,7 +22,7 @@ def main():
 
     # Parse the arguments.
     ap = argparse.ArgumentParser(description="Build an android package.")
-    ap.add_argument("command", help="The command to run. One of install_sdk, configure, or build.")
+    ap.add_argument("command", help="The command to run. One of installsdk, configure, or build.")
     ap.add_argument("argument", nargs='*', help="The arguments to the selected command.")
     
     args = ap.parse_args()
