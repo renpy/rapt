@@ -313,12 +313,18 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
     // The user program is waiting in waitForResume.
     static int PAUSE_WAIT_FOR_RESUME = 3;
 
-	static int PAUSE_STOP_REQUEST = 4;
-	static int PAUSE_STOP_ACK = 5;
-
     // This stores the state of the pause system.
     static int mPause = PAUSE_NOT_PARTICIPATING;
 
+    // A similar state machine for stop.
+    static int STOP_NOT_PARTICIPATING = 0;
+    static int STOP_NONE = 1;
+	static int STOP_REQUEST = 2;
+	static int STOP_ACK = 3;
+
+    static int mStop = STOP_NOT_PARTICIPATING;
+    
+    
     private PowerManager.WakeLock wakeLock;
 
     // The width and height. (This should be set at startup time -
@@ -423,6 +429,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
      * Must not be called before a renderer has been set.
      */
     public void onPause() {
+		Log.w(TAG, "onPause() called");
 
         synchronized (this) {
             if (mPause == PAUSE_NONE) {
@@ -450,6 +457,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
      * Must not be called before a renderer has been set.
      */
     public void onResume() {
+		Log.w(TAG, "onResume() called");
         synchronized (this) {
             if (mPause == PAUSE_WAIT_FOR_RESUME) {
                 mPause = PAUSE_NONE;
@@ -461,21 +469,32 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 
 	public void onDestroy() {
 		Log.w(TAG, "onDestroy() called");
+
+		// If something is wrong with the Android lifecycle call onPause ourselves.
+		if (mPause == PAUSE_NONE) {
+			Log.w(TAG, "onPause not called before onDestroy");
+			onPause();
+		}
+		
 		synchronized (this) {
 			this.notifyAll();
 
-			if ( mPause == PAUSE_STOP_ACK ) {
+			if (mStop == STOP_NOT_PARTICIPATING) {
+				Log.d(TAG, "onDestroy() not participating.");
+			}
+			
+			if ( mStop == STOP_ACK ) {
 				Log.d(TAG, "onDestroy() app already leaved.");
 				return;
 			}
 
 			// application didn't leave, give 10s before closing.
 			// hopefully, this could be enough for launching the on_stop() trigger within the app.
-			mPause = PAUSE_STOP_REQUEST;
+			mStop = STOP_REQUEST;
 			int i = 50;
 
 			Log.d(TAG, "onDestroy() stop requested, wait for an event from the app");
-			for (; i >= 0 && mPause == PAUSE_STOP_REQUEST; i--) {
+			for (; i >= 0 && mStop == STOP_REQUEST; i--) {
 				try {
 					this.wait(200);
 				} catch (InterruptedException e) {
@@ -487,7 +506,11 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	static int checkStop() {
-        if (mPause == PAUSE_STOP_REQUEST)
+		if (mStop == STOP_NOT_PARTICIPATING) {
+			mStop = STOP_NONE;
+		}
+		
+		if (mStop == STOP_REQUEST)
 			return 1;
 		return 0;
 	}
@@ -495,7 +518,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 	static void ackStop() {
 		Log.d(TAG, "ackStop() notify");
 		synchronized (instance) {
-			mPause = PAUSE_STOP_ACK;
+			mStop = STOP_ACK;
 			instance.notifyAll();
 		}
 	}
@@ -660,7 +683,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 		nativeSetMouseUsed();
 		nativeInit();
 
-		mPause = PAUSE_STOP_ACK;
+		mStop = STOP_ACK;
 
 		//Log.i(TAG, "End of native init, stop everything (exit0)");
         System.exit(0);
