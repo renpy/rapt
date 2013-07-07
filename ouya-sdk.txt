@@ -1,0 +1,5 @@
+OUYA Development Kit is released under the terms of the Apache License, Version 2.0
+
+Version 1.0.6 - Jun 24, 2013
+
+Downloaded from: https://devs.ouya.tv/developers/odk

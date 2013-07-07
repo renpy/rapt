@@ -58,6 +58,9 @@ try ./copy_scripts.sh "$DISTROROOT"
 try cp "whitelist-renpy.txt" "$DISTROROOT/whitelist.txt"
 try cp "blacklist-renpy.txt" "$DISTROROOT/blacklist.txt"
 
+# Copy the OUYA SDK over.
+try cp "$ROOT/ouya-sdk.jar" "$DISTROROOT/libs/ouya-sdk.jar"
+
 echo Done adding renpy.
 
 if [ "$1" != "" ]; then
