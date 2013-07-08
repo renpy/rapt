@@ -230,9 +230,14 @@ public class PythonActivity extends Activity implements Runnable {
 
         System.loadLibrary("sdl");
         System.loadLibrary("sdl_image");
-        System.loadLibrary("sdl_ttf");
-        System.loadLibrary("sdl_mixer");
-		System.loadLibrary("python2.7");
+    	System.loadLibrary("sdl_ttf");
+    	
+    	try {
+    		System.loadLibrary("sdl_mixer");
+        } catch(UnsatisfiedLinkError e) {
+        }
+    	
+        System.loadLibrary("python2.7");
         System.loadLibrary("application");
         System.loadLibrary("sdl_main");
 
