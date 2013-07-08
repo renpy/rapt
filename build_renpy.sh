@@ -44,6 +44,10 @@ fi
 
 try mv "$ROOT/python-for-android/dist/$DISTRO" "$DISTROROOT"
 
+# Delete unneeded librarys.
+try rm "$DISTROROOT/libs/armeabi/libsdl_mixer.so"
+try rm "$DISTROROOT/libs/armeabi/libsqlite3.so"
+
 # Copy the common files over.
 try mkdir -p "$DISTROROOT/renpy"
 try cp -a "$RENPYROOT/renpy/common" "$DISTROROOT/renpy"
