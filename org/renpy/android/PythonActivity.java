@@ -22,6 +22,7 @@ import android.widget.Toast;
 import android.util.Log;
 import android.util.DisplayMetrics;
 import android.os.Debug;
+import android.widget.FrameLayout;
 
 import java.io.InputStream;
 import java.io.FileInputStream;
@@ -39,7 +40,8 @@ public class PythonActivity extends Activity implements Runnable {
 
     // The SDLSurfaceView we contain.
     public static SDLSurfaceView mView = null;
-	public static PythonActivity mActivity = null;
+    public static FrameLayout mFrameLayout = null;
+    public static PythonActivity mActivity = null;
 	public static String mExpansionFile = null;
 	
     // Did we launch our thread?
@@ -120,7 +122,11 @@ public class PythonActivity extends Activity implements Runnable {
             mPath.getAbsolutePath());
         Hardware.view = mView;
 
-        setContentView(mView);
+        
+        mFrameLayout = new FrameLayout(this);
+        mFrameLayout.addView(mView);
+        
+        setContentView(mFrameLayout);
     }
 
     /**

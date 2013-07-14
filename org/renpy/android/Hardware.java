@@ -11,7 +11,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.view.View;
 
 import java.util.List;
-import java.util.ArrayList;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.content.BroadcastReceiver;
