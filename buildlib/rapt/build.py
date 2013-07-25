@@ -6,7 +6,6 @@ import re
 import tarfile
 import os
 import shutil
-import subprocess
 import time
 import zipfile
 
@@ -114,13 +113,13 @@ def render(template, dest, **kwargs):
     f.write(text.encode("utf-8"))
     f.close()
 
-def compile_dir(dfn):
+def compile_dir(iface, dfn):
     """
     Compile *.py in directory `dfn` to *.pyo
     """
 
     # -OO = strip docstrings
-    subprocess.call([PYTHON,'-OO','-m','compileall','-f',dfn])
+    iface.call([PYTHON,'-OO','-m','compileall','-f',dfn])
 
 def make_tar(fn, source_dirs):
     """
@@ -164,7 +163,7 @@ def make_tar(fn, source_dirs):
     for sd in source_dirs:
 
         if PYTHON and not RENPY:
-            compile_dir(sd)
+            compile_dir(iface, sd)
 
         sd = os.path.abspath(sd)
 
@@ -444,7 +443,7 @@ def build(iface, directory, commands):
 
     # Clean is required
     try:
-        subprocess.check_call([plat.ant, "clean"] +  commands)
+        iface.call([plat.ant, "clean"] +  commands)
         iface.success("It looks like the build succeeded.")
     except:
         iface.fail("The build seems to have failed.")
@@ -455,7 +454,7 @@ def build(iface, directory, commands):
 
         dest = "/mnt/sdcard/{}".format(expansion_file)
 
-        subprocess.check_call([ plat.adb, "push", expansion_file, dest ])
+        iface.call([ plat.adb, "push", expansion_file, dest ])
 
         iface.success("Uploaded the expansion file.")
 

@@ -9,12 +9,12 @@ from colorama import Fore, Back, Style
 colorama.init()
 
 class Interface(object):
-    
+
     def write(self, s, style=""):
         """
         Writes out s, in the given style and color.
         """
-        
+
         wrapped = "\n\n".join("\n".join(textwrap.wrap(i)) for i in s.split("\n\n"))
 
         sys.stdout.write(style)
@@ -22,7 +22,7 @@ class Interface(object):
         sys.stdout.write(Fore.RESET + Back.RESET + Style.RESET_ALL)
         sys.stdout.write("\n")
         sys.stdout.flush()
-    
+
     def info(self, prompt):
         """
         Displays `prompt` as an informational message.
@@ -46,27 +46,27 @@ class Interface(object):
         self.write(prompt, Fore.GREEN + Style.BRIGHT)
         print
 
-        
+
     def yesno(self, prompt, default=None):
         """
         Prompts the user for a response to a yes or no question.
         """
 
-        print 
+        print
         self.write(prompt, Style.BRIGHT)
 
         while True:
-            
+
             if default is True:
                 prompt = "yes/no [yes]> "
             elif default is False:
                 prompt = "yes/no [no]> "
             else:
                 prompt = "yes/no> "
-        
+
             choice = raw_input(prompt)
             choice = choice.strip().lower()
-            
+
             if choice == "yes" or choice == "y":
                 return True
             elif choice == "no" or choice == "n":
@@ -79,20 +79,20 @@ class Interface(object):
     def terms(self, url, prompt):
         self.info("Opening {} in a web browser.".format(url))
 
-        webbrowser.open_new(url)        
+        webbrowser.open_new(url)
         time.sleep(.5)
-        
+
         if not self.yesno(prompt):
             self.fail("You must accept the terms and conditions to proceed.")
-    
-    
+
+
     def input(self, prompt, empty=None): #@ReservedAssignment
         """
         Prompts the user for input. The input is expected to be a string, which
-        is stripped of leading and trailing whitespace. If `empty` is true, 
+        is stripped of leading and trailing whitespace. If `empty` is true,
         empty strings are allowed. Otherwise, they are not.
         """
-        
+
         print
         self.write(prompt, Style.BRIGHT)
 
@@ -102,7 +102,7 @@ class Interface(object):
                 prompt = "[{}]> ".format(empty)
             else:
                 prompt = "> "
-            
+
             rv = raw_input(prompt)
             rv = rv.strip()
 
@@ -117,37 +117,37 @@ class Interface(object):
     def choice(self, prompt, choices, default=None):
         """
         Prompts the user with prompt, and then presents him with a list of
-        choices. 
-        
+        choices.
+
         `choices`
             A list of (value, label) tuples.
-            
+
         `default`
             If not None, should be one of the values. The value that we use
             return if the user just hits enter.
         """
-        
+
         default_choice = None
-        
+
         print
         self.write(prompt, Style.BRIGHT)
-        
+
         for i, (value, label) in enumerate(choices):
 
             i += 1
 
             if value == default:
                 default_choice = i
-                
+
             self.write("{}) {}".format(i, label), Style.BRIGHT)
-            
+
         print
-        
+
         if default_choice is not None:
             prompt = "1-{} [{}]> ".format(len(choices), default_choice)
         else:
             prompt = "1-{}> ".format(len(choices))
-        
+
         while True:
             try:
                 choice = raw_input(prompt).strip()
@@ -160,14 +160,14 @@ class Interface(object):
                         continue
             except:
                 continue
-            
+
             choice -= 1
 
             if choice >= 0 and choice < len(choices):
                 return choices[choice][0]
 
         print
-    
+
     def fail(self, prompt):
         """
         Causes the program to terminate with a message, and a failure code.
@@ -177,3 +177,10 @@ class Interface(object):
         self.write(prompt, Fore.RED + Style.BRIGHT)
 
         sys.exit(-1)
+
+    def call(self, args):
+        """
+        Executes `args` as a program.
+        """
+
+        subprocess.check_call(args)

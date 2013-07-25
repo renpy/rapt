@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import subprocess
 import traceback
 import os
 import zipfile
@@ -12,9 +11,9 @@ import rapt.plat as plat
 
 
 ##############################################################################
-def run(*args):
+def run(interface, *args):
     try:
-        subprocess.check_call(args)
+        interface.call(args)
         return True
     except:
         traceback.print_exc()
@@ -42,7 +41,7 @@ class test {
     f.write(SOURCE)
     f.close()
 
-    if not run(plat.javac, "test.java"):
+    if not run(interface, plat.javac, "test.java"):
         interface.info("""\
 I was unable to use javac to compile a test file. If you haven't installed
 the JDK yet, please download it from:
@@ -151,7 +150,7 @@ def get_packages(interface):
 
     interface.info("I'm about to download and install the required Android packages. This might take a while.")
 
-    if not run(plat.android, "update", "sdk", "-u", "-a", "-t", ",".join(packages)):
+    if not run(interface, plat.android, "update", "sdk", "-u", "-a", "-t", ",".join(packages)):
         interface.fail("I was unable to install the required Android packages.")
 
     interface.info("I'm updating the library packages.")
@@ -165,8 +164,8 @@ def get_packages(interface):
         with open("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties", "w") as f:
             f.write(data)
 
-    run(plat.android, "update", "project", "-p", "android-sdk/extras/google/play_licensing/library")
-    run(plat.android, "update", "project", "-p", "android-sdk/extras/google/play_apk_expansion/downloader_library")
+    run(interface, plat.android, "update", "project", "-p", "android-sdk/extras/google/play_licensing/library")
+    run(interface, plat.android, "update", "project", "-p", "android-sdk/extras/google/play_apk_expansion/downloader_library")
 
     if os.path.exists("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9"):
         shutil.rmtree("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9")
@@ -203,7 +202,7 @@ Will you make a backup of android.keystore, and keep it in a safe place?"""):
 
     dname = "CN=" + org
 
-    run(plat.keytool, "-genkey", "-keystore", "android.keystore", "-alias", "android", "-keyalg", "RSA", "-keysize", "2048", "-keypass", "android", "-storepass", "android", "-dname", dname, "-validity", "20000")
+    run(interface, plat.keytool, "-genkey", "-keystore", "android.keystore", "-alias", "android", "-keyalg", "RSA", "-keysize", "2048", "-keypass", "android", "-storepass", "android", "-dname", dname, "-validity", "20000")
 
     f = file("local.properties", "a")
     print >>f, "key.alias=android"
