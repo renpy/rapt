@@ -9,11 +9,12 @@ import shutil
 import time
 import zipfile
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "jinja2.egg"))
+import rapt.plat as plat
+
+sys.path.append(os.path.join(plat.RAPT_PATH, "buildlib", "jinja2.egg"))
 
 import jinja2
 import rapt.configure as configure
-import rapt.plat as plat
 
 # If we have python 2.7, record the path to it.
 if sys.version_info.major == 2 and sys.version_info.minor == 7:
