@@ -29,11 +29,6 @@ class Interface(object):
     def info(self, prompt):
         """
         Displays `prompt` as an informational message.
-
-
-        `wait`
-            If true, the user is also prompted to press enter, to confirm that
-            he has read the message.
         """
 
         print
