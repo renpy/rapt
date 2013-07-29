@@ -2,6 +2,9 @@ import webbrowser
 import textwrap
 import sys
 import time
+import subprocess
+
+import plat
 
 import colorama
 from colorama import Fore, Back, Style
@@ -183,4 +186,4 @@ class Interface(object):
         Executes `args` as a program.
         """
 
-        subprocess.check_call(args)
+        subprocess.check_call(args, cwd=plat.RAPT_PATH)

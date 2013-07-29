@@ -30,7 +30,7 @@ class PatternList(object):
         self.patterns = [ ]
 
         for i in args:
-            self.load(i)
+            self.load(plat.path(i))
 
     def match(self, s):
         """
@@ -98,13 +98,15 @@ class PatternList(object):
 
 
 # Used by render.
-environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates'))
+environment = jinja2.Environment(loader=jinja2.FileSystemLoader(plat.path('templates')))
 
 def render(template, dest, **kwargs):
     """
     Using jinja2, render `template` to the filename `dest`, supplying the keyword
     arguments as template parameters.
     """
+
+    dest = plat.path(dest)
 
     template = environment.get_template(template)
     text = template.render(**kwargs)
@@ -125,6 +127,8 @@ def make_tar(fn, source_dirs):
     """
     Make a zip file `fn` from the contents of source_dis.
     """
+
+    source_dirs = [ plat.path(i) for i in source_dirs ]
 
     def include(fn):
         rv = True
@@ -187,6 +191,9 @@ def make_tar(fn, source_dirs):
 
 def make_tree(src, dest):
 
+    src = plat.path(src)
+    dest = plat.path(dest)
+
     def ignore(dir, files):
 
         rv = [ ]
@@ -227,6 +234,8 @@ def edit_file(fn, pattern, line):
     should not end with a newline - we add it.
     """
 
+    fn = plat.path(fn)
+
     lines = [ ]
 
     with open(fn, "r") as f:
@@ -246,6 +255,8 @@ def zip_directory(zf, dirname):
     contents of the directory into.
     """
 
+    dirname = plat.path(dirname)
+
     for dirname, dirs, files in os.walk(dirname):
         for fn in files:
             fn = os.path.join(dirname, fn)
@@ -258,7 +269,7 @@ def build(iface, directory, commands):
     # Are we doing a Ren'Py build?
 
     global RENPY
-    RENPY = os.path.exists("renpy")
+    RENPY = os.path.exists(plat.path("renpy"))
 
     if not os.path.isdir(directory):
         iface.fail("{} is not a directory.".format(directory))
@@ -280,8 +291,8 @@ def build(iface, directory, commands):
 
     if RENPY:
         manifest_extra = None
-        default_icon = "templates/renpy-icon.png"
-        default_presplash = "templates/renpy-presplash.jpg"
+        default_icon = plat.path("templates/renpy-icon.png")
+        default_presplash = plat.path("templates/renpy-presplash.jpg")
 
         public_dir = None
         private_dir = None
@@ -289,8 +300,8 @@ def build(iface, directory, commands):
 
     else:
         manifest_extra = ""
-        default_icon = "templates/pygame-icon.png"
-        default_presplash = "templates/pygame-presplash.jpg"
+        default_icon = plat.path("templates/pygame-icon.png")
+        default_presplash = plat.path("templates/pygame-presplash.jpg")
 
         if config.layout == "internal":
             private_dir = directory
@@ -335,7 +346,7 @@ def build(iface, directory, commands):
         config = config)
 
     try:
-        os.unlink("build.xml")
+        os.unlink(plat.path("build.xml"))
     except:
         pass
 
@@ -346,7 +357,7 @@ def build(iface, directory, commands):
     iface.info("Updating build files.")
 
     # Update the project to a recent version.
-    subprocess.call([plat.android, "update", "project", "-p", '.', '-t', 'android-8', '-n', versioned_name,
+    iface.call([plat.android, "update", "project", "-p", '.', '-t', 'android-8', '-n', versioned_name,
         # "--library", "android-sdk/extras/google/play_licensing/library",
         "--library", "android-sdk/extras/google/play_apk_expansion/downloader_library",
         ])
@@ -354,7 +365,7 @@ def build(iface, directory, commands):
 
     iface.info("Creating assets directory.")
 
-    if os.path.isdir("assets"):
+    if os.path.isdir(plat.path("assets")):
         shutil.rmtree("assets")
 
     if assets_dir is not None:
@@ -363,16 +374,16 @@ def build(iface, directory, commands):
         os.mkdir("assets")
 
     # Copy in the Ren'Py common assets.
-    if os.path.exists("renpy/common"):
+    if os.path.exists(plat.path("renpy/common")):
 
-        if os.path.isdir("assets/common"):
-            shutil.rmtree("assets/common")
+        if os.path.isdir(plat.path("assets/common")):
+            shutil.rmtree(plat.path("assets/common"))
 
         make_tree("renpy/common", "assets/common")
 
         # Ren'Py uses a lot of names that don't work as assets. Auto-rename
         # them.
-        for dirpath, dirnames, filenames in os.walk("assets", topdown=False):
+        for dirpath, dirnames, filenames in os.walk(plat.path("assets"), topdown=False):
 
             for fn in filenames + dirnames:
                 if fn[0] == ".":
@@ -388,16 +399,16 @@ def build(iface, directory, commands):
         iface.info("Creating expansion file.")
         expansion_file = "main.{}.{}.obb".format(config.numeric_version, config.package)
 
-        zf = zipfile.ZipFile(expansion_file, "w", zipfile.ZIP_STORED)
+        zf = zipfile.ZipFile(plat.path(expansion_file), "w", zipfile.ZIP_STORED)
         zip_directory(zf, "assets")
         zf.close()
 
         # Delete and re-make the assets directory.
-        shutil.rmtree("assets")
-        os.mkdir("assets")
+        shutil.rmtree(plat.path("assets"))
+        os.mkdir(plat.path("assets"))
 
         # Write the file size into DownloaderActivity.
-        file_size = os.path.getsize(expansion_file)
+        file_size = os.path.getsize(plat.path(expansion_file))
 
         edit_file("src/org/renpy/android/DownloaderActivity.java",
             r'    private int fileVersion =',
@@ -417,26 +428,26 @@ def build(iface, directory, commands):
     if private_dir is not None:
         private_dirs.append(private_dir)
 
-    if os.path.exists("engine-private"):
-        private_dirs.append("engine-private")
+    if os.path.exists(plat.path("engine-private")):
+        private_dirs.append(plat.path("engine-private"))
 
-    make_tar("assets/private.mp3", private_dirs)
+    make_tar(plat.path("assets/private.mp3"), private_dirs)
 
     if public_dir is not None:
         iface.info("Packaging external data.")
-        make_tar("assets/public.mp3", [ public_dir ])
+        make_tar(plat.path("assets/public.mp3"), [ public_dir ])
 
     # Copy over the icon and presplash files.
-    shutil.copy(join_and_check(directory, "android-icon.png") or default_icon, "res/drawable/icon.png")
-    shutil.copy(join_and_check(directory, "android-presplash.jpg") or default_presplash, "res/drawable/presplash.jpg")
+    shutil.copy(join_and_check(directory, "android-icon.png") or default_icon, plat.path("res/drawable/icon.png"))
+    shutil.copy(join_and_check(directory, "android-presplash.jpg") or default_presplash, plat.path("res/drawable/presplash.jpg"))
 
     ouya_icon = join_and_check(directory, "ouya-icon.png") or join_and_check(directory, "ouya_icon.png")
 
     if ouya_icon:
-        if not os.path.exists("res/drawable-xhdpi"):
-            os.mkdir("res/drawable-xhdpi")
+        if not os.path.exists(plat.path("res/drawable-xhdpi")):
+            os.mkdir(plat.path("res/drawable-xhdpi"))
 
-        shutil.copy(ouya_icon, "res/drawable-xhdpi/ouya_icon.png")
+        shutil.copy(ouya_icon, plat.path("res/drawable-xhdpi/ouya_icon.png"))
 
     # Build.
     iface.info("I'm using Ant to build the package.")

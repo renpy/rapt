@@ -37,7 +37,7 @@ class test {
 }
 """
 
-    f = file("test.java", "w")
+    f = file(plat.path("test.java"), "w")
     f.write(SOURCE)
     f.close()
 
@@ -57,12 +57,12 @@ Without a working JDK, I can't continue.
 
     interface.success("The JDK is present and working. Good!")
 
-    os.unlink("test.java")
-    os.unlink("test.class")
+    os.unlink(plat.path("test.java"))
+    os.unlink(plat.path("test.class"))
 
 def unpack_sdk(interface):
 
-    if os.path.exists("android-sdk"):
+    if os.path.exists(plat.path("android-sdk")):
         interface.success("The Android SDK has already been unpacked.")
         return
 
@@ -88,15 +88,15 @@ def unpack_sdk(interface):
     interface.info("I'm extracting the Android SDK.")
 
     if archive.endswith(".tgz"):
-        tf = tarfile.open(archive, "r:*")
-        tf.extractall()
+        tf = tarfile.open(plat.path(archive), "r:*")
+        tf.extractall(plat.path("."))
         tf.close()
     else:
-        zf = zipfile.ZipFile(archive)
-        zf.extractall()
+        zf = zipfile.ZipFile(plat.path(archive))
+        zf.extractall(plat.path("."))
         zf.close()
 
-    os.rename(unpacked, "android-sdk")
+    os.rename(plat.path(unpacked), plat.path("android-sdk"))
 
     interface.success("I've finished unpacking the Android SDK.")
 
@@ -127,19 +127,19 @@ def get_packages(interface):
 
     packages = [ ]
 
-    if not os.path.exists("android-sdk/platforms/android-8"):
+    if not os.path.exists(plat.path("android-sdk/platforms/android-8")):
         packages.append("android-8")
 
-    if not os.path.exists("android-sdk/platforms/android-15"):
+    if not os.path.exists(plat.path("android-sdk/platforms/android-15")):
         packages.append("android-15")
 
-    if not os.path.exists("android-sdk/platform-tools"):
+    if not os.path.exists(plat.path("android-sdk/platform-tools")):
         packages.append("platform-tools")
 
-    if not os.path.exists("android-sdk/extras/google/play_licensing"):
+    if not os.path.exists(plat.path("android-sdk/extras/google/play_licensing")):
         packages.append("extra-google-play_licensing")
 
-    if not os.path.exists("android-sdk/extras/google/play_apk_expansion"):
+    if not os.path.exists(plat.path("android-sdk/extras/google/play_apk_expansion")):
         packages.append("extra-google-play_apk_expansion")
 
     # TODO: Install the play_ libraries, and maybe update them.
@@ -156,25 +156,25 @@ def get_packages(interface):
     interface.info("I'm updating the library packages.")
 
     if "extra-google-play_apk_expansion" in packages:
-        with open("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties", "r") as f:
+        with open(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties"), "r") as f:
             data = f.read()
 
         data = data.replace("../market_licensing", "../../play_licensing/library")
 
-        with open("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties", "w") as f:
+        with open(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties"), "w") as f:
             f.write(data)
 
     run(interface, plat.android, "update", "project", "-p", "android-sdk/extras/google/play_licensing/library")
     run(interface, plat.android, "update", "project", "-p", "android-sdk/extras/google/play_apk_expansion/downloader_library")
 
-    if os.path.exists("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9"):
-        shutil.rmtree("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9")
+    if os.path.exists(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9")):
+        shutil.rmtree(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9"))
 
     interface.success("I've finished installing the required Android packages.")
 
 def generate_keys(interface):
 
-    if os.path.exists("android.keystore"):
+    if os.path.exists(plat.path("android.keystore")):
         interface.info("You've already created an Android keystore, so I won't create a new one for you.")
         return
 
@@ -204,7 +204,7 @@ Will you make a backup of android.keystore, and keep it in a safe place?"""):
 
     run(interface, plat.keytool, "-genkey", "-keystore", "android.keystore", "-alias", "android", "-keyalg", "RSA", "-keysize", "2048", "-keypass", "android", "-storepass", "android", "-dname", dname, "-validity", "20000")
 
-    f = file("local.properties", "a")
+    f = file(plat.path("local.properties"), "a")
     print >>f, "key.alias=android"
     print >>f, "key.store.password=android"
     print >>f, "key.alias.password=android"
@@ -219,7 +219,7 @@ def install_sdk(interface):
     unpack_sdk(interface)
 
     if plat.macintosh or plat.linux:
-        os.chmod("android-sdk/tools/android", 0755)
+        os.chmod(plat.path("android-sdk/tools/android"), 0755)
 
     get_packages(interface)
     generate_keys(interface)
