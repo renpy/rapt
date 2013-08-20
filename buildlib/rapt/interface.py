@@ -44,6 +44,15 @@ class Interface(object):
         self.write(prompt, Fore.GREEN + Style.BRIGHT)
         print
 
+    def final_success(self, prompt):
+        """
+        Displays `prompt` as the last success message of an operation.
+        """
+
+        print
+        self.write(prompt, Fore.GREEN + Style.BRIGHT)
+        print
+
 
     def yesno(self, prompt, default=None):
         """
@@ -178,7 +187,8 @@ class Interface(object):
 
     def call(self, args):
         """
-        Executes `args` as a program.
+        Executes `args` as a program. Raises subprocess.CalledProgramError
+        if the program fails.
         """
 
         subprocess.check_call(args, cwd=plat.RAPT_PATH)

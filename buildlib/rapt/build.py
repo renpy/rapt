@@ -8,6 +8,7 @@ import os
 import shutil
 import time
 import zipfile
+import subprocess
 
 import rapt.plat as plat
 
@@ -468,7 +469,7 @@ def build(iface, directory, commands):
         if expansion_file is not None:
             os.rename(expansion_file, "bin/" + expansion_file)
 
-    except:
+    except subprocess.CalledProcessError:
         iface.fail("The build seems to have failed.")
 
-    iface.success("It looks like the build succeeded.")
+    iface.final_success("The build seems to have succeeded.")

@@ -224,5 +224,5 @@ def install_sdk(interface):
     get_packages(interface)
     generate_keys(interface)
 
-    interface.success("It looks like you're ready to start packaging games.")
+    interface.final_success("It looks like you're ready to start packaging games.")
 
