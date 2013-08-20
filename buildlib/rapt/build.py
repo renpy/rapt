@@ -367,12 +367,12 @@ def build(iface, directory, commands):
     iface.info("Creating assets directory.")
 
     if os.path.isdir(plat.path("assets")):
-        shutil.rmtree("assets")
+        shutil.rmtree(plat.path("assets"))
 
     if assets_dir is not None:
-        make_tree(assets_dir, "assets")
+        make_tree(assets_dir, plat.path("assets"))
     else:
-        os.mkdir("assets")
+        os.mkdir(plat.path("assets"))
 
     # Copy in the Ren'Py common assets.
     if os.path.exists(plat.path("renpy/common")):
@@ -453,22 +453,22 @@ def build(iface, directory, commands):
     # Build.
     iface.info("I'm using Ant to build the package.")
 
-    # Clean is required
     try:
+
+        # Clean is required, so we don't use old code.
         iface.call([plat.ant, "clean"] +  commands)
-        iface.success("It looks like the build succeeded.")
+
+        if (expansion_file is not None) and ("install" in commands):
+            iface.info("Uploading expansion file.")
+
+            dest = "/mnt/sdcard/{}".format(expansion_file)
+
+            iface.call([ plat.adb, "push", expansion_file, dest ])
+
+        if expansion_file is not None:
+            os.rename(expansion_file, "bin/" + expansion_file)
+
     except:
         iface.fail("The build seems to have failed.")
 
-
-    if (expansion_file is not None) and ("install" in commands):
-        iface.info("Uploading expansion file.")
-
-        dest = "/mnt/sdcard/{}".format(expansion_file)
-
-        iface.call([ plat.adb, "push", expansion_file, dest ])
-
-        iface.success("Uploaded the expansion file.")
-
-    if expansion_file is not None:
-        os.rename(expansion_file, "bin/" + expansion_file)
+    iface.success("It looks like the build succeeded.")
