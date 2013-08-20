@@ -457,14 +457,14 @@ def build(iface, directory, commands):
     try:
 
         # Clean is required, so we don't use old code.
-        iface.call([plat.ant, "clean"] +  commands)
+        iface.call([plat.ant, "clean"] +  commands, cancel=True)
 
         if (expansion_file is not None) and ("install" in commands):
             iface.info("Uploading expansion file.")
 
             dest = "/mnt/sdcard/{}".format(expansion_file)
 
-            iface.call([ plat.adb, "push", expansion_file, dest ])
+            iface.call([ plat.adb, "push", expansion_file, dest ], cancel=True)
 
         if expansion_file is not None:
             os.rename(expansion_file, "bin/" + expansion_file)
