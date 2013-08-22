@@ -5,18 +5,36 @@ import os
 import zipfile
 import tarfile
 import shutil
+import subprocess
 
 import rapt.plat as plat
 
 
 ##############################################################################
 def run(interface, *args):
+    """
+    Runs the supplied arguments.
+    """
+
     try:
         interface.call(args)
         return True
-    except:
-        traceback.print_exc()
+    except subprocess.CalledProcessError:
         return False
+
+
+def run_slow(interface, *args):
+    """
+    Runs the supplied arguments in a manner that lets the program
+    be cancelled.
+    """
+
+    try:
+        interface.call(args, cancel=True)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
 
 ##############################################################################
 def check_java(interface):
@@ -40,7 +58,7 @@ class test {
     f.write(SOURCE)
     f.close()
 
-    if not run(interface, plat.javac, "test.java"):
+    if not run_slow(interface, plat.javac, "test.java"):
         interface.info("""\
 I was unable to use javac to compile a test file. If you haven't installed
 the JDK yet, please download it from:
@@ -149,7 +167,7 @@ def get_packages(interface):
 
     interface.info("I'm about to download and install the required Android packages. This might take a while.")
 
-    if not run(interface, plat.android, "update", "sdk", "-u", "-a", "-t", ",".join(packages)):
+    if not run_slow(interface, plat.android, "update", "sdk", "-u", "-a", "-t", ",".join(packages)):
         interface.fail("I was unable to install the required Android packages.")
 
     interface.info("I'm updating the library packages.")
@@ -219,6 +237,7 @@ def install_sdk(interface):
 
     if plat.macintosh or plat.linux:
         os.chmod(plat.path("android-sdk/tools/android"), 0755)
+        os.chmod(plat.path("android-sdk/tools/zipalign"), 0755)
 
     get_packages(interface)
     generate_keys(interface)
