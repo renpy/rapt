@@ -4,7 +4,6 @@ import traceback
 import os
 import zipfile
 import tarfile
-import urllib
 import shutil
 
 import rapt.plat as plat
@@ -83,7 +82,7 @@ def unpack_sdk(interface):
 
     interface.info("I'm downloading the Android SDK. This might take a while.")
 
-    urllib.urlretrieve(url, archive)
+    interface.download(url, archive)
 
     interface.info("I'm extracting the Android SDK.")
 
@@ -111,7 +110,7 @@ def unpack_ant(interface):
 
     interface.info("I'm downloading Apache Ant. This might take a while.")
 
-    urllib.urlretrieve(url, archive)
+    interface.download(url, archive)
 
     interface.info("I'm extracting Apache Ant.")
 

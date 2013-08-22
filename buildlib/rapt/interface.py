@@ -3,6 +3,7 @@ import textwrap
 import sys
 import time
 import subprocess
+import urllib
 
 import plat
 
@@ -196,3 +197,10 @@ class Interface(object):
         """
 
         subprocess.check_call(args, cwd=plat.RAPT_PATH)
+
+    def download(self, url, dest):
+        """
+        Downloads `url` to `dest`.
+        """
+
+        urllib.urlretrieve(url, dest)
