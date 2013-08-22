@@ -55,9 +55,19 @@ class Interface(object):
         print
 
 
-    def yesno(self, prompt, default=None):
+    def yesno(self, prompt):
         """
         Prompts the user for a response to a yes or no question.
+        """
+
+        return self.yesno_choice(prompt)
+
+    def yesno_choice(self, prompt, default=None):
+        """
+        Prompts the user for a response to a yes or no question.
+
+        This can also take a default, and indicates which of yes or no
+        is currently selected, if any.
         """
 
         print
@@ -84,7 +94,16 @@ class Interface(object):
 
         print
 
+
+
     def terms(self, url, prompt):
+        """
+        Displays `url` to the user, and then prompts the user to accept the
+        terms and conditions.
+
+        If the user doesn't accept, gives up.
+        """
+
         self.info("Opening {} in a web browser.".format(url))
 
         webbrowser.open_new(url)

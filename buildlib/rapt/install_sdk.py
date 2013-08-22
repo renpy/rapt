@@ -100,7 +100,7 @@ def unpack_sdk(interface):
 
     interface.info("I'm downloading the Android SDK. This might take a while.")
 
-    interface.download(url, archive)
+    interface.download(url, plat.path(archive))
 
     interface.info("I'm extracting the Android SDK.")
 
@@ -128,15 +128,15 @@ def unpack_ant(interface):
 
     interface.info("I'm downloading Apache Ant. This might take a while.")
 
-    interface.download(url, archive)
+    interface.download(url, plat.path(archive))
 
     interface.info("I'm extracting Apache Ant.")
 
-    tf = tarfile.open(archive, "r:*")
+    tf = tarfile.open(plat.path(archive), "r:*")
     tf.extractall()
     tf.close()
 
-    os.rename(unpacked, "apache-ant")
+    os.rename(plat.path(unpacked), plat.path("apache-ant"))
 
     interface.success("I've finished unpacking Apache Ant.")
 
