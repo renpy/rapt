@@ -133,7 +133,7 @@ def unpack_ant(interface):
     interface.info("I'm extracting Apache Ant.")
 
     tf = tarfile.open(plat.path(archive), "r:*")
-    tf.extractall()
+    tf.extractall(plat.path("."))
     tf.close()
 
     os.rename(plat.path(unpacked), plat.path("apache-ant"))
