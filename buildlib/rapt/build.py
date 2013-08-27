@@ -370,44 +370,51 @@ def build(iface, directory, commands):
     if os.path.isdir(plat.path("assets")):
         shutil.rmtree(plat.path("assets"))
 
-    if assets_dir is not None:
-        make_tree(assets_dir, plat.path("assets"))
-    else:
-        os.mkdir(plat.path("assets"))
+    def make_assets():
 
-    # Copy in the Ren'Py common assets.
-    if os.path.exists(plat.path("renpy/common")):
+        if assets_dir is not None:
+            make_tree(assets_dir, plat.path("assets"))
+        else:
+            os.mkdir(plat.path("assets"))
 
-        if os.path.isdir(plat.path("assets/common")):
-            shutil.rmtree(plat.path("assets/common"))
+        # Copy in the Ren'Py common assets.
+        if os.path.exists(plat.path("renpy/common")):
 
-        make_tree("renpy/common", "assets/common")
+            if os.path.isdir(plat.path("assets/common")):
+                shutil.rmtree(plat.path("assets/common"))
 
-        # Ren'Py uses a lot of names that don't work as assets. Auto-rename
-        # them.
-        for dirpath, dirnames, filenames in os.walk(plat.path("assets"), topdown=False):
+            make_tree("renpy/common", "assets/common")
 
-            for fn in filenames + dirnames:
-                if fn[0] == ".":
-                    continue
+            # Ren'Py uses a lot of names that don't work as assets. Auto-rename
+            # them.
+            for dirpath, dirnames, filenames in os.walk(plat.path("assets"), topdown=False):
 
-                old = os.path.join(dirpath, fn)
-                new = os.path.join(dirpath, "x-" + fn)
+                for fn in filenames + dirnames:
+                    if fn[0] == ".":
+                        continue
 
-                plat.rename(old, new)
+                    old = os.path.join(dirpath, fn)
+                    new = os.path.join(dirpath, "x-" + fn)
 
+                    plat.rename(old, new)
+
+    iface.background(make_assets)
 
     if config.expansion:
         iface.info("Creating expansion file.")
         expansion_file = "main.{}.{}.obb".format(config.numeric_version, config.package)
 
-        zf = zipfile.ZipFile(plat.path(expansion_file), "w", zipfile.ZIP_STORED)
-        zip_directory(zf, "assets")
-        zf.close()
+        def make_expansion():
 
-        # Delete and re-make the assets directory.
-        shutil.rmtree(plat.path("assets"))
-        os.mkdir(plat.path("assets"))
+            zf = zipfile.ZipFile(plat.path(expansion_file), "w", zipfile.ZIP_STORED)
+            zip_directory(zf, "assets")
+            zf.close()
+
+            # Delete and re-make the assets directory.
+            shutil.rmtree(plat.path("assets"))
+            os.mkdir(plat.path("assets"))
+
+        iface.background(make_expansion)
 
         # Write the file size into DownloaderActivity.
         file_size = os.path.getsize(plat.path(expansion_file))
@@ -433,7 +440,10 @@ def build(iface, directory, commands):
     if os.path.exists(plat.path("engine-private")):
         private_dirs.append(plat.path("engine-private"))
 
-    make_tar(plat.path("assets/private.mp3"), private_dirs)
+    def pack():
+        make_tar(plat.path("assets/private.mp3"), private_dirs)
+
+    iface.background(pack)
 
     if public_dir is not None:
         iface.info("Packaging external data.")

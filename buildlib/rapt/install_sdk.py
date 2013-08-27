@@ -158,7 +158,7 @@ def get_packages(interface):
     if not os.path.exists(plat.path("android-sdk/platforms/android-15")):
         packages.append("android-15")
 
-    if not os.path.exists(plat.path("android-sdk/platform-tools")):
+    if not os.path.exists(plat.path("android-sdk/platform-tools/")):
         packages.append("platform-tools")
 
     if not os.path.exists(plat.path("android-sdk/extras/google/play_licensing")):
@@ -166,8 +166,6 @@ def get_packages(interface):
 
     if not os.path.exists(plat.path("android-sdk/extras/google/play_apk_expansion")):
         packages.append("extra-google-play_apk_expansion")
-
-    # TODO: Install the play_ libraries, and maybe update them.
 
     if not packages:
         interface.success("The required Android packages are already installed.")
