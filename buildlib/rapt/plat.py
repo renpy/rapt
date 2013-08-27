@@ -77,5 +77,15 @@ def path(path):
     rv = os.path.join(RAPT_PATH, path)
     return rv
 
+def rename(src, dst):
+    """
+    Renames src to dst.
+    """
 
+    if os.path.isdir(dst):
+        shutil.rmtree(dst)
+    elif os.path.exists(dst):
+        os.unlink(dst)
+
+    os.rename(src, dst)
 

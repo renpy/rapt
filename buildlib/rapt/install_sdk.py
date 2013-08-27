@@ -113,7 +113,7 @@ def unpack_sdk(interface):
         zf.extractall(plat.path("."))
         zf.close()
 
-    os.rename(plat.path(unpacked), plat.path("android-sdk"))
+    plat.rename(plat.path(unpacked), plat.path("android-sdk"))
 
     interface.success("I've finished unpacking the Android SDK.")
 
@@ -136,7 +136,7 @@ def unpack_ant(interface):
     tf.extractall(plat.path("."))
     tf.close()
 
-    os.rename(plat.path(unpacked), plat.path("apache-ant"))
+    plat.rename(plat.path(unpacked), plat.path("apache-ant"))
 
     interface.success("I've finished unpacking Apache Ant.")
 

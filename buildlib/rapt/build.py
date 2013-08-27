@@ -394,7 +394,7 @@ def build(iface, directory, commands):
                 old = os.path.join(dirpath, fn)
                 new = os.path.join(dirpath, "x-" + fn)
 
-                os.rename(old, new)
+                plat.rename(old, new)
 
 
     if config.expansion:
@@ -467,7 +467,7 @@ def build(iface, directory, commands):
             iface.call([ plat.adb, "push", expansion_file, dest ], cancel=True)
 
         if expansion_file is not None:
-            os.rename(expansion_file, "bin/" + expansion_file)
+            plat.rename(expansion_file, "bin/" + expansion_file)
 
     except subprocess.CalledProcessError:
         iface.fail("The build seems to have failed.")
