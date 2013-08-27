@@ -104,14 +104,18 @@ def unpack_sdk(interface):
 
     interface.info("I'm extracting the Android SDK.")
 
-    if archive.endswith(".tgz"):
-        tf = tarfile.open(plat.path(archive), "r:*")
-        tf.extractall(plat.path("."))
-        tf.close()
-    else:
-        zf = zipfile.ZipFile(plat.path(archive))
-        zf.extractall(plat.path("."))
-        zf.close()
+    def extract():
+
+        if archive.endswith(".tgz"):
+            tf = tarfile.open(plat.path(archive), "r:*")
+            tf.extractall(plat.path("."))
+            tf.close()
+        else:
+            zf = zipfile.ZipFile(plat.path(archive))
+            zf.extractall(plat.path("."))
+            zf.close()
+
+    interface.background(extract)
 
     plat.rename(plat.path(unpacked), plat.path("android-sdk"))
 
@@ -132,9 +136,13 @@ def unpack_ant(interface):
 
     interface.info("I'm extracting Apache Ant.")
 
-    tf = tarfile.open(plat.path(archive), "r:*")
-    tf.extractall(plat.path("."))
-    tf.close()
+    def extract():
+
+        tf = tarfile.open(plat.path(archive), "r:*")
+        tf.extractall(plat.path("."))
+        tf.close()
+
+    interface.background(extract)
 
     plat.rename(plat.path(unpacked), plat.path("apache-ant"))
 

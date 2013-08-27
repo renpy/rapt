@@ -223,3 +223,13 @@ class Interface(object):
         """
 
         urllib.urlretrieve(url, dest)
+
+    def background(f):
+        """
+        Runs f in the background, if possible. Returns when f has finished.
+
+        (This is used in the Ren'Py launcher to update the screen while
+        expensive operations are occuring.)
+        """
+
+        f()
