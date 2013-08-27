@@ -118,7 +118,7 @@ def unpack_sdk(interface):
     interface.success("I've finished unpacking the Android SDK.")
 
 def unpack_ant(interface):
-    if os.path.exists("apache-ant"):
+    if os.path.exists(plat.path("apache-ant")):
         interface.success("Apache ANT has already been unpacked.")
         return
 
