@@ -58,6 +58,8 @@ elif platform.mac_ver()[0]:
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
 
+    os.environ.setdefault("JAVA_HOME", "/usr")
+
 else:
     linux = True
     android = "android-sdk/tools/android"

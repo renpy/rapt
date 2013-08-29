@@ -11,28 +11,28 @@ import rapt.plat as plat
 
 
 ##############################################################################
-def run(interface, *args):
+def run(interface, *args, **kwargs):
     """
     Runs the supplied arguments.
     """
 
     try:
-        interface.call(args)
+        interface.call(args, **kwargs)
         return True
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, OSError):
         return False
 
 
-def run_slow(interface, *args):
+def run_slow(interface, *args, **kwargs):
     """
     Runs the supplied arguments in a manner that lets the program
     be cancelled.
     """
 
     try:
-        interface.call(args, cancel=True)
+        interface.call(args, cancel=True, **kwargs)
         return True
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, OSError):
         return False
 
 
@@ -58,18 +58,15 @@ class test {
     f.write(SOURCE)
     f.close()
 
-    if not run_slow(interface, plat.javac, "test.java"):
-        interface.info("""\
+    if not run_slow(interface, plat.javac, "test.java", use_path=True):
+        interface.fail("""\
 I was unable to use javac to compile a test file. If you haven't installed
-the JDK yet, please download it from:
+the Java Development Kit yet, please download it from:
 
 http://www.oracle.com/technetwork/java/javase/downloads/index.html
 
 The JDK is different from the JRE, so it's possible you have Java
-without having the JDK.""")
-
-        interface.fail("""\
-Without a working JDK, I can't continue.
+without having the JDK. Without a working JDK, I can't continue.
 """)
 
     interface.success("The JDK is present and working. Good!")
@@ -225,7 +222,8 @@ Will you make a backup of android.keystore, and keep it in a safe place?"""):
 
     dname = "CN=" + org
 
-    run(interface, plat.keytool, "-genkey", "-keystore", "android.keystore", "-alias", "android", "-keyalg", "RSA", "-keysize", "2048", "-keypass", "android", "-storepass", "android", "-dname", dname, "-validity", "20000")
+    if not run(interface, plat.keytool, "-genkey", "-keystore", "android.keystore", "-alias", "android", "-keyalg", "RSA", "-keysize", "2048", "-keypass", "android", "-storepass", "android", "-dname", dname, "-validity", "20000", use_path=True):
+        interface.fail("Could not create android.keystore. Is keytool in your path?")
 
     f = file(plat.path("local.properties"), "a")
     print >>f, "key.alias=android"

@@ -205,7 +205,7 @@ class Interface(object):
 
         sys.exit(-1)
 
-    def call(self, args, cancel=False):
+    def call(self, args, cancel=False, use_path=False):
         """
         Executes `args` as a program. Raises subprocess.CalledProgramError
         if the program fails.
@@ -213,6 +213,9 @@ class Interface(object):
         `cancel`
             If true, this is an expensive call that the user may be offered
             the opportunity to cancel.
+
+        `use_path`
+            If true, searches the system path for the file.
         """
 
         subprocess.check_call(args, cwd=plat.RAPT_PATH)
