@@ -22,14 +22,11 @@ package org.renpy.android;
 public class DownloaderService extends com.google.android.vending.expansion.downloader.impl.DownloaderService {
 
 	// EDIT THIS: Replace the string with the public key given to you by the Google Play developer console.
-    private static final String BASE64_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnuEWAcDOIVnMiE+21oKAG2SJ0F150eAioAqtjAoGViBzu0cMiJBvJG/O6ji57BytiVn67qzqOeKjRwl0H0xL1OWyEA3UKo1K80SK242c3agCHxfoMoPwzGfk4BgjzXJ7dRZTjbYaw4tHwhoRxCxjEDow0xgvhwphyyoFSGBNExdSLY/bKLjxjWzgN9hN4Ot3eYLcv+rjvVnRDLHKhrFOWKgvUqDrYCAL1Wok+fXSKK/ZE25Exx79KJ1PXSCTv9bn8vtB6n1xjLg7UYMzimZwmbP03uGL3W+zKtbq+Fk/LMY8YO7pjyk/Gz9DZZvcMdTARDntQF8sD0tWrwlaLhIxawIDAQAB";
-
+    private static final String BASE64_PUBLIC_KEY = "CHANGE_THIS";
 
     // EDIT THIS: Change these random numbers to something that only you know. This keeps
     // data downloaded from Google Play secure.
-    private static final byte[] SALT = new byte[] {
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
-    };
+    private static final byte[] SALT = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
 
     /**
      * This public key comes from your Android Market publisher account, and it
