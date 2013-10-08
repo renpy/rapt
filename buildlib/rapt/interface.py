@@ -227,7 +227,7 @@ class Interface(object):
 
         urllib.urlretrieve(url, dest)
 
-    def background(f):
+    def background(self, f):
         """
         Runs f in the background, if possible. Returns when f has finished.
 

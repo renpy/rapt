@@ -17,6 +17,8 @@ class Configuration(object):
         self.layout = None
         self.source = False
         self.expansion = False
+        self.google_play_key = None
+        self.google_play_salt = None
 
         try:
             with file(os.path.join(directory, ".android.json"), "r") as f:
@@ -85,8 +87,8 @@ This should be an integer number, and the value should increase between versions
         ], config.orientation)
 
     config.expansion = interface.choice("Would you like to create an expansion APK?", [
-        (False, "No. Size limit of 50 MB on Google Play, but can be distributed through other store and sideloaded."),
-        (True, "Yes. 2 GB size limit, but won't work outside of Google Play.")
+        (False, "No. Size limit of 50 MB on Google Play, but can be distributed through other stores and sideloaded."),
+        (True, "Yes. 2 GB size limit, but won't work outside of Google Play. (Read the documentation to get this to work.)")
         ], config.expansion)
 
     if not renpy:

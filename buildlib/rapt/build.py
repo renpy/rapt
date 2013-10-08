@@ -430,6 +430,18 @@ def build(iface, directory, commands):
     else:
         expansion_file = None
 
+    # Update the GP key and salt.
+    if config.google_play_key:
+        edit_file("src/org/renpy/android/DownloaderService.java",
+            r'    private static final String BASE64_PUBLIC_KEY',
+            '    private static final String BASE64_PUBLIC_KEY = "%s";' % config.google_play_key)
+
+    if config.google_play_salt:
+        edit_file("src/org/renpy/android/DownloaderService.java",
+            r'    private static final byte\[\] SALT',
+            '    private static final byte[] SALT = new byte[] { %s };' % config.google_play_salt)
+
+
     iface.info("Packaging internal data.")
 
     private_dirs = [ 'private' ]
@@ -474,10 +486,10 @@ def build(iface, directory, commands):
 
             dest = "/mnt/sdcard/{}".format(expansion_file)
 
-            iface.call([ plat.adb, "push", expansion_file, dest ], cancel=True)
+            iface.call([ plat.adb, "push", plat.path(expansion_file), dest ], cancel=True)
 
         if expansion_file is not None:
-            plat.rename(expansion_file, "bin/" + expansion_file)
+            plat.rename(plat.path(expansion_file), plat.path("bin/" + expansion_file))
 
     except subprocess.CalledProcessError:
         iface.fail("The build seems to have failed.")
