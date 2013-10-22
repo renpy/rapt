@@ -5,7 +5,7 @@ try () {
 }
 
 if [ "$1" != "" ]; then
-    DISTRO="rapt-$1"    
+    DISTRO="rapt-$1"
 else
     DISTRO=renpy
 fi
@@ -45,8 +45,14 @@ fi
 try mv "$ROOT/python-for-android/dist/$DISTRO" "$DISTROROOT"
 
 # Delete unneeded librarys.
-try rm "$DISTROROOT/libs/armeabi/libsdl_mixer.so"
-try rm "$DISTROROOT/libs/armeabi/libsqlite3.so"
+
+if [ -e "$DISTROROOT/libs/armeabi/libsdl_mixer.so" ]; then
+    try rm "$DISTROROOT/libs/armeabi/libsdl_mixer.so"
+fi
+
+if [ -e "$DISTROROOT/libs/armeabi/libsqlite3.so" ]; then
+    try rm "$DISTROROOT/libs/armeabi/libsqlite3.so"
+fi
 
 # Copy the common files over.
 try mkdir -p "$DISTROROOT/renpy"
