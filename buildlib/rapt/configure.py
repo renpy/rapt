@@ -1,5 +1,6 @@
 import json
 import os
+import plat
 
 class Configuration(object):
 
@@ -54,7 +55,7 @@ def set_version(config, value):
 
 def configure(interface, directory):
 
-    renpy = os.path.exists("renpy")
+    renpy = os.path.exists(plat.path("renpy"))
 
     config = Configuration(directory)
     config.name = interface.input("""What is the full name of your application? This name will appear in the list of installed applications.""", config.name)
