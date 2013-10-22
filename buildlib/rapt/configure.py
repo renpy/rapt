@@ -118,7 +118,7 @@ Please enter a space-separated list of permissions.""", permissions)
 
         if not config.expansion:
             internet = "INTERNET" in config.permissions
-            internet = interface.yesno("Do you want to allow the app to access the Internet?", internet)
+            internet = interface.yesno_choice("Do you want to allow the app to access the Internet?", internet)
         else:
             internet = False # included in template.
 
