@@ -44,7 +44,11 @@ fi
 
 try mv "$ROOT/python-for-android/dist/$DISTRO" "$DISTROROOT"
 
-# Delete unneeded librarys.
+# Delete unneeded librarys and the python install.
+
+if [ -e "$DISTROROOT/python-install" ]; then
+    try rm -Rf "$DISTROROOT/python-install"
+fi
 
 if [ -e "$DISTROROOT/libs/armeabi/libsdl_mixer.so" ]; then
     try rm "$DISTROROOT/libs/armeabi/libsdl_mixer.so"

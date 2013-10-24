@@ -10,8 +10,8 @@ try ./build_renpy.sh
 ROOT=$(dirname $(readlink -f $0))
 D=dist/renpy
 
-# try ln -s "$ROOT/android-sdk" "$D"
-# try ln -s "$ROOT/apache-ant" "$D"
+try ln -s "$ROOT/android-sdk" "$D"
+try ln -s "$ROOT/apache-ant" "$D"
 
 try cd "$D"
 
