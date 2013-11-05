@@ -68,8 +68,14 @@ def configure(interface, directory):
     config.package = interface.input("""\
 What is the name of the package?
 
-This is usually of the form com.domain.program or com.domain.email.program. It
-must only contain ASCII letters and dots.""", config.package)
+This is usually of the form com.domain.program or com.domain.email.program. It may only contain ASCII letters and dots. It must contain at least one dot.""", config.package)
+
+    if " " in config.package:
+        interface.fail("The package name may not contain spaces.")
+
+    if "." not in config.package:
+        interface.fail("The package name must contain at least one dot.")
+
 
     version = interface.input("""\
 What is the application's version?
