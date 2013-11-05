@@ -19,5 +19,8 @@ export PGS4A_NO_TERMS=1
 (echo no) | try ./android.py installsdk
 
 try cp "$ROOT/local.properties" .
+try touch "android.keystore"
 
-try ./android.py build $1 debug install
+if [ "$1" != "" ]; then
+    try ./android.py build $1 debug install
+fi
