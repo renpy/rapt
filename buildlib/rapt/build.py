@@ -264,6 +264,71 @@ def zip_directory(zf, dirname):
             fn = os.path.join(dirname, fn)
             zf.write(fn)
 
+def copy_icon(directory, name, default):
+    """
+    Copys icon or presplash files ending with `name` found in `directory` to
+    the appropriate res/drawables directory. If the file doesn't exist,
+    copies in default instead.
+    """
+
+    def copy(src, dst):
+        try:
+            os.makedirs(os.path.dirname(dst))
+        except:
+            pass
+
+        shutil.copy(src, dst)
+
+    res = plat.path("res")
+
+    # Clean out old files.
+    for i in os.listdir(res):
+        if not i.startswith("drawable"):
+            continue
+
+        fn = os.path.join(res, i, name)
+
+        if os.path.exists(fn):
+            os.unlink(fn)
+
+    found = False
+
+    # Copy files, if any are found.
+    for i in os.listdir(directory):
+
+        fullfn = os.path.join(directory, i)
+        fn = i.lower()
+
+        if not fn.startswith("android-"):
+            continue
+
+        if not fn.endswith("-" + name):
+            continue
+
+        prefix, rest = fn.split("-", 1)
+
+        if "-" in rest:
+            selector, _name = rest.rsplit("-", 1)
+
+            if selector not in ["ldpi", "mdpi", "hdpi", "xhdpi", "xxhdpi", "tvdpi" ]:
+                continue
+
+            dest = os.path.join(res, "drawable-" + selector, name)
+        else:
+            dest = os.path.join(res, "drawable", rest)
+
+        copy(fullfn, dest)
+
+        found = True
+
+
+    if found:
+        return
+
+    # If no files are found, copy over the default.
+    copy(default, os.path.join(res, "drawable", name))
+
+
 
 
 def build(iface, directory, commands):
@@ -462,9 +527,10 @@ def build(iface, directory, commands):
         make_tar(plat.path("assets/public.mp3"), [ public_dir ])
 
     # Copy over the icon and presplash files.
-    shutil.copy(join_and_check(directory, "android-icon.png") or default_icon, plat.path("res/drawable/icon.png"))
-    shutil.copy(join_and_check(directory, "android-presplash.jpg") or default_presplash, plat.path("res/drawable/presplash.jpg"))
+    copy_icon(directory, "icon.png", default_icon)
+    copy_icon(directory, "presplash.jpg", default_presplash)
 
+    # Copy over the OUYA icon.
     ouya_icon = join_and_check(directory, "ouya-icon.png") or join_and_check(directory, "ouya_icon.png")
 
     if ouya_icon:
