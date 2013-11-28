@@ -20,6 +20,7 @@ class Configuration(object):
         self.expansion = False
         self.google_play_key = None
         self.google_play_salt = None
+        self.target_version = 8
 
         try:
             with file(os.path.join(directory, ".android.json"), "r") as f:
@@ -97,6 +98,12 @@ This should be an integer number, and the value should increase between versions
         (False, "No. Size limit of 50 MB on Google Play, but can be distributed through other stores and sideloaded."),
         (True, "Yes. 2 GB size limit, but won't work outside of Google Play. (Read the documentation to get this to work.)")
         ], config.expansion)
+
+    config.target_version = interface.choice("What version of Android would you like to target?", [
+        (8, "Android 2.2. The menu button will always be shown."),
+        (11, "Android 3.0. The menu button will be shown on phones, but not tablets."),
+        (14, "Android 4.0. The menu button will never be shown."),
+        ], config.target_version)
 
     if not renpy:
 
