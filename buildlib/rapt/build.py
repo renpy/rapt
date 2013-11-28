@@ -310,7 +310,7 @@ def copy_icon(directory, name, default):
         if "-" in rest:
             selector, _name = rest.rsplit("-", 1)
 
-            if selector not in ["ldpi", "mdpi", "hdpi", "xhdpi", "xxhdpi", "tvdpi" ]:
+            if selector not in [ "ldpi", "mdpi", "hdpi", "xhdpi", "xxhdpi", "tvdpi" ]:
                 continue
 
             dest = os.path.join(res, "drawable-" + selector, name)
