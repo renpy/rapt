@@ -251,18 +251,19 @@ def edit_file(fn, pattern, line):
     with open(fn, "w") as f:
         f.write(''.join(lines))
 
-def zip_directory(zf, dirname):
+def zip_directory(zf, dn):
     """
-    Zips up the directory with `dirname`. `zf` is the file to place the
+    Zips up the directory `dn`. `zf` is the file to place the
     contents of the directory into.
     """
 
-    dirname = plat.path(dirname)
+    base_dirname = plat.path(dn)
 
-    for dirname, dirs, files in os.walk(dirname):
+    for dirname, dirs, files in os.walk(base_dirname):
         for fn in files:
             fn = os.path.join(dirname, fn)
-            zf.write(fn)
+            archive_fn = os.path.join(dn, os.path.relpath(fn, base_dirname))
+            zf.write(fn, archive_fn)
 
 def copy_icon(directory, name, default):
     """
