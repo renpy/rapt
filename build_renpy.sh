@@ -5,18 +5,22 @@ try () {
 }
 
 if [ "$1" != "" ]; then
-    DISTRO="rapt-$1"
+    DISTRO="$1"
 else
     DISTRO=renpy
 fi
 
-
+if [ "$2" != "" ]; then
+    RENPYROOT="$2"
+else
+    RENPYROOT="/home/tom/ab/renpy"
+fi
 
 export ROOT=$(dirname $(readlink -f $0))
 
-export RENPYROOT="$ROOT/renpy"
+export RENPYROOT
 export RENPY_ANDROID="$ROOT"
-export RENPY_PYARGS="-OO"
+export RENPY_PYARGS="-O"
 
 export ANDROIDSDK="$ROOT/android-sdk"
 export ANDROIDNDK="$ROOT/android-ndk-r8c"
@@ -75,10 +79,10 @@ try cp "blacklist-renpy.txt" "$DISTROROOT/blacklist.txt"
 # Copy the OUYA SDK over.
 try cp "$ROOT/ouya-sdk.jar" "$DISTROROOT/libs/ouya-sdk.jar"
 
-echo Done adding renpy.
+# echo Done adding renpy.
 
-if [ "$1" != "" ]; then
-    try cd "$ROOT/dist"
-    try tar cjf "rapt-$1.tar.bz2" "rapt-$1"
-    try zip -9r "rapt-$1.zip" "rapt-$1"
-fi
+# if [ "$1" != "" ]; then
+    #    try cd "$ROOT/dist"
+    # try tar cjf "rapt-$1.tar.bz2" "rapt-$1"
+    # try zip -9r "rapt-$1.zip" "rapt-$1"
+# fi
