@@ -443,13 +443,8 @@ def build(iface, directory, commands):
         else:
             os.mkdir(plat.path("assets"))
 
-        # Copy in the Ren'Py common assets.
-        if os.path.exists(plat.path("renpy/common")):
-
-            if os.path.isdir(plat.path("assets/common")):
-                shutil.rmtree(plat.path("assets/common"))
-
-            make_tree("renpy/common", "assets/common")
+        # If we're Ren'Py, rename things.
+        if os.path.exists(plat.path("assets/renpy")):
 
             # Ren'Py uses a lot of names that don't work as assets. Auto-rename
             # them.
