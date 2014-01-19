@@ -20,6 +20,8 @@
 **.swp
 **.pyc
 **.py
+**.pyx
+**.pxd
 
 **/.hg**
 **/.git**

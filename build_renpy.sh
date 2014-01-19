@@ -50,17 +50,89 @@ try mv "$ROOT/python-for-android/dist/$DISTRO" "$DISTROROOT"
 
 # Delete unneeded librarys and the python install.
 
-if [ -e "$DISTROROOT/python-install" ]; then
-    try rm -Rf "$DISTROROOT/python-install"
-fi
+tryrm () {
+  echo rm "$@"
+  try rm -Rf "$@"
+}
 
-if [ -e "$DISTROROOT/libs/armeabi/libsdl_mixer.so" ]; then
-    try rm "$DISTROROOT/libs/armeabi/libsdl_mixer.so"
-fi
+tryrm "$DISTROROOT/python-install"
+tryrm "$DISTROROOT/libs/armeabi/libsdl_mixer.so"
+tryrm "$DISTROROOT/libs/armeabi/libsqlite3.so"
 
-if [ -e "$DISTROROOT/libs/armeabi/libsqlite3.so" ]; then
-    try rm "$DISTROROOT/libs/armeabi/libsqlite3.so"
-fi
+python="$DISTROROOT/private/lib/python2.7"
+pygame="$python/site-packages/pygame"
+
+tryrm "$pygame/_camera_"*
+tryrm "$pygame/camera.pyo"
+tryrm "$pygame/"*.html
+tryrm "$pygame/"*.bmp
+tryrm "$pygame/"*.svg
+tryrm "$pygame/cdrom.so"
+tryrm "$pygame/pygame_icon.icns"
+tryrm "$pygame/threads/Py25Queue.pyo"
+tryrm "$pygame/"*.ttf
+tryrm "$pygame/mac"*
+tryrm "$pygame/_numpy"*
+tryrm "$pygame/sndarray.pyo"
+tryrm "$pygame/surfarray.pyo"
+tryrm "$pygame/_arraysurfarray.pyo"
+
+
+# unused encodings
+tryrm "$python/unittest/"*
+tryrm "$python/distutils/"*.exe
+tryrm "$python/lib-dynload/"*codec*
+
+tryrm "$python/encodings/cp"*.pyo
+tryrm "$python/encodings/tis"*
+tryrm "$python/encodings/shift"*
+tryrm "$python/encodings/iso"*
+tryrm "$python/encodings/undefined"*
+tryrm "$python/encodings/johab"*
+tryrm "$python/encodings/p"*
+tryrm "$python/encodings/m"*
+tryrm "$python/encodings/euc"*
+tryrm "$python/encodings/k"*
+tryrm "$python/encodings/gb"*
+tryrm "$python/encodings/big5"*
+tryrm "$python/encodings/hp"*
+tryrm "$python/encodings/hz"*
+
+# unused python modules
+tryrm "$python/bsddb/"*
+tryrm "$python/wsgiref/"*
+tryrm "$python/sqlite3/"*
+tryrm "$python/hotshot/"*
+tryrm "$python/pydoc_data/"*
+tryrm "$python/tty.pyo"
+tryrm "$python/anydbm.pyo"
+tryrm "$python/nturl2path.pyo"
+tryrm "$python/LICENCE.txt"
+tryrm "$python/macurl2path.pyo"
+tryrm "$python/dummy_threading.pyo"
+tryrm "$python/audiodev.pyo"
+tryrm "$python/antigravity.pyo"
+tryrm "$python/dumbdbm.pyo"
+tryrm "$python/sndhdr.pyo"
+tryrm "$python/__phello__.foo.pyo"
+tryrm "$python/sunaudio.pyo"
+tryrm "$python/os2emxpath.pyo"
+tryrm "$python/multiprocessing/dummy"*
+
+# unused binaries python modules
+tryrm "$python/lib-dynload/_sqlite3.so"
+tryrm "$python/lib-dynload/_lsprof.so"
+tryrm "$python/lib-dynload/*audioop.so"
+tryrm "$python/lib-dynload/_hotshot.so"
+tryrm "$python/lib-dynload/_csv.so"
+tryrm "$python/lib-dynload/_lsprof.so"
+tryrm "$python/lib-dynload/_heapq.so"
+tryrm "$python/lib-dynload/grp.so"
+tryrm "$python/lib-dynload/resource.so"
+
+# odd files
+tryrm "$python/plat-linux3/regen"
+
 
 # Copy the common files over.
 try mkdir -p "$DISTROROOT/renpy"
