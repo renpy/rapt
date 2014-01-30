@@ -79,6 +79,8 @@ def path(path):
     rv = os.path.join(RAPT_PATH, path)
     return rv
 
+renpy = os.path.exists(path("private/lib/python2.7/site-packages/renpy/__init__.pyo"))
+
 def rename(src, dst):
     """
     Renames src to dst.

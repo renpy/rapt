@@ -56,8 +56,6 @@ def set_version(config, value):
 
 def configure(interface, directory):
 
-    renpy = os.path.exists(plat.path("renpy"))
-
     config = Configuration(directory)
     config.name = interface.input("""What is the full name of your application? This name will appear in the list of installed applications.""", config.name)
 
@@ -105,7 +103,7 @@ This should be an integer number, and the value should increase between versions
         (14, "Android 4.0. The menu button will never be shown."),
         ], config.target_version)
 
-    if not renpy:
+    if not plat.renpy:
 
         config.layout = interface.choice("How is your application laid out?", [
             ("internal", "A single directory, that will be placed on device internal storage."),
@@ -127,7 +125,7 @@ Please enter a space-separated list of permissions.""", permissions)
         config.include_sqlite = interface.yesno_choice("Do you want to include SQLite3 with your application?", config.include_sqlite)
         config.include_pil = interface.yesno_choice("Do you want to include the Python Imaging Library (PIL) with your application?", config.include_pil)
 
-    if renpy:
+    if plat.renpy:
 
         if not config.expansion:
             internet = "INTERNET" in config.permissions

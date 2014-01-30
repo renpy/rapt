@@ -337,7 +337,7 @@ def build(iface, directory, commands):
     # Are we doing a Ren'Py build?
 
     global RENPY
-    RENPY = os.path.exists(plat.path("renpy"))
+    RENPY = plat.renpy
 
     if not os.path.isdir(directory):
         iface.fail("{} is not a directory.".format(directory))
