@@ -69,11 +69,19 @@ What is the name of the package?
 
 This is usually of the form com.domain.program or com.domain.email.program. It may only contain ASCII letters and dots. It must contain at least one dot.""", config.package)
 
+    config.package = config.package.strip()
+
+    if not config.package:
+        interface.fail("The package name may not be empty.")
+
     if " " in config.package:
         interface.fail("The package name may not contain spaces.")
 
     if "." not in config.package:
         interface.fail("The package name must contain at least one dot.")
+
+    if config.package[-1] == '.':
+        interface.fail("The package name may not end with a dot.")
 
 
     version = interface.input("""\
