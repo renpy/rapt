@@ -43,7 +43,7 @@ public class PythonActivity extends Activity implements Runnable {
     public static FrameLayout mFrameLayout = null;
     public static PythonActivity mActivity = null;
 	public static String mExpansionFile = null;
-	
+
     // Did we launch our thread?
     private boolean mLaunchedThread = false;
 
@@ -71,9 +71,13 @@ public class PythonActivity extends Activity implements Runnable {
         resourceManager = new ResourceManager(this);
         oldExternalStorage = new File(Environment.getExternalStorageDirectory(), getPackageName());
         externalStorage = getExternalFilesDir(null);
-        
+
+        if (externalStorage == null) {
+        	externalStorage = oldExternalStorage;
+        }
+
         Intent intent = getIntent();
-        
+
         // Figure out the directory where the game is. If the game was
         // given to us via an intent, then we use the scheme-specific
         // part of that intent to determine the file to launch. We
@@ -122,10 +126,10 @@ public class PythonActivity extends Activity implements Runnable {
             mPath.getAbsolutePath());
         Hardware.view = mView;
 
-        
+
         mFrameLayout = new FrameLayout(this);
         mFrameLayout.addView(mView);
-        
+
         setContentView(mFrameLayout);
     }
 
@@ -173,7 +177,7 @@ public class PythonActivity extends Activity implements Runnable {
     	 * a main.py newer than main.pyo, but start.c won't run it.
     	 */
     	new File(target, "main.pyo").delete();
-    	
+
         // The version of data in memory and on disk.
         String data_version = resourceManager.getString(resource + "_version");
         String disk_version = null;
@@ -227,22 +231,22 @@ public class PythonActivity extends Activity implements Runnable {
 
 
     public void run() {
-    
+
     	// Record the expansion file, if any.
         mExpansionFile = getIntent().getStringExtra("expansionFile");
-    
+
         unpackData("private", getFilesDir());
         unpackData("public", externalStorage);
 
         System.loadLibrary("sdl");
         System.loadLibrary("sdl_image");
     	System.loadLibrary("sdl_ttf");
-    	
+
     	try {
     		System.loadLibrary("sdl_mixer");
         } catch(UnsatisfiedLinkError e) {
         }
-    	
+
         System.loadLibrary("python2.7");
         System.loadLibrary("application");
         System.loadLibrary("sdl_main");
