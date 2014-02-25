@@ -55,6 +55,8 @@ tryrm () {
   try rm -Rf "$@"
 }
 
+tryrm "$DISTROROOT/local.properties"
+
 tryrm "$DISTROROOT/python-install"
 tryrm "$DISTROROOT/libs/armeabi/libsdl_mixer.so"
 tryrm "$DISTROROOT/libs/armeabi/libsqlite3.so"
