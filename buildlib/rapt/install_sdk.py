@@ -194,6 +194,22 @@ def get_packages(interface):
 
 def generate_keys(interface):
 
+    update_properties = True
+
+    if os.path.exists(plat.path("local.properties")):
+        with open(plat.path("local.properties")) as f:
+            for l in f:
+                if l.startswith("key.store"):
+                    update_properties = False
+
+    if update_properties:
+        f = file(plat.path("local.properties"), "a")
+        print >>f, "key.alias=android"
+        print >>f, "key.store.password=android"
+        print >>f, "key.alias.password=android"
+        print >>f, "key.store=android.keystore"
+        f.close()
+
     if os.path.exists(plat.path("android.keystore")):
         interface.info("You've already created an Android keystore, so I won't create a new one for you.")
         return
@@ -225,12 +241,6 @@ Will you make a backup of android.keystore, and keep it in a safe place?"""):
     if not run(interface, plat.keytool, "-genkey", "-keystore", "android.keystore", "-alias", "android", "-keyalg", "RSA", "-keysize", "2048", "-keypass", "android", "-storepass", "android", "-dname", dname, "-validity", "20000", use_path=True):
         interface.fail("Could not create android.keystore. Is keytool in your path?")
 
-    f = file(plat.path("local.properties"), "a")
-    print >>f, "key.alias=android"
-    print >>f, "key.store.password=android"
-    print >>f, "key.alias.password=android"
-    print >>f, "key.store=android.keystore"
-    f.close()
 
     interface.success("""I've finished creating android.keystore. Please back it up, and keep it in a safe place.""")
 
