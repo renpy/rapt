@@ -564,7 +564,7 @@ def connect(interface, address):
     the form "hostname:port".
     """
 
-    interface.info("Disconnecting from remote ADB.")
+    interface.info("Connecting to remote ADB.")
     interface.call([ plat.adb, "disconnect" ], cancel=True)
     interface.call([ plat.adb, "connect", address ], cancel=True)
     interface.final_success("Connected to remote ADB.")
