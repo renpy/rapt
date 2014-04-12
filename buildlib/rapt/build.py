@@ -557,3 +557,24 @@ def build(iface, directory, commands):
         iface.fail("The build seems to have failed.")
 
     iface.final_success("The build seems to have succeeded.")
+
+def connect(interface, address):
+    """
+    Causes ADB to connect to a remote address, which should be a string of
+    the form "hostname:port".
+    """
+
+    interface.info("Disconnecting from remote ADB.")
+    interface.call([ plat.adb, "disconnect" ], cancel=True)
+    interface.call([ plat.adb, "connect", address ], cancel=True)
+    interface.final_success("Connected to remote ADB.")
+
+def disconnect(interface):
+    """
+    Causes ADB to disconnect from a remote address.
+    """
+
+    interface.info("Disconnecting from remote ADB.")
+    interface.call([ plat.adb, "disconnect" ], cancel=True)
+    interface.final_success("Disconnected from remote ADB.")
+
