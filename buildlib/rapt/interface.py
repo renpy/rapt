@@ -205,7 +205,7 @@ class Interface(object):
 
         sys.exit(-1)
 
-    def call(self, args, cancel=False, use_path=False):
+    def call(self, args, cancel=False, use_path=False, yes=False):
         """
         Executes `args` as a program. Raises subprocess.CalledProgramError
         if the program fails.
@@ -216,9 +216,26 @@ class Interface(object):
 
         `use_path`
             If true, searches the system path for the file.
+
+        `yes`
+            Repeatedly sends 'y\n' to the command's stdin.
         """
 
-        subprocess.check_call(args, cwd=plat.RAPT_PATH)
+        if yes:
+            p = subprocess.Popen(args, cwd=plat.RAPT_PATH, stdin=subprocess.PIPE)
+
+            try:
+                while True:
+                    time.sleep(.2)
+                    p.stdin.write('y\n')
+                    p.stdin.flush()
+            except:
+                pass
+
+            p.wait()
+
+        else:
+            subprocess.check_call(args, cwd=plat.RAPT_PATH)
 
     def download(self, url, dest):
         """

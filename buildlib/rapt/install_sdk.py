@@ -83,14 +83,16 @@ def unpack_sdk(interface):
     if "PGS4A_NO_TERMS" not in os.environ:
         interface.terms("http://developer.android.com/sdk/terms.html", "Do you accept the Android SDK Terms and Conditions?")
 
+    SDK_VERSION = "r22.6.2"
+
     if plat.windows:
-        archive = "android-sdk_r20-windows.zip"
+        archive = "android-sdk_{}-windows.zip".format(SDK_VERSION)
         unpacked = "android-sdk-windows"
     elif plat.macintosh:
-        archive = "android-sdk_r20-macosx.zip"
+        archive = "android-sdk_{}-macosx.zip".format(SDK_VERSION)
         unpacked = "android-sdk-macosx"
     elif plat.linux:
-        archive = "android-sdk_r20-linux.tgz"
+        archive = "android-sdk_{}-linux.tgz".format(SDK_VERSION)
         unpacked = "android-sdk-linux"
 
     url = "http://dl.google.com/android/" + archive
@@ -123,8 +125,8 @@ def unpack_ant(interface):
         interface.success("Apache ANT has already been unpacked.")
         return
 
-    archive = "apache-ant-1.8.4-bin.tar.gz"
-    unpacked = "apache-ant-1.8.4"
+    archive = "apache-ant-1.9.3-bin.tar.gz"
+    unpacked = "apache-ant-1.9.3"
     url = "http://archive.apache.org/dist/ant/binaries/" + archive
 
     interface.info("I'm downloading Apache Ant. This might take a while.")
@@ -149,6 +151,9 @@ def get_packages(interface):
 
     packages = [ ]
 
+    if not os.path.exists(plat.path("android-sdk/build-tools/build-tools-19.0.3")):
+        packages.append("build-tools-19.0.3")
+
     if not os.path.exists(plat.path("android-sdk/platforms/android-8")):
         packages.append("android-8")
 
@@ -170,7 +175,7 @@ def get_packages(interface):
 
     interface.info("I'm about to download and install the required Android packages. This might take a while.")
 
-    if not run_slow(interface, plat.android, "update", "sdk", "-u", "-a", "-t", ",".join(packages)):
+    if not run_slow(interface, plat.android, "update", "sdk", "-u", "-f", "-a", "-t", ",".join(packages), yes=True):
         interface.fail("I was unable to install the required Android packages.")
 
     interface.info("I'm updating the library packages.")
