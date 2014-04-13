@@ -83,16 +83,14 @@ def unpack_sdk(interface):
     if "PGS4A_NO_TERMS" not in os.environ:
         interface.terms("http://developer.android.com/sdk/terms.html", "Do you accept the Android SDK Terms and Conditions?")
 
-    SDK_VERSION = "r22.6.2"
-
     if plat.windows:
-        archive = "android-sdk_{}-windows.zip".format(SDK_VERSION)
+        archive = "android-sdk_{}-windows.zip".format(plat.sdk_version)
         unpacked = "android-sdk-windows"
     elif plat.macintosh:
-        archive = "android-sdk_{}-macosx.zip".format(SDK_VERSION)
+        archive = "android-sdk_{}-macosx.zip".format(plat.sdk_version)
         unpacked = "android-sdk-macosx"
     elif plat.linux:
-        archive = "android-sdk_{}-linux.tgz".format(SDK_VERSION)
+        archive = "android-sdk_{}-linux.tgz".format(plat.sdk_version)
         unpacked = "android-sdk-linux"
 
     url = "http://dl.google.com/android/" + archive
@@ -116,7 +114,7 @@ def unpack_sdk(interface):
 
     interface.background(extract)
 
-    plat.rename(plat.path(unpacked), plat.path("android-sdk"))
+    plat.rename(plat.path(unpacked, replace=False), plat.path("android-sdk"))
 
     interface.success("I've finished unpacking the Android SDK.")
 
@@ -143,15 +141,13 @@ def unpack_ant(interface):
 
     interface.background(extract)
 
-    plat.rename(plat.path(unpacked), plat.path("apache-ant"))
-
     interface.success("I've finished unpacking Apache Ant.")
 
 def get_packages(interface):
 
     packages = [ ]
 
-    if not os.path.exists(plat.path("android-sdk/build-tools/build-tools-19.0.3")):
+    if not os.path.exists(plat.path("android-sdk/build-tools/19.0.3")):
         packages.append("build-tools-19.0.3")
 
     if not os.path.exists(plat.path("android-sdk/platforms/android-8")):
@@ -189,8 +185,8 @@ def get_packages(interface):
         with open(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties"), "w") as f:
             f.write(data)
 
-    run(interface, plat.android, "update", "project", "-p", "android-sdk/extras/google/play_licensing/library")
-    run(interface, plat.android, "update", "project", "-p", "android-sdk/extras/google/play_apk_expansion/downloader_library")
+    run(interface, plat.android, "update", "project", "-p", plat.path("android-sdk/extras/google/play_licensing/library"))
+    run(interface, plat.android, "update", "project", "-p", plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library"))
 
     if os.path.exists(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9")):
         shutil.rmtree(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9"))

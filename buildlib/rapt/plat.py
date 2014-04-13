@@ -70,14 +70,31 @@ else:
 
 RAPT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-def path(path):
+sdk_version = "r22.6.2"
+ant_version = "1.9.3"
+
+def path(path, replace=True, relative=False):
     """
     Turns a relative path into an absolute path relative to the RAPT
     directory.
+
+    `replace`
+        If true, replaces apache-ant and android-sdk with versioned paths.
     """
 
-    rv = os.path.join(RAPT_PATH, path)
-    return rv
+    if replace:
+        path = path.replace("android-sdk", "android-sdk-" + sdk_version)
+        path = path.replace("apache-ant", "apache-ant-" + ant_version)
+
+
+    if not relative:
+        path = os.path.join(RAPT_PATH, path)
+
+    return path
+
+android = path(android)
+ant = path(ant)
+adb = path(adb)
 
 renpy = os.path.exists(path("private/lib/python2.7/site-packages/renpy/__init__.pyo"))
 
