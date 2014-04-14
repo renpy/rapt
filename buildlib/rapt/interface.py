@@ -225,7 +225,7 @@ class Interface(object):
             p = subprocess.Popen(args, cwd=plat.RAPT_PATH, stdin=subprocess.PIPE)
 
             try:
-                while True:
+                while p.poll() is None:
                     time.sleep(.2)
                     p.stdin.write('y\n')
                     p.stdin.flush()
