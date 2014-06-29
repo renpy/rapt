@@ -181,6 +181,7 @@ def get_packages(interface):
             data = f.read()
 
         data = data.replace("../market_licensing", "../../play_licensing/library")
+        data = data.replace("..\\market_licensing", "..\\..\\play_licensing/library")
 
         with open(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties"), "w") as f:
             f.write(data)
