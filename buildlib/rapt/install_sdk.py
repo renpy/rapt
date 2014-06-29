@@ -147,14 +147,14 @@ def get_packages(interface):
 
     packages = [ ]
 
-    if not os.path.exists(plat.path("android-sdk/build-tools/19.0.3")):
-        packages.append("build-tools-19.0.3")
+    if not os.path.exists(plat.path("android-sdk/build-tools/" + plat.build_version)):
+        packages.append("build-tools-" + plat.build_version)
 
-    if not os.path.exists(plat.path("android-sdk/platforms/android-8")):
-        packages.append("android-8")
+#     if not os.path.exists(plat.path("android-sdk/platforms/android-8")):
+#         packages.append("android-8")
 
-    if not os.path.exists(plat.path("android-sdk/platforms/android-15")):
-        packages.append("android-15")
+    if not os.path.exists(plat.path("android-sdk/platforms/" + plat.target)):
+        packages.append(plat.target)
 
     if not os.path.exists(plat.path("android-sdk/platform-tools/")):
         packages.append("platform-tools")
@@ -252,7 +252,6 @@ def install_sdk(interface):
 
     if plat.macintosh or plat.linux:
         os.chmod(plat.path("android-sdk/tools/android"), 0755)
-        os.chmod(plat.path("android-sdk/tools/zipalign"), 0755)
 
     get_packages(interface)
     generate_keys(interface)

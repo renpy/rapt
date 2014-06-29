@@ -426,8 +426,11 @@ def build(iface, directory, commands):
 
     # Update the project to a recent version.
 
-    iface.call([plat.android, "update", "project", "-p", '.', '-t', 'android-8', '-n', versioned_name,
-        # "--library", "android-sdk/extras/google/play_licensing/library",
+    if os.path.exists(plat.path("project.properties")):
+        os.unlink(plat.path("project.properties"))
+
+    iface.call([plat.android, "update", "project",
+        "-p", '.', '-t', plat.target, '-n', versioned_name,
         "--library", plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library", relative=True),
         ])
 
