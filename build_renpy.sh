@@ -142,8 +142,7 @@ try mkdir -p "$DISTROROOT/renpy"
 # try cp -a "$RENPYROOT/renpy/common" "$DISTROROOT/renpy"
 # try rm -f "$DISTROROOT/renpy/common/"*.rpy
 # try rm -Rf "$DISTROROOT/renpy/common/_compat"
-
-try cp "$RENPYROOT/renpy.py" "$DISTROROOT/private/main.py"
+# try cp "$RENPYROOT/renpy.py" "$DISTROROOT/private/main.py"
 
 # Copy the build scripts.
 try ./copy_scripts.sh "$DISTROROOT"

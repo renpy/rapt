@@ -330,6 +330,40 @@ def copy_icon(directory, name, default):
     copy(default, os.path.join(res, "drawable", name))
 
 
+def split_renpy(directory):
+    """
+    Takes a built Ren'Py game, and splits it into the private and assets
+    directories. This also renames <game>.py to main.py, and moves common/
+    into assets.
+    """
+
+    private = os.path.join(directory, "private")
+    assets = os.path.join(directory, "assets")
+
+    filenames = os.listdir(directory)
+
+    os.mkdir(private)
+    os.mkdir(assets)
+    os.mkdir(os.path.join(assets, "renpy"))
+
+    os.rename(os.path.join(directory, "renpy", "common"), os.path.join(assets, "renpy", "common"))
+
+    for fn in filenames:
+        full_fn = os.path.join(directory, fn)
+
+        print full_fn
+
+        if fn.endswith(".py"):
+            os.rename(full_fn, os.path.join(private, "main.py"))
+            continue
+
+        if fn == "renpy":
+            os.rename(full_fn, os.path.join(private, fn))
+            continue
+
+        os.rename(full_fn, os.path.join(assets, fn))
+
+    return private, assets
 
 
 def build(iface, directory, commands):
@@ -350,7 +384,6 @@ def build(iface, directory, commands):
     if config.package is None:
         iface.fail("Run configure before attempting to build the app.")
 
-
     global blacklist
     global whitelist
 
@@ -363,8 +396,7 @@ def build(iface, directory, commands):
         default_presplash = plat.path("templates/renpy-presplash.jpg")
 
         public_dir = None
-        private_dir = None
-        assets_dir = directory
+        private_dir, assets_dir = split_renpy(directory)
 
     else:
         manifest_extra = ""
