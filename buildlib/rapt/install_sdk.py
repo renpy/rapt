@@ -165,29 +165,26 @@ def get_packages(interface):
     if not os.path.exists(plat.path("android-sdk/extras/google/play_apk_expansion")):
         packages.append("extra-google-play_apk_expansion")
 
-    if not packages:
-        interface.success("The required Android packages are already installed.")
-        return
+    if packages:
 
-    interface.info("I'm about to download and install the required Android packages. This might take a while.")
+        interface.info("I'm about to download and install the required Android packages. This might take a while.")
 
-    if not run_slow(interface, plat.android, "update", "sdk", "-u", "-f", "-a", "-t", ",".join(packages), yes=True):
-        interface.fail("I was unable to install the required Android packages.")
+        if not run_slow(interface, plat.android, "update", "sdk", "-u", "-f", "-a", "-t", ",".join(packages), yes=True):
+            interface.fail("I was unable to install the required Android packages.")
 
     interface.info("I'm updating the library packages.")
 
-    if "extra-google-play_apk_expansion" in packages:
-        with open(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties"), "r") as f:
-            data = f.read()
+    with open(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties"), "r") as f:
+        data = f.read()
 
-        data = data.replace("../market_licensing", "../../play_licensing/library")
-        data = data.replace("..\\market_licensing", "..\\..\\play_licensing/library")
+    data = data.replace("../market_licensing", "../../play_licensing/library")
+    data = data.replace("..\\market_licensing", "..\\..\\play_licensing/library")
 
-        with open(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties"), "w") as f:
-            f.write(data)
+    with open(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties"), "w") as f:
+        f.write(data)
 
-    run(interface, plat.android, "update", "project", "-p", plat.path("android-sdk/extras/google/play_licensing/library"))
-    run(interface, plat.android, "update", "project", "-p", plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library"))
+    run(interface, plat.android, "update", "project", "-p", plat.path("android-sdk/extras/google/play_licensing/library"), "--target", plat.target)
+    run(interface, plat.android, "update", "project", "-p", plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library"), "--target", plat.target)
 
     if os.path.exists(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9")):
         shutil.rmtree(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9"))
