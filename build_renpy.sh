@@ -34,6 +34,10 @@ rm -Rf "$RENPYROOT/module/build/lib.android"
 
 # Build the python-for-android distro.
 try cd "$ROOT/python-for-android"
+rm -Rf build/android
+rm -Rf build/pygame
+rm -Rf build/renpy
+rm -Rf build/pyjnius
 try ./distribute.sh -d "$DISTRO" -m "android pygame renpy pyjnius"
 
 # Move the built distro to $DISTROROOT.
