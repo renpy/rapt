@@ -153,8 +153,9 @@ try ./copy_scripts.sh "$DISTROROOT"
 try cp "whitelist-renpy.txt" "$DISTROROOT/whitelist.txt"
 try cp "blacklist-renpy.txt" "$DISTROROOT/blacklist.txt"
 
-# Copy the OUYA SDK over.
-try cp "$ROOT/ouya-sdk.jar" "$DISTROROOT/libs/ouya-sdk.jar"
+# Copy the SDKs over.
+try cp "$ROOT/ouya-sdk.jar" "$DISTROROOT/libs/"
+try cp "$ROOT/Amazon-InAppSDK-Purchasing.jar" "$DISTROROOT/libs/"
 
 # echo Done adding renpy.
 

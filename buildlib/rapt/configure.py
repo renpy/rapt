@@ -21,6 +21,7 @@ class Configuration(object):
         self.google_play_key = None
         self.google_play_salt = None
         self.target_version = 8
+        self.store = "none"
 
         try:
             with file(os.path.join(directory, ".android.json"), "r") as f:
@@ -100,10 +101,18 @@ This should be an integer number, and the value should increase between versions
             ("portrait", "In portrait mode."),
         ], config.orientation)
 
-    config.expansion = interface.choice("Would you like to create an expansion APK?", [
-        (False, "No. Size limit of 50 MB on Google Play, but can be distributed through other stores and sideloaded."),
-        (True, "Yes. 2 GB size limit, but won't work outside of Google Play. (Read the documentation to get this to work.)")
-        ], config.expansion)
+    if plat.renpy:
+        config.store = interface.choice("Which app store would you like to support in-app purchasing through?", [
+            ("play", "Google Play."),
+            ("amazon", "Amazon App Store."),
+            ("none", "Neither."),
+            ], config.store)
+
+    if config.store in [ "play", "none" ]:
+        config.expansion = interface.choice("Would you like to create an expansion APK?", [
+            (False, "No. Size limit of 50 MB on Google Play, but can be distributed through other stores and sideloaded."),
+            (True, "Yes. 2 GB size limit, but won't work outside of Google Play. (Read the documentation to get this to work.)")
+            ], config.expansion)
 
     config.target_version = interface.choice("What version of Android would you like to target?", [
         (8, "Android 2.2. The menu button will always be shown."),

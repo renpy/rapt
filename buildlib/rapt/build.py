@@ -422,6 +422,9 @@ def build(iface, directory, commands):
     config.name = config.name.replace("'", "\\'")
     config.icon_name = config.icon_name.replace("'", "\\'")
 
+    if config.store not in [ "play", "none" ]:
+        config.expansion = False
+
     # Figure out versions of the private and public data.
     private_version = str(time.time())
 

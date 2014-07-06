@@ -8,4 +8,7 @@ public class Constants {
     // Used by the expansion downloader.
     public static int fileVersion = {{ config.numeric_version }};
     public static int fileSize = {{ file_size }};
+
+    // Used by the in-app purchasing code.
+    public static String store = "{{ config.store }}";
 }

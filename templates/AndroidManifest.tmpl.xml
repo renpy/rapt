@@ -13,7 +13,7 @@
     <activity android:name="org.renpy.android.PythonActivity"
               android:label="@string/iconName"
               android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode"
-              android:launchMode="singleTask"
+              android:launchMode="singleTop"
               android:process=":python"
               android:screenOrientation="{{ config.orientation }}"
               android:windowSoftInputMode="stateAlwaysHidden"
@@ -26,6 +26,15 @@
         </intent-filter>
 {% endif %}
     </activity>
+
+{% if config.store == "amazon" %}
+    <receiver android:name="com.amazon.inapp.purchasing.ResponseReceiver">
+       <intent-filter>
+          <action android:name="com.amazon.inapp.purchasing.NOTIFY"
+          android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY" />
+       </intent-filter>
+    </receiver>
+{% endif %}
 
 {% if config.expansion %}
        <activity
@@ -47,12 +56,19 @@
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-  {% if config.expansion %}
-    <uses-permission android:name="com.android.vending.CHECK_LICENSE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-  {% endif %}
+{% if config.expansion or config.store == "play" %}
+  <uses-permission android:name="com.android.vending.CHECK_LICENSE"/>
+{% endif %}
+
+{% if config.expansion %}
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+{% endif %}
+
+{% if config.store == "play" %}
+  <uses-permission android:name="com.android.vending.BILLING"/>
+{% endif %}
 
   {% for perm in config.permissions %}
   <uses-permission android:name="android.permission.{{ perm }}" />
