@@ -31,7 +31,7 @@ public class devicePurchaseGoogle {
    static public void create (Activity activity) {
       m_singleton = new devicePurchaseGoogle (activity);
    }
-   
+
    /**
     * Method called on activity destruction
     */
@@ -41,7 +41,7 @@ public class devicePurchaseGoogle {
          m_singleton = null;
       }
    }
-   
+
    /**
     * Method called on activity start
     *
@@ -50,7 +50,7 @@ public class devicePurchaseGoogle {
    static public void start (Activity activity) {
       m_activity = activity;
    }
-   
+
    /**
     * Method called on activity stop
     */
@@ -72,18 +72,18 @@ public class devicePurchaseGoogle {
       else
          return false;
    }
-   
+
    /**
     * Constructor
     *
     * \param activity game activity
     */
-   
+
    public devicePurchaseGoogle (Activity activity) {
       int nResult;
-      
+
       m_activity = activity;
-      m_iabHelper = new IabHelper (m_activity, developerKey.m_base64EncodedPublicKey);
+      m_iabHelper = new IabHelper (m_activity, org.renpy.android.Constants.PLAY_BASE64_PUBLIC_KEY);
       if (m_iabHelper != null) {
          /*m_iabHelper.enableDebugLogging (true);*/
          m_iabHelper.startSetup (new IabHelper.OnIabSetupFinishedListener () {
@@ -100,11 +100,11 @@ public class devicePurchaseGoogle {
          });
       }
    }
-   
+
    /**
     * Clean resources used by in-app billing
     */
-   
+
    public void cleanup () {
       if (m_iabHelper != null) {
          m_iabHelper.dispose ();
@@ -120,7 +120,7 @@ public class devicePurchaseGoogle {
    static public Integer isPurchasingAvailable() {
       return m_iabAvailable ? ((Integer) 1) : ((Integer) 0);
    }
-   
+
    /**
     * Start the purchase process. Called by the game
     *
@@ -143,7 +143,7 @@ public class devicePurchaseGoogle {
          setPurchaseResult (2);
       }
    }
-   
+
    /**
     * Restore existing purchases. Called by the game
     */
@@ -157,7 +157,7 @@ public class devicePurchaseGoogle {
          });
       }
    }
-   
+
    /**
     * Start the purchase process. Called by the game
     *
@@ -165,16 +165,16 @@ public class devicePurchaseGoogle {
     */
    static public void consumePurchase (String sProductId) {
       final String sFinalProductId = sProductId;
-      
+
       if (m_iabAvailable && m_activity != null && m_iabHelper != null) {
          Thread thread = new Thread() {
             @Override
             public void run() {
                try {
                   Looper.prepare ();
-                  
+
                   Log.v ("renpurchase", "consume purchase for '" + sFinalProductId + "'");
-                  
+
                   Inventory inventory = m_iabHelper.queryInventory (false, null, null);
                   if (inventory.hasPurchase (sFinalProductId)) {
                      Log.v ("renpurchase", "consume: inventory obtained, consuming purchase");
@@ -185,11 +185,11 @@ public class devicePurchaseGoogle {
                }
             }
          };
-         
+
          thread.start ();
       }
    }
-   
+
    /**
     * Check purchase result. Called by the game
     *
@@ -197,11 +197,11 @@ public class devicePurchaseGoogle {
     */
    static public synchronized int checkPurchaseResult () {
       int result = m_purchaseResult;
-      
+
       m_purchaseResult = 0;
       return result;
    }
-   
+
    /**
     * Check if a particular SKU is owned. Called by the game
     *
@@ -215,16 +215,7 @@ public class devicePurchaseGoogle {
       else
          return 0;
    }
-   
-   /**
-    * Set new developer key
-    *
-    * \param sNewKey key
-    */
-   static public void setKey (String sNewKey) {
-      developerKey.m_base64EncodedPublicKey = sNewKey;
-   }
-   
+
    /**
     * Unlock specified achievement
     *
@@ -232,7 +223,7 @@ public class devicePurchaseGoogle {
     */
    static public void unlockAchievement (String sAchievementID) {
    }
-   
+
    /**
     * Set purchase result - internal
     *
@@ -243,7 +234,7 @@ public class devicePurchaseGoogle {
    static private synchronized void setPurchaseResult (int nResult) {
       m_purchaseResult = nResult;
    }
-   
+
    /**
     * Add owned product to the list - internal
     *
@@ -254,7 +245,7 @@ public class devicePurchaseGoogle {
    static private synchronized void addOwnedProduct (String sProductId) {
       m_ownedSkus.add (sProductId);
    }
-   
+
    /** Listener for in-app purchase results */
    static IabHelper.OnIabPurchaseFinishedListener m_onPurchaseFinishedListener  = new IabHelper.OnIabPurchaseFinishedListener () {
       public void onIabPurchaseFinished(IabResult result, Purchase purchase) {

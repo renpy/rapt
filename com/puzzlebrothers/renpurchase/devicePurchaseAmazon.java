@@ -36,13 +36,13 @@ public class devicePurchaseAmazon {
     */
    static public void create (Activity activity) {
    }
-   
+
    /**
     * Method called on activity destruction
     */
    static public void destroy () {
    }
-   
+
    /**
     * Method called on activity start
     *
@@ -53,7 +53,7 @@ public class devicePurchaseAmazon {
       m_observer = new MyObserver ();
       PurchasingManager.registerObserver (m_observer);
    }
-   
+
    /**
     * Method called on activity stop
     */
@@ -62,7 +62,7 @@ public class devicePurchaseAmazon {
          m_observer = null;
       }
    }
-   
+
    /**
     * Method called when an activity result is received
     *
@@ -75,7 +75,7 @@ public class devicePurchaseAmazon {
    static public boolean onActivityResult (int requestCode, int resultCode, Intent data) {
       return false;
    }
-   
+
    /**
     * Start the purchase process. Called by the game
     */
@@ -87,7 +87,7 @@ public class devicePurchaseAmazon {
       Log.v ("renpurchase", "begin item data request for " + m_sProductSku);
       PurchasingManager.initiateItemDataRequest (skus);
    }
-   
+
    /**
     * Restore existing purchases. Called by the game
     */
@@ -96,7 +96,7 @@ public class devicePurchaseAmazon {
       Log.v ("renpurchase", "restore purchases");
       PurchasingManager.initiatePurchaseUpdatesRequest(Offset.BEGINNING);
    }
-   
+
    /**
     * Start the purchase process. Called by the game
     *
@@ -104,7 +104,7 @@ public class devicePurchaseAmazon {
     */
    static public void consumePurchase (String sProductId) {
    }
-   
+
    /**
     * Check purchase result. Called by the game
     *
@@ -112,11 +112,11 @@ public class devicePurchaseAmazon {
     */
    static public synchronized int checkPurchaseResult () {
       int result = m_purchaseResult;
-      
+
       m_purchaseResult = 0;
       return result;
    }
-   
+
    /**
     * Check if a particular SKU is owned. Called by the game
     *
@@ -130,16 +130,7 @@ public class devicePurchaseAmazon {
       else
          return 0;
    }
-   
-   /**
-    * Set new developer key
-    *
-    * \param sNewKey key
-    */
-   static public void setKey (String sNewKey) {
-      developerKey.m_base64EncodedPublicKey = sNewKey;
-   }
-   
+
    /**
     * Unlock specified achievement
     *
@@ -147,7 +138,7 @@ public class devicePurchaseAmazon {
     */
    static public void unlockAchievement (String sAchievementID) {
    }
-   
+
    /**
     * Set purchase result - internal
     *
@@ -158,7 +149,7 @@ public class devicePurchaseAmazon {
    static private synchronized void setPurchaseResult (int nResult) {
       m_purchaseResult = nResult;
    }
-   
+
    /**
     * Add owned product to the list - internal
     *
@@ -169,18 +160,18 @@ public class devicePurchaseAmazon {
    static private synchronized void addOwnedProduct (String sProductId) {
       m_ownedSkus.add (sProductId);
    }
-   
+
    /** Purchase observer */
-   
+
    static private class MyObserver extends BasePurchasingObserver {
       /** Constructor */
       public MyObserver() {
          super (devicePurchaseAmazon.m_activity);
       }
-      
+
       /** Respond to product data requests */
       @Override
-      public void onItemDataResponse (ItemDataResponse itemDataResponse) {      
+      public void onItemDataResponse (ItemDataResponse itemDataResponse) {
          if (itemDataResponse.getItemDataRequestStatus() == ItemDataRequestStatus.SUCCESSFUL) {
             /* Succesfully got product info: initiate purchase */
             String requestId = PurchasingManager.initiatePurchaseRequest (m_sProductSku);
@@ -193,7 +184,7 @@ public class devicePurchaseAmazon {
             Log.v ("renpurchase", "itemDataResponse.getItemDataRequestStatus() = " + itemDataResponse.getItemDataRequestStatus());
          }
       }
-      
+
       /** Respond to purchases */
       @Override
       public void onPurchaseResponse (PurchaseResponse purchaseResponse) {
@@ -211,12 +202,12 @@ public class devicePurchaseAmazon {
             Log.v ("renpurchase", "purchaseResponse.getPurchaseRequestStatus() = " + purchaseResponse.getPurchaseRequestStatus());
          }
       }
-      
+
       /** Respond to restores */
       @Override
       public void onPurchaseUpdatesResponse(final PurchaseUpdatesResponse purchaseUpdatesResponse) {
          Log.v("devicePurchaseAmazon", "onPurchaseUpdatesReceived");
-         
+
          switch (purchaseUpdatesResponse.getPurchaseUpdatesRequestStatus()) {
          case SUCCESSFUL:
             Log.v("devicePurchaseAmazon", "restore successful");
@@ -229,13 +220,13 @@ public class devicePurchaseAmazon {
                      Log.v ("renpurchase", "purchase restored");
                      addOwnedProduct (receipt.getSku());
                      break;
-                     
+
                   default:
                      break;
                }
             }
             break;
-         
+
          default:
             Log.v("devicePurchaseAmazon", "restore failed");
             setPurchaseResult (2);
@@ -246,16 +237,16 @@ public class devicePurchaseAmazon {
 
    /** SKU to purchase as defined on the amazon developer portal */
    static private String m_sProductSku = "";
-   
+
    /** Array of owned SKUs */
    static private ArrayList<String> m_ownedSkus = new ArrayList<String>();
-   
+
    /** Game activity */
    static private Activity m_activity = null;
-   
+
    /** Amazon purchase observer */
    static private MyObserver m_observer = null;
-   
+
    /** Result of the current purchase */
    static private int m_purchaseResult = 0;
 }

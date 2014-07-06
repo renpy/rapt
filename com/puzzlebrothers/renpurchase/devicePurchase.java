@@ -194,21 +194,6 @@ public class devicePurchase {
 		return 0;
 	}
 
-	/**
-	 * Set new developer key
-	 *
-	 * \param sNewKey key
-	 */
-	static public void setKey(String sNewKey) {
-		switch(m_store) {
-		case PLAY:
-			devicePurchaseGoogle.setKey(sNewKey);
-			break;
-		case AMAZON:
-			devicePurchaseAmazon.setKey(sNewKey);
-			break;
-		}
-	}
 
 	/**
 	 * Unlock specified achievement
