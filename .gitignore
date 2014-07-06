@@ -1,13 +1,12 @@
-android-sdk/
-android-ndk-r8c
-android-sdk
+android-ndk*
+android-sdk*
+apache-ant*
 dist
 .classpath
 .project
 
 *.pyc
 *.pyo
-apache-ant/
 bin/
 dl/
 doc/_build/
