@@ -516,27 +516,22 @@ def build(iface, directory, commands):
         # Write the file size into DownloaderActivity.
         file_size = os.path.getsize(plat.path(expansion_file))
 
-        edit_file("src/org/renpy/android/DownloaderActivity.java",
-            r'    private int fileVersion =',
-            '    private int fileVersion = {};'.format(config.numeric_version))
-
-        edit_file("src/org/renpy/android/DownloaderActivity.java",
-            r'    private int fileSize =',
-            '    private int fileSize = {};'.format(file_size))
-
     else:
         expansion_file = None
+        file_size = 0
 
-    # Update the GP key and salt.
-    if config.google_play_key:
-        edit_file("src/org/renpy/android/DownloaderService.java",
-            r'    private static final String BASE64_PUBLIC_KEY',
-            '    private static final String BASE64_PUBLIC_KEY = "%s";' % config.google_play_key)
+    # Write out constants.java.
+    if not config.google_play_key:
+        config.google_play_key = "NOT_SET"
 
-    if config.google_play_salt:
-        edit_file("src/org/renpy/android/DownloaderService.java",
-            r'    private static final byte\[\] SALT',
-            '    private static final byte[] SALT = new byte[] { %s };' % config.google_play_salt)
+    if not config.google_play_salt:
+        config.google_play_salt = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20"
+
+    render(
+        "Constants.java",
+        "src/org/renpy/android/Constants.java",
+        config = config,
+        file_size = file_size)
 
 
     iface.info("Packaging internal data.")
