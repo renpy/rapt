@@ -22,5 +22,8 @@ try cp "$ROOT/local.properties" .
 try touch "android.keystore"
 
 if [ "$1" != "" ]; then
-    try ./android.py build $1 debug install
+    cd "$ROOT"
+
+    # try ./android.py build $1 debug install
+    try ./renpy/renpy.sh ./renpy/launcher android_build $1 debug install
 fi
