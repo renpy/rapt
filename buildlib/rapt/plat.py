@@ -98,7 +98,7 @@ android = path(android)
 ant = path(ant)
 adb = path(adb)
 
-renpy = os.path.exists(path("private/lib/python2.7/site-packages/renpy/__init__.pyo"))
+renpy = os.path.exists(path("private/lib/python2.7/site-packages/renpy"))
 
 def rename(src, dst):
     """
