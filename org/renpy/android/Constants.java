@@ -9,4 +9,7 @@ public class Constants {
     // Used by the expansion downloader.
     public static int fileVersion = 0;
     public static int fileSize = 0;
+
+    // Used by the in-app purchasing code.
+    public static String store = "none";
 }

@@ -33,6 +33,8 @@ import java.io.IOException;
 
 import java.util.zip.GZIPInputStream;
 
+import com.puzzlebrothers.renpurchase.devicePurchase;
+
 public class PythonActivity extends Activity implements Runnable {
 
     // The audio thread for streaming audio...
@@ -66,6 +68,8 @@ public class PythonActivity extends Activity implements Runnable {
         Action.context = this;
 		this.mActivity = this;
 
+        devicePurchase.create (this);
+
         getWindowManager().getDefaultDisplay().getMetrics(Hardware.metrics);
 
         resourceManager = new ResourceManager(this);
@@ -85,7 +89,7 @@ public class PythonActivity extends Activity implements Runnable {
         //
         // Otherwise, we use the public data, if we have it, or the
         // private data if we do not.
-        if (intent != null && intent.getAction() != null && intent.getAction().equals("org.renpy.LAUNCH")) {
+        if (getIntent().getAction().equals("org.renpy.LAUNCH")) {
             mPath = new File(getIntent().getData().getSchemeSpecificPart());
 
             Project p = Project.scanDirectory(mPath);
@@ -309,6 +313,25 @@ public class PythonActivity extends Activity implements Runnable {
     }
 
     @Override
+    protected void onStart () {
+       super.onStart ();
+       devicePurchase.start (this);
+    }
+
+    @Override
+    protected void onStop () {
+       super.onStop ();
+       devicePurchase.stop ();
+    }
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+       if (!devicePurchase.onActivityResult (requestCode, resultCode, data)) {
+          super.onActivityResult (requestCode, resultCode, data);
+       }
+    }
+
+   @Override
     public boolean onKeyDown(int keyCode, final KeyEvent event) {
         //Log.i("python", "key2 " + mView + " " + mView.mStarted);
         if (mView != null && mView.mStarted && SDLSurfaceView.nativeKey(keyCode, 1, event.getUnicodeChar())) {
@@ -340,6 +363,7 @@ public class PythonActivity extends Activity implements Runnable {
     }
 
 	protected void onDestroy() {
+      devicePurchase.destroy ();
 		if (mView != null) {
 			mView.onDestroy();
 		}
