@@ -92,34 +92,31 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
                 R.string.text_button_pause;
         mPauseButton.setText(stringResourceID);
     }
-    
-    private int fileVersion = 0;
-    private int fileSize = 0;
 
     boolean checkExpansionFile(String filename, boolean checkLength) {
     	File f = new File(filename);
-    	
+
     	Log.i("DownloaderActivity", "Checking expansion file " + filename + " " + f.length());
-    	
-    	if (f.length() == fileSize) {
+
+    	if (f.length() == org.renpy.android.Constants.fileSize) {
     		return true;
     	}
-    	
+
     	if ((! checkLength) && f.exists()) {
     		return true;
     	}
-    	
+
     	return false;
     }
-    
+
 
     /**
-     * Gets the path to the expansion file, if it exists on the system. 
+     * Gets the path to the expansion file, if it exists on the system.
      * If not, return null;
      */
     String getExpansionFile(boolean checkLength) {
-        String fileName = Helpers.getExpansionAPKFileName(this, true, fileVersion);
-        
+        String fileName = Helpers.getExpansionAPKFileName(this, true, org.renpy.android.Constants.fileVersion);
+
         {
         	String fullFileName = "/mnt/sdcard/" + fileName;
         	if (checkExpansionFile(fullFileName, checkLength)) {
@@ -133,7 +130,7 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
         		return fullFileName;
         	}
         }
-        
+
         return null;
     }
 
@@ -212,7 +209,7 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
         	Toast.makeText(this, "Could not find expansion file. Giving up.", Toast.LENGTH_LONG).show();
         	return;
         }
-        
+
         // Launch PythonActivity
         Intent pythonIntent = new Intent(this, PythonActivity.class);
         pythonIntent.setAction("android.intent.action.MAIN");
@@ -220,13 +217,13 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
         if (expansionFile != null) {
         	pythonIntent.putExtra("expansionFile", expansionFile);
         }
-        		
+
 		this.startActivity(pythonIntent);
         this.finish();
-    	
+
     }
-    
-    
+
+
     /**
      * Called when the activity is first create; we wouldn't create a layout in
      * the case where we have the file and are moving to another activity
@@ -241,9 +238,9 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        
+
         String expansionFile = getExpansionFile(true);
-        
+
         /**
          * Before we do anything, are the files we expect already here and
          * delivered (presumably by Market) For free titles, this is probably
@@ -282,9 +279,9 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
                     return;
                 } // otherwise, download not needed so we fall through to
                   // starting the movie
-                
+
                 Log.i("DownloaderActivity", "Download not required.");
-                
+
             } catch (NameNotFoundException e) {
                 Log.e(LOG_TAG, "Cannot find own package! MAYDAY!");
                 e.printStackTrace();
@@ -388,9 +385,9 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
                 showDashboard = false;
                 paused = false;
                 indeterminate = false;
-                
+
                 startPython();
-                
+
                 return;
             default:
                 paused = true;
