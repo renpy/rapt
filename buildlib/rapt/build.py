@@ -353,6 +353,8 @@ def split_renpy(directory):
 
         if fn.startswith("android-"):
             continue
+        if fn.startswith("ouya-"):
+            continue
 
         if fn.endswith(".py"):
             os.rename(full_fn, os.path.join(private, "main.py"))
