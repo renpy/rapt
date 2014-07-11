@@ -63,6 +63,18 @@ public class devicePurchase {
 	}
 
 	/**
+	 * Returns the name of the store that we're using for
+	 * in-app purchasing. One of:
+	 *
+	 * "google"
+	 * "amazon"
+	 * "none"
+	 */
+	static public String getStoreName() {
+		return org.renpy.android.Constants.store;
+	}
+
+	/**
 	 * Method called on activity destruction
 	 */
 	static public void destroy() {
@@ -181,7 +193,8 @@ public class devicePurchase {
 	/**
 	 * Check purchase result. Called by the game
 	 *
-	 * \return result
+	 * Returns 0 if the purchases is in-progress, 1 if it is successful, or
+	 * 2 if if failed or was cancelled.
 	 */
 	static public synchronized int checkPurchaseResult() {
 		switch(m_store) {
