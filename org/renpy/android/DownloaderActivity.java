@@ -231,13 +231,8 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-
-        /// Adjust the window.
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                             WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 
         String expansionFile = getExpansionFile(true);
 
@@ -246,6 +241,7 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
          * delivered (presumably by Market) For free titles, this is probably
          * worth doing. (so no Market request is necessary)
          */
+
         if (expansionFile == null) {
 
             try {
@@ -275,6 +271,7 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
                 if (startResult != DownloaderClientMarshaller.NO_DOWNLOAD_REQUIRED) {
                     // The DownloaderService has started downloading the files,
                     // show progress
+                	setTheme(android.R.style.Theme);
                     initializeDownloadUI();
                     return;
                 } // otherwise, download not needed so we fall through to
