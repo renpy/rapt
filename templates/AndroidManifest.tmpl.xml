@@ -39,7 +39,8 @@
 {% if config.expansion %}
        <activity
            android:label="@string/iconName"
-           android:name="org.renpy.android.DownloaderActivity" >
+           android:name="org.renpy.android.DownloaderActivity"
+           android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
            <intent-filter >
                <action android:name="android.intent.action.MAIN" />
                <category android:name="android.intent.category.LAUNCHER" />
