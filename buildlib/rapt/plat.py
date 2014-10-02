@@ -10,6 +10,9 @@ import os
 import platform
 import traceback
 
+if "ANT_HOME" in os.environ:
+    del os.environ["ANT_HOME"]
+
 def set_win32_java_home():
 
     if "JAVA_HOME" in os.environ:
