@@ -125,7 +125,7 @@ def compile_dir(iface, dfn):
     # -OO = strip docstrings
     iface.call([PYTHON,'-OO','-m','compileall','-f',dfn])
 
-def make_tar(fn, source_dirs):
+def make_tar(iface, fn, source_dirs):
     """
     Make a zip file `fn` from the contents of source_dis.
     """
@@ -551,13 +551,13 @@ def build(iface, directory, commands):
         private_dirs.append(plat.path("engine-private"))
 
     def pack():
-        make_tar(plat.path("assets/private.mp3"), private_dirs)
+        make_tar(iface, plat.path("assets/private.mp3"), private_dirs)
 
     iface.background(pack)
 
     if public_dir is not None:
         iface.info("Packaging external data.")
-        make_tar(plat.path("assets/public.mp3"), [ public_dir ])
+        make_tar(iface, plat.path("assets/public.mp3"), [ public_dir ])
 
     # Copy over the icon and presplash files.
     copy_icon(directory, "icon.png", default_icon)
