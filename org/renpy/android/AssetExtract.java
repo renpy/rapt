@@ -38,6 +38,8 @@ class AssetExtract {
         InputStream assetStream = null;
         TarInputStream tis = null;
 
+        Log.i("python", "extracting " + asset + " to " + target);
+        
         try {
             assetStream = mAssetManager.open(asset, AssetManager.ACCESS_STREAMING);
             tis = new TarInputStream(new BufferedInputStream(new GZIPInputStream(new BufferedInputStream(assetStream, 8192)), 8192));
@@ -60,7 +62,7 @@ class AssetExtract {
                 break;
             }
 
-            Log.i("python", "extracting " + entry.getName());
+            // Log.i("python", "extracting " + entry.getName());
 
             if (entry.isDirectory()) {
 

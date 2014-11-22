@@ -64,6 +64,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import android.graphics.Color;
 import android.content.res.Resources;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 
 
 public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
@@ -85,8 +88,8 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         "uniform sampler2D sTexture;\n" +
         "void main() {\n" +
         "  gl_FragColor = texture2D(sTexture, vTextureCoord);\n" +
-
         "}\n";
+
     private static class ConfigChooser implements GLSurfaceView.EGLConfigChooser {
 
         public ConfigChooser(int r, int g, int b, int a, int depth, int stencil) {
@@ -333,11 +336,17 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
     // The user program is waiting in waitForResume.
     static int PAUSE_WAIT_FOR_RESUME = 3;
 
-    static int PAUSE_STOP_REQUEST = 4;
-    static int PAUSE_STOP_ACK = 5;
-
     // This stores the state of the pause system.
     static int mPause = PAUSE_NOT_PARTICIPATING;
+
+    // A similar state machine for stop.
+    static int STOP_NOT_PARTICIPATING = 0;
+    static int STOP_NONE = 1;
+	static int STOP_REQUEST = 2;
+	static int STOP_ACK = 3;
+
+    static int mStop = STOP_NOT_PARTICIPATING;
+
 
     private PowerManager.WakeLock wakeLock;
 
@@ -378,12 +387,12 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         super(act);
         SDLSurfaceView.instance = this;
 
-        mActivity = act;
+        mActivity = (PythonActivity) act;
         mResourceManager = new ResourceManager(act);
 
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
-        holder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
+        holder.setFormat(PixelFormat.RGBA_8888);
 
         mFilesDirectory = mActivity.getFilesDir().getAbsolutePath();
         mArgument = argument;
@@ -482,6 +491,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
      * Must not be called before a renderer has been set.
      */
     public void onPause() {
+		Log.w(TAG, "onPause() called");
 
         this.closeSoftKeyboard();
         synchronized (this) {
@@ -511,6 +521,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
      * Must not be called before a renderer has been set.
      */
     public void onResume() {
+		Log.w(TAG, "onResume() called");
         synchronized (this) {
             if (mPause == PAUSE_WAIT_FOR_RESUME) {
                 mPause = PAUSE_NONE;
@@ -523,11 +534,21 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 
     public void onDestroy() {
         Log.w(TAG, "onDestroy() called");
-        this.closeSoftKeyboard();
+
+		// If something is wrong with the Android lifecycle call onPause ourselves.
+		if (mPause == PAUSE_NONE) {
+			Log.w(TAG, "onPause not called before onDestroy");
+			onPause();
+		}
+
         synchronized (this) {
             this.notifyAll();
 
-            if ( mPause == PAUSE_STOP_ACK ) {
+			if (mStop == STOP_NOT_PARTICIPATING) {
+				Log.d(TAG, "onDestroy() not participating.");
+			}
+
+			if ( mStop == STOP_ACK ) {
                 Log.d(TAG, "onDestroy() app already leaved.");
                 return;
             }
@@ -535,11 +556,11 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 
             // application didn't leave, give 10s before closing.
             // hopefully, this could be enough for launching the on_stop() trigger within the app.
-            mPause = PAUSE_STOP_REQUEST;
+			mStop = STOP_REQUEST;
             int i = 50;
 
             Log.d(TAG, "onDestroy() stop requested, wait for an event from the app");
-            for (; i >= 0 && mPause == PAUSE_STOP_REQUEST; i--) {
+			for (; i >= 0 && mStop == STOP_REQUEST; i--) {
                 try {
                     this.wait(200);
                 } catch (InterruptedException e) {
@@ -551,7 +572,11 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
     }
 
     static int checkStop() {
-        if (mPause == PAUSE_STOP_REQUEST)
+		if (mStop == STOP_NOT_PARTICIPATING) {
+			mStop = STOP_NONE;
+		}
+
+		if (mStop == STOP_REQUEST)
             return 1;
         return 0;
     }
@@ -559,7 +584,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
     static void ackStop() {
         Log.d(TAG, "ackStop() notify");
         synchronized (instance) {
-            mPause = PAUSE_STOP_ACK;
+			mStop = STOP_ACK;
             instance.notifyAll();
         }
     }
@@ -648,23 +673,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
             try {
                 if (configToTest == 0) {
                     Log.i(TAG, "Try to use graphics config R8G8B8A8S8");
-                    ConfigChooser chooser = new ConfigChooser(
-                            // rgba
-                            8, 8, 8, 8,
-                            // depth
-                            ai.metaData.getInt("surface.depth", 0),
-                            // stencil
-                            ai.metaData.getInt("surface.stencil", 8));
-                    mEglConfig = chooser.chooseConfig(mEgl, mEglDisplay);
-                } else if (configToTest == 1) {
-                    Log.i(TAG, "Try to use graphics config R5G6B5S8");
-                    ConfigChooser chooser = new ConfigChooser(
-                            // rgba
-                            5, 6, 5, 0,
-                            // depth
-                            ai.metaData.getInt("surface.depth", 0),
-                            // stencil
-                            ai.metaData.getInt("surface.stencil", 8));
+					ConfigChooser chooser = new ConfigChooser(8, 8, 8, 8, 0, 0);
                     mEglConfig = chooser.chooseConfig(mEgl, mEglDisplay);
                 } else {
                     Log.e(TAG, "Unable to find a correct surface for this device !");
@@ -703,10 +712,34 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         if (DEBUG) Log.d(TAG, "Done egl");
         waitForStart();
 
+        // Figure out the APK path.
+        String apkFilePath;
+        ApplicationInfo appInfo;
+        PackageManager packMgmr = mActivity.getApplication().getPackageManager();
+
+        Log.i(TAG, "package name = " + mActivity.getPackageName());
+
+        try {
+            appInfo = packMgmr.getApplicationInfo(mActivity.getPackageName(), 0);
+            apkFilePath = appInfo.sourceDir;
+        } catch (NameNotFoundException e) {
+            apkFilePath = "";
+        }
+
+        Log.i(TAG, "ANDROID_APK = " + apkFilePath);
+
         nativeResize(mWidth, mHeight);
         nativeInitJavaCallbacks();
         nativeSetEnv("ANDROID_PRIVATE", mFilesDirectory);
+        nativeSetEnv("ANDROID_PUBLIC", mActivity.externalStorage.getAbsolutePath());
+        nativeSetEnv("ANDROID_OLD_PUBLIC", mActivity.oldExternalStorage.getAbsolutePath());
         nativeSetEnv("ANDROID_ARGUMENT", mArgument);
+        nativeSetEnv("ANDROID_APK", apkFilePath);
+
+        if (mActivity.mExpansionFile != null) {
+        	nativeSetEnv("ANDROID_EXPANSION", mActivity.mExpansionFile);
+        }
+
         nativeSetEnv("PYTHONOPTIMIZE", "2");
         nativeSetEnv("PYTHONHOME", mFilesDirectory);
         nativeSetEnv("PYTHONPATH", mArgument + ":" + mFilesDirectory + "/lib");
@@ -723,9 +756,10 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         }
 
         nativeSetMultitouchUsed();
+		nativeSetMouseUsed();
         nativeInit();
 
-        mPause = PAUSE_STOP_ACK;
+		mStop = STOP_ACK;
 
         //Log.i(TAG, "End of native init, stop everything (exit0)");
         System.exit(0);
@@ -781,6 +815,12 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
             throw new RuntimeException("Could not get attrib location for uMVPMatrix");
         }
 
+        muTextureUnitHandle = GLES20.glGetUniformLocation(mProgram, "sTexture");
+        checkGlError("glGetUniformLocation sTexture");
+        if (muTextureUnitHandle == -1) {
+        	throw new RuntimeException("Could not get attrib location for sTexture");
+        }
+
         // Create our texture. This has to be done each time the
         // surface is created.
 
@@ -802,6 +842,9 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
                 GLES20.GL_CLAMP_TO_EDGE);
 
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+
+        checkGlError("texImage2D");
+
 
         Matrix.setLookAtM(mVMatrix, 0, 0, 0, -5, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
@@ -853,7 +896,11 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         // BufferQueue has been abandoned!), it will work.
         for ( int i = 0; i < 2; i++ ) {
             GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+
+            GLES20.glUniform1i(muTextureUnitHandle, 0);
+            checkGlError("set texture unit");
+
+        	GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
             checkGlError("glDrawArrays");
             swapBuffers();
         }
@@ -920,6 +967,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         // Make the new surface current.
         boolean rv = mEgl.eglMakeCurrent(
                 mEglDisplay, mEglSurface, mEglSurface, mEglContext);
+
         if (!rv) {
             mEglSurface = null;
             return false;
@@ -1407,6 +1455,7 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
     private float[] mVMatrix = new float[16];
     private int mProgram;
     private int mTextureID;
+    private int muTextureUnitHandle;
     private int muMVPMatrixHandle;
     private int maPositionHandle;
     private int maTextureHandle;
