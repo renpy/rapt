@@ -344,13 +344,6 @@ public class PythonActivity extends Activity implements Runnable {
        devicePurchase.stop ();
     }
 
-    @Override
-    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-       if (!devicePurchase.onActivityResult (requestCode, resultCode, data)) {
-          super.onActivityResult (requestCode, resultCode, data);
-       }
-    }
-
    @Override
     public boolean onKeyDown(int keyCode, final KeyEvent event) {
         //Log.i("python", "key2 " + mView + " " + mView.mStarted);
@@ -462,6 +455,11 @@ public class PythonActivity extends Activity implements Runnable {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+    	if (devicePurchase.onActivityResult (requestCode, resultCode, intent)) {
+        	return;
+        }
+
         if ( this.activityResultListeners == null )
             return;
         if ( this.mView != null )
