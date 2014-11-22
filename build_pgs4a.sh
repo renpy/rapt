@@ -6,7 +6,7 @@ try () {
 
 
 if [ "$1" != "" ]; then
-    DISTRO="pgs4a-$1"    
+    DISTRO="pgs4a-$1"
 else
     DISTRO=pgs4a
 fi
@@ -36,13 +36,17 @@ try mv "$ROOT/python-for-android/dist/$DISTRO" "$DISTROROOT"
 
 try ./copy_scripts.sh "$DISTROROOT"
 
+# Copy the SDKs over.
+try cp "$ROOT/ouya-sdk.jar" "$DISTROROOT/libs/"
+try cp "$ROOT/Amazon-InAppSDK-Purchasing.jar" "$DISTROROOT/libs/"
+
 # Build the documentation.
 try cd "$ROOT/doc"
 try make html
 try cp -a "_build/html" "$DISTROROOT/doc"
 
 if [ "$1" != "" ]; then
-        
+
     try cd "$ROOT/dist"
     try tar cjf "pgs4a-$1.tar.bz2" "pgs4a-$1"
     try zip -9r "pgs4a-$1.zip" "pgs4a-$1"

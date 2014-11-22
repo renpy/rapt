@@ -25,6 +25,11 @@
         <category android:name="tv.ouya.intent.category.GAME" />
         </intent-filter>
 {% endif %}
+
+
+      <meta-data android:name="wakelock" android:value="1" />
+      <meta-data android:name="surface.transparent" android:value="0" />
+      <meta-data android:name="fullscreen" android:value="1" />
     </activity>
 
 {% if config.store == "amazon" %}
