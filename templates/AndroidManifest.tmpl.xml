@@ -10,6 +10,11 @@
                android:icon="@drawable/icon"
                >
 
+    <meta-data android:name="wakelock" android:value="1" />
+    <meta-data android:name="surface.transparent" android:value="0" />
+    <meta-data android:name="fullscreen" android:value="1" />
+
+
     <activity android:name="org.renpy.android.PythonActivity"
               android:label="@string/iconName"
               android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode"
@@ -26,10 +31,6 @@
         </intent-filter>
 {% endif %}
 
-
-      <meta-data android:name="wakelock" android:value="1" />
-      <meta-data android:name="surface.transparent" android:value="0" />
-      <meta-data android:name="fullscreen" android:value="1" />
     </activity>
 
 {% if config.store == "amazon" %}
