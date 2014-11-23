@@ -14,9 +14,9 @@ fi
 ROOT=$(dirname $(readlink -f $0))
 
 export ANDROIDSDK="$ROOT/android-sdk"
-export ANDROIDNDK="$ROOT/android-ndk-r8c"
-export ANDROIDNDKVER=r8c
-export ANDROIDAPI=8
+export ANDROIDNDK="$ROOT/android-ndk-r10c"
+export ANDROIDNDKVER=r10c
+export ANDROIDAPI=9
 
 # Build the python-for-android distro.
 try cd "$ROOT/python-for-android"
