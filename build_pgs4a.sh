@@ -13,6 +13,9 @@ fi
 
 ROOT=$(dirname $(readlink -f $0))
 
+export PYGAME_SDL2_ROOT="${2:-/home/tom/ab/pygame_sdl2}"
+export PYGAME_SDL2_ANDROID="$ROOT"
+
 export ANDROIDSDK="$ROOT/android-sdk"
 export ANDROIDNDK="$ROOT/android-ndk-r10c"
 export ANDROIDNDKVER=r10c
@@ -20,7 +23,7 @@ export ANDROIDAPI=9
 
 # Build the python-for-android distro.
 try cd "$ROOT/python-for-android"
-echo | try ./distribute.sh -d "$DISTRO" -m "android pygame pyjnius"
+echo | try ./distribute.sh -d "$DISTRO" -m "android pygame_sdl2 pyjnius"
 
 # Move the built distro to $DISTROROOT.
 DISTROROOT="$ROOT/dist/$DISTRO"

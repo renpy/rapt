@@ -4,22 +4,15 @@ try () {
     "$@" || exit 1
 }
 
-if [ "$1" != "" ]; then
-    DISTRO="$1"
-else
-    DISTRO=renpy
-fi
-
-if [ "$2" != "" ]; then
-    RENPYROOT="$2"
-else
-    RENPYROOT="/home/tom/ab/renpy"
-fi
-
 export ROOT=$(dirname $(readlink -f $0))
 
-export RENPYROOT
+export DISTRO="${1:-renpy}"
+export RENPYROOT="${2:-/home/tom/ab/renpy}"
+export PYGAME_SDL2_ROOT="${3:-/home/tom/ab/pygame_sdl2}"
+
 export RENPY_ANDROID="$ROOT"
+export PYGAME_SDL2_ANDROID="$ROOT"
+
 export RENPY_PYARGS="-O"
 
 export ANDROIDSDK="$ROOT/android-sdk"
@@ -35,10 +28,10 @@ rm -Rf "$RENPYROOT/module/build/lib.android"
 # Build the python-for-android distro.
 try cd "$ROOT/python-for-android"
 rm -Rf build/android
-rm -Rf build/pygame
+rm -Rf build/pygame_sdl2
 rm -Rf build/renpy
 rm -Rf build/pyjnius
-try ./distribute.sh -d "$DISTRO" -m "android pygame renpy pyjnius"
+try ./distribute.sh -d "$DISTRO" -m "android pygame_sdl2 renpy pyjnius"
 
 # Move the built distro to $DISTROROOT.
 DISTROROOT="$ROOT/dist/$DISTRO"
@@ -62,27 +55,12 @@ tryrm () {
 tryrm "$DISTROROOT/local.properties"
 
 tryrm "$DISTROROOT/python-install"
-tryrm "$DISTROROOT/libs/armeabi/libsdl_mixer.so"
-tryrm "$DISTROROOT/libs/armeabi/libsqlite3.so"
+tryrm "$DISTROROOT/libs/armeabi/libSDL2_ttf.so"
 
 python="$DISTROROOT/private/lib/python2.7"
 pygame="$python/site-packages/pygame"
 
-tryrm "$pygame/_camera_"*
-tryrm "$pygame/camera.pyo"
-tryrm "$pygame/"*.html
-tryrm "$pygame/"*.bmp
-tryrm "$pygame/"*.svg
-tryrm "$pygame/cdrom.so"
-tryrm "$pygame/pygame_icon.icns"
 tryrm "$pygame/threads/Py25Queue.pyo"
-tryrm "$pygame/"*.ttf
-tryrm "$pygame/mac"*
-tryrm "$pygame/_numpy"*
-tryrm "$pygame/sndarray.pyo"
-tryrm "$pygame/surfarray.pyo"
-tryrm "$pygame/_arraysurfarray.pyo"
-
 
 # unused encodings
 tryrm "$python/unittest/"*
