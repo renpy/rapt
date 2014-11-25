@@ -8,21 +8,23 @@
 
   <application android:label="@string/appName"
                android:icon="@drawable/icon"
+               android:allowBackup="true"
+               android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+               android:hardwareAccelerated="true" >
                >
 
     <meta-data android:name="wakelock" android:value="1" />
     <meta-data android:name="surface.transparent" android:value="0" />
     <meta-data android:name="fullscreen" android:value="1" />
 
-
-    <activity android:name="org.renpy.android.PythonActivity"
+    <activity android:name="org.renpy.android.PythonSDLActivity"
               android:label="@string/iconName"
-              android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode"
               android:launchMode="singleTop"
               android:process=":python"
               android:screenOrientation="{{ config.orientation }}"
-              android:windowSoftInputMode="stateAlwaysHidden"
-            >
+              android:configChanges="keyboardHidden|orientation"
+              >
+
 {% if not config.expansion %}
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -59,7 +61,8 @@
   </application>
 
   <uses-feature android:glEsVersion="0x00020000" android:required="true" />
-  <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="{{ config.target_version }}"/>
+  <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="{{ config.target_version }}"/>
+
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 

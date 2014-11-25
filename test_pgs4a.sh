@@ -21,4 +21,4 @@ try cp "$ROOT/local.properties" .
 try touch "android.keystore"
 
 ./android.py build /home/tom/ab/android/tests/color_touch debug install
-adb shell am start -n org.renpy.ct/org.renpy.android.PythonActivity
+adb shell am start -n org.renpy.ct/org.renpy.android.PythonSDLActivity
