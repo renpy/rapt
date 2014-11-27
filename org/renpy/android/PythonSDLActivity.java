@@ -3,6 +3,7 @@ package org.renpy.android;
 import org.libsdl.app.SDLActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,8 +22,14 @@ import java.io.InputStream;
 
 public class PythonSDLActivity extends SDLActivity {
 
+	/**
+	 * This exists so python code can access this activity.
+	 */
+	public static PythonSDLActivity mActivity = null;
+
 	public native void nativeSetEnv(String variable, String value);
-    ResourceManager resourceManager;
+
+	ResourceManager resourceManager;
 
     /**
      * This determines if unpacking one the zip files included in
@@ -109,7 +117,7 @@ public class PythonSDLActivity extends SDLActivity {
         }
     }
 
-    void openUrl(String url) {
+    public void openUrl(String url) {
         Log.i("python", "Opening URL: " + url);
 
         Intent i = new Intent(Intent.ACTION_VIEW);
@@ -117,10 +125,20 @@ public class PythonSDLActivity extends SDLActivity {
         startActivity(i);
     }
 
-    public void preparePython() {
-        Log.v("python", "Starting preparePython.");
+    public void vibrate(double s) {
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (v != null) {
+            v.vibrate((int) (1000 * s));
+        }
+    }
 
-        resourceManager = new ResourceManager(this);
+
+    public void preparePython() {
+    	Log.v("python", "Starting preparePython.");
+
+    	mActivity = this;
+
+    	resourceManager = new ResourceManager(this);
 
         File oldExternalStorage = new File(Environment.getExternalStorageDirectory(), getPackageName());
         File externalStorage = getExternalFilesDir(null);
