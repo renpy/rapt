@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -132,6 +133,11 @@ public class PythonSDLActivity extends SDLActivity {
         }
     }
 
+    public int getDPI() {
+    	DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    	return metrics.densityDpi;
+    }
 
     public void preparePython() {
     	Log.v("python", "Starting preparePython.");
@@ -188,7 +194,5 @@ public class PythonSDLActivity extends SDLActivity {
 
         Log.v("python", "Finished preparePython.");
 
-
     };
-
 }
