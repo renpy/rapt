@@ -3,9 +3,11 @@ package org.renpy.android;
 import org.libsdl.app.SDLActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -107,6 +109,13 @@ public class PythonSDLActivity extends SDLActivity {
         }
     }
 
+    void openUrl(String url) {
+        Log.i("python", "Opening URL: " + url);
+
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+    }
 
     public void preparePython() {
         Log.v("python", "Starting preparePython.");
