@@ -31,6 +31,9 @@ class Configuration(object):
         except:
             pass
 
+        if self.orientation == "landscape":
+            self.orientation = "sensorLandscape"
+
     def save(self, directory):
 
         with file(os.path.join(directory, ".android.json"), "w") as f:
@@ -97,8 +100,9 @@ This should be the human-readable version that you would present to a person."""
 This should be an integer number, and the value should increase between versions.""", config.numeric_version)
 
     config.orientation = interface.choice("How would you like your application to be displayed?", [
-            ("landscape", "In landscape mode."),
-            ("portrait", "In portrait mode."),
+            ("sensorLandscape", "In landscape orientation."),
+            ("portrait", "In portrait orientation."),
+            ("sensor", "In the user's preferred orientation."),
         ], config.orientation)
 
     if plat.renpy:
