@@ -24,7 +24,6 @@ def main():
     # Map the back button to the escape key.
     if android:
         android.init()
-        android.map_key(android.KEYCODE_BACK, pygame.K_ESCAPE)
 
     # Use a timer to ensure the Android events get regularly
     # called.
@@ -35,15 +34,19 @@ def main():
 
     x = -w
     y = -h
-    
+
     while True:
 
         ev = pygame.event.wait()
 
-        # Android-specific:
-        if android:
-            if android.check_pause():
-                android.wait_for_resume()
+        # Handle application state events.
+        if ev.type == pygame.APP_WILLENTERBACKGROUND:
+            pygame.time.set_timer(TIMEREVENT, 0)
+        elif ev.type == pygame.APP_DIDENTERFOREGROUND:
+            screen = pygame.display.set_mode((info.current_w, info.current_h))
+            pygame.time.set_timer(TIMEREVENT, 1000 / FPS)
+        elif ev.type == pygame.APP_TERMINATING:
+            break
 
         # Draw the screen based on the timer.
         if ev.type == TIMEREVENT:
@@ -54,10 +57,10 @@ def main():
         if ev.type == pygame.MOUSEBUTTONDOWN:
             x, y = ev.pos
 
-        elif ev.type == pygame.KEYDOWN and ev.key == pygame.K_ESCAPE:
+        elif ev.type == pygame.KEYDOWN and ev.key == pygame.K_APP_BACK:
             break
 
-            
+
 # This isn't run on Android.
 if __name__ == "__main__":
     main()
