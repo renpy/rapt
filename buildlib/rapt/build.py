@@ -267,7 +267,7 @@ def zip_directory(zf, dn):
 
 def copy_icon(directory, name, default):
     """
-    Copys icon or presplash files ending with `name` found in `directory` to
+    Copys icon ending with `name` found in `directory` to
     the appropriate res/drawables directory. If the file doesn't exist,
     copies in default instead.
     """
@@ -329,6 +329,18 @@ def copy_icon(directory, name, default):
     # If no files are found, copy over the default.
     copy(default, os.path.join(res, "drawable", name))
 
+
+def copy_presplash(directory, name, default):
+    """
+    Copies the presplash file.
+    """
+
+    fn = os.path.join(directory, name)
+
+    if not os.path.exists(fn):
+        fn = default
+
+    shutil.copy(fn, plat.path("assets/" + name))
 
 def split_renpy(directory):
     """
@@ -559,8 +571,12 @@ def build(iface, directory, commands):
         iface.info("Packaging external data.")
         make_tar(iface, plat.path("assets/public.mp3"), [ public_dir ])
 
-    # Copy over the icon and presplash files.
+    # Copy over the icon files.
     copy_icon(directory, "icon.png", default_icon)
+
+    # Copy the presplash files.
+    copy_presplash(directory, "android-presplash.jpg", default_presplash)
+
     copy_icon(directory, "presplash.jpg", default_presplash)
 
     # Copy over the OUYA icon.

@@ -57,7 +57,7 @@ def main():
         if ev.type == pygame.MOUSEBUTTONDOWN:
             x, y = ev.pos
 
-        elif ev.type == pygame.KEYDOWN and ev.key == pygame.K_APP_BACK:
+        elif ev.type == pygame.KEYDOWN and ev.key == pygame.K_AC_BACK:
             break
 
 
