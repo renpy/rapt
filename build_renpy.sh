@@ -10,6 +10,11 @@ export DISTRO="${1:-renpy}"
 export RENPYROOT="${2:-/home/tom/ab/renpy}"
 export PYGAME_SDL2_ROOT="${3:-/home/tom/ab/pygame_sdl2}"
 
+try cd $RENPYROOT
+try ./run.sh the_question compile
+
+rm -Rf "$RENPYROOT/module/build/lib.android"
+
 export RENPY_ANDROID="$ROOT"
 export PYGAME_SDL2_ANDROID="$ROOT"
 
@@ -20,17 +25,12 @@ export ANDROIDNDK="$ROOT/android-ndk-r10c"
 export ANDROIDNDKVER=r10c
 export ANDROIDAPI=9
 
-try cd $RENPYROOT
-try ./run.sh the_question compile
-
-rm -Rf "$RENPYROOT/module/build/lib.android"
-
 # Build the python-for-android distro.
 try cd "$ROOT/python-for-android"
-rm -Rf build/android
-rm -Rf build/pygame_sdl2
-rm -Rf build/renpy
-rm -Rf build/pyjnius
+# rm -Rf build/android
+# rm -Rf build/pygame_sdl2
+# rm -Rf build/renpy
+# rm -Rf build/pyjnius
 try ./distribute.sh -d "$DISTRO" -m "android pygame_sdl2 renpy pyjnius"
 
 # Move the built distro to $DISTROROOT.
@@ -55,7 +55,7 @@ tryrm () {
 tryrm "$DISTROROOT/local.properties"
 
 tryrm "$DISTROROOT/python-install"
-tryrm "$DISTROROOT/libs/armeabi/libSDL2_ttf.so"
+# tryrm "$DISTROROOT/libs/armeabi/libSDL2_ttf.so"
 
 python="$DISTROROOT/private/lib/python2.7"
 pygame="$python/site-packages/pygame"
