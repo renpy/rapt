@@ -32,6 +32,16 @@ public class PythonSDLActivity extends SDLActivity {
 
 	ResourceManager resourceManager;
 
+
+    public void recursiveDelete(File f) {
+        if (f.isDirectory()) {
+            for (File r : f.listFiles()) {
+                recursiveDelete(r);
+            }
+        }
+        f.delete();
+    }
+
     /**
      * This determines if unpacking one the zip files included in
      * the .apk is necessary. If it is, the zip file is unpacked.
@@ -72,7 +82,10 @@ public class PythonSDLActivity extends SDLActivity {
         if (! data_version.equals(disk_version)) {
             Log.v("python", "Extracting " + resource + " assets.");
 
-            // recursiveDelete(target);
+            // Delete old libraries & renpy files.
+            recursiveDelete(new File(target, "lib"));
+            recursiveDelete(new File(target, "renpy"));
+
             target.mkdirs();
 
             AssetExtract ae = new AssetExtract(this);
