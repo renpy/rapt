@@ -14,6 +14,11 @@ import android.os.Environment;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -28,10 +33,46 @@ public class PythonSDLActivity extends SDLActivity {
 	 */
 	public static PythonSDLActivity mActivity = null;
 
-	public native void nativeSetEnv(String variable, String value);
+	/**
+	 * The layout that contains the SDL view. VideoPlayer uses this to add
+	 * its own view on on top of the SDL view.
+	 */
+	public FrameLayout mFrameLayout;
+
+
+	/**
+	 * A layout that contains mLayout. This is a 3x3 grid, with the layout
+	 * in the center. The idea is that if someone wants to show an ad, they
+	 * can stick it in one of the other cells..
+	 */
+	public LinearLayout mVbox;
 
 	ResourceManager resourceManager;
 
+	// GUI code. /////////////////////////////////////////////////////////////
+
+
+	public void addView(View view, int index) {
+		mVbox.addView(view, index, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, (float) 0.0));
+	}
+
+	public void removeView(View view) {
+		mVbox.removeView(view);
+	}
+
+	@Override
+	public void setContentView(View view) {
+		mFrameLayout = new FrameLayout(this);
+		mFrameLayout.addView(view);
+
+		mVbox = new LinearLayout(this);
+		mVbox.setOrientation(LinearLayout.VERTICAL);
+		mVbox.addView(mFrameLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, (float) 1.0));
+
+		super.setContentView(mVbox);
+	}
+
+	// Code to unpack python and get things running ///////////////////////////
 
     public void recursiveDelete(File f) {
         if (f.isDirectory()) {
@@ -131,26 +172,7 @@ public class PythonSDLActivity extends SDLActivity {
         }
     }
 
-    public void openUrl(String url) {
-        Log.i("python", "Opening URL: " + url);
-
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
-        startActivity(i);
-    }
-
-    public void vibrate(double s) {
-        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        if (v != null) {
-            v.vibrate((int) (1000 * s));
-        }
-    }
-
-    public int getDPI() {
-    	DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-    	return metrics.densityDpi;
-    }
+	public native void nativeSetEnv(String variable, String value);
 
     public void preparePython() {
     	Log.v("python", "Starting preparePython.");
@@ -208,4 +230,30 @@ public class PythonSDLActivity extends SDLActivity {
         Log.v("python", "Finished preparePython.");
 
     };
+
+
+    // Code to support public APIs. ///////////////////////////////////////////
+
+    public void openUrl(String url) {
+        Log.i("python", "Opening URL: " + url);
+
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+    }
+
+    public void vibrate(double s) {
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (v != null) {
+            v.vibrate((int) (1000 * s));
+        }
+    }
+
+    public int getDPI() {
+    	DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    	return metrics.densityDpi;
+    }
+
+
 }

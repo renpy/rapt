@@ -14,39 +14,39 @@ public class VideoPlayer implements SurfaceHolder.Callback, MediaPlayer.OnErrorL
 	SurfaceView view = null;
 
 	boolean playing = true;
-	
-	
+
+
 	public boolean onError(MediaPlayer mp, int what, int extra) {
 		Log.i("VP", "Error is " + what + " " + extra);
 		return false;
 	}
-	
+
 	public void onCompletion(MediaPlayer mp) {
 		Log.i("VP", "Completion.");
-		
+
 		if (playing) {
 			stop();
 		}
 	}
-	
+
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 	}
-	
+
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.i("VP", "Surface created.");
-		
+
 		try {
 			player = new MediaPlayer();
 
 			player.setOnErrorListener(this);
 			player.setOnCompletionListener(this);
-			
+
 			player.setDisplay(view.getHolder());
 
 			Log.i("VP", "Set display.");
-			
+
 			FileInputStream f = new FileInputStream(realFn);
-	
+
 	        if (length >= 0) {
 	            player.setDataSource(f.getFD(), base, length);
 	        } else {
@@ -56,77 +56,77 @@ public class VideoPlayer implements SurfaceHolder.Callback, MediaPlayer.OnErrorL
 			f.close();
 
 	        Log.i("VP", "Set input stream.");
-	        
+
 			player.prepare();
 
 			Log.i("VP", "Prepared, duration = " + player.getDuration());
-			
+
 			player.start();
 
 			Log.i("VP", "Started playing");
-			
-			
+
+
 		} catch (Exception e) {
-			
+
 			Log.e("VP", "exception in surface creation", e);
-			
+
 			playing = false;
 			return;
 		}
-			
+
 		synchronized (VideoPlayer.this) {
 			VideoPlayer.this.notifyAll();
 		}
 	}
-	
+
 	public void surfaceDestroyed(SurfaceHolder holder) {
 	}
-	
+
 	/**
 	 * This runs on the UI thread to create the surface.
 	 */
 	private void startPlaying() {
 		Log.i("VP", "startPlaying called");
-		
-		
-		view = new SurfaceView(PythonActivity.mActivity);
+
+
+		view = new SurfaceView(PythonSDLActivity.mActivity);
 		view.setZOrderOnTop(true);
-		
+
 		view.getHolder().addCallback(this);
-		
-		PythonActivity.mFrameLayout.addView(view);
-		
+
+		PythonSDLActivity.mActivity.mFrameLayout.addView(view);
+
 		Log.i("VP", "startPlaying done");
 	}
-	
+
 	/**
 	 * This runs on the UI thread to remove the view.
 	 */
 	private void stopPlaying() {
 		player.release();
-		PythonActivity.mFrameLayout.removeView(view);
+		PythonSDLActivity.mActivity.mFrameLayout.removeView(view);
 	}
-	
+
 
 	public void stop() {
 
 		playing = false;
-		
-		PythonActivity.mActivity.runOnUiThread(new Runnable() {
+
+		PythonSDLActivity.mActivity.runOnUiThread(new Runnable() {
 			public void run() {
 				stopPlaying();
 			}
 		});
 	}
-	
+
 	public boolean isPlaying() {
 		return this.playing;
 	}
-	
+
 	String realFn;
 	long base;
 	long length;
-	
+
 	/**
 	 * Creates a new videoplayer and starts it playing.
 	 */
@@ -135,21 +135,21 @@ public class VideoPlayer implements SurfaceHolder.Callback, MediaPlayer.OnErrorL
 		this.realFn = realFn;
 		this.base = base;
 		this.length = length;
-		
+
 		synchronized (this) {
-			PythonActivity.mActivity.runOnUiThread(new Runnable() {
+			PythonSDLActivity.mActivity.runOnUiThread(new Runnable() {
 				public void run() {
 					startPlaying();
 				}
 			});
-			
+
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				
+
 			}
 		}
-			
+
 	}
-	
+
 }

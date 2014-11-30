@@ -211,7 +211,7 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
         }
 
         // Launch PythonActivity
-        Intent pythonIntent = new Intent(this, PythonActivity.class);
+        Intent pythonIntent = new Intent(this, PythonSDLActivity.class);
         pythonIntent.setAction("android.intent.action.MAIN");
 
         if (expansionFile != null) {
