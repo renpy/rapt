@@ -13,6 +13,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -291,5 +292,20 @@ public class PythonSDLActivity extends SDLActivity {
     	return metrics.densityDpi;
     }
 
+    public PowerManager.WakeLock wakeLock = null;
+
+    public void setWakeLock(boolean active) {
+    	if (wakeLock == null) {
+			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+			wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "Screen On");
+			wakeLock.setReferenceCounted(false);
+    	}
+
+    	if (active) {
+    		wakeLock.acquire();
+    	} else {
+    		wakeLock.release();
+    	}
+    }
 
 }
