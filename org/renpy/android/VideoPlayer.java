@@ -69,8 +69,7 @@ public class VideoPlayer implements SurfaceHolder.Callback, MediaPlayer.OnErrorL
 		} catch (Exception e) {
 
 			Log.e("VP", "exception in surface creation", e);
-
-			playing = false;
+			stop();
 			return;
 		}
 
@@ -105,6 +104,20 @@ public class VideoPlayer implements SurfaceHolder.Callback, MediaPlayer.OnErrorL
 	private void stopPlaying() {
 		player.release();
 		PythonSDLActivity.mActivity.mFrameLayout.removeView(view);
+	}
+
+	public void pause() {
+		if (playing) {
+			player.pause();
+			Log.i("VP", "paused");
+		}
+	}
+
+	public void unpause() {
+		if (playing) {
+			player.start();
+			Log.i("VP", "unpaused");
+		}
 	}
 
 
