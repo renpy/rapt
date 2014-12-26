@@ -31,7 +31,7 @@ try cd "$ROOT/python-for-android"
 # rm -Rf build/pygame_sdl2
 # rm -Rf build/renpy
 # rm -Rf build/pyjnius
-try ./distribute.sh -d "$DISTRO" -m "android pygame_sdl2 renpy pyjnius"
+try ./distribute.sh -d "$DISTRO" -m "libav android pygame_sdl2 renpy pyjnius"
 
 # Move the built distro to $DISTROROOT.
 DISTROROOT="$ROOT/dist/$DISTRO"
