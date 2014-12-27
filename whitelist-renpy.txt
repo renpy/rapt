@@ -91,7 +91,9 @@
 /lib/python2.7/decimal.pyo
 
 /lib/python2.7/site-packages/pygame/**
+/lib/python2.7/site-packages/pygame_sdl2/**
 /lib/python2.7/site-packages/renpy/**
+/lib/python2.7/site-packages/pysdlsound/**
 /lib/python2.7/site-packages/pyjnius/**
 /lib/python2.7/site-packages/android/**
 
