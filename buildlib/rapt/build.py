@@ -381,7 +381,7 @@ def split_renpy(directory):
     return private, assets
 
 
-def build(iface, directory, commands):
+def build(iface, directory, commands, launch=False):
 
     # Are we doing a Ren'Py build?
 
@@ -609,6 +609,17 @@ def build(iface, directory, commands):
 
     except subprocess.CalledProcessError:
         iface.fail("The build seems to have failed.")
+
+    if launch:
+        iface.info("Launching app.")
+
+        iface.call([
+            plat.adb, "shell",
+            "am", "start",
+            "-W",
+            "-a", "android.intent.action.MAIN",
+            "{}/org.renpy.android.PythonSDLActivity".format(config.package),
+            ], cancel=True)
 
     iface.final_success("The build seems to have succeeded.")
 

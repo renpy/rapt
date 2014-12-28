@@ -23,6 +23,7 @@ def main():
     ap = argparse.ArgumentParser(description="Build an android package.")
     ap.add_argument("command", help="The command to run. One of installsdk, configure, or build.")
     ap.add_argument("argument", nargs='*', help="The arguments to the selected command.")
+    ap.add_argument("--launch", action="store_true", help="If true, launch the app when build completes.")
 
     args = ap.parse_args()
 
@@ -50,7 +51,7 @@ def main():
         if len(args.argument) < 2:
             iface.fail("The build command expects at least 2 arguments.")
 
-        build.build(iface, args.argument[0], args.argument[1:])
+        build.build(iface, args.argument[0], args.argument[1:], launch=args.launch)
 
     elif args.command == "logcat":
         subprocess.call([ plat.adb, "logcat", "-s", "python:*"] + args.argument)

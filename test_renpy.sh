@@ -25,5 +25,5 @@ if [ "$1" != "" ]; then
     cd "$ROOT"
 
     # try ./android.py build $1 debug install
-    try ./renpy/renpy.sh ./renpy/launcher android_build $1 release install
+    try ./renpy/renpy.sh ./renpy/launcher android_build --launch $1 release install
 fi
