@@ -593,8 +593,9 @@ def build(iface, directory, commands):
 
     try:
 
-        # Clean is required, so we don't use old code.
-        iface.call([plat.ant, "clean"] +  commands, cancel=True)
+        # Clean is required, so we don't use old code. (Not true anymore?)
+        # iface.call([plat.ant, "clean" ] +  commands, cancel=True)
+        iface.call([ plat.ant ] +  commands, cancel=True)
 
         if (expansion_file is not None) and ("install" in commands):
             iface.info("Uploading expansion file.")
