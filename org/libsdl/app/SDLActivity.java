@@ -46,11 +46,21 @@ public class SDLActivity extends Activity {
 
     // Load the .so
     static {
+        System.loadLibrary("png16");
+        System.loadLibrary("avutil");
+        System.loadLibrary("avcodec");
+        System.loadLibrary("avformat");
+        System.loadLibrary("avresample");
+        System.loadLibrary("swscale");
         System.loadLibrary("SDL2");
-        //System.loadLibrary("SDL2_image");
+        System.loadLibrary("SDL2_image");
+        System.loadLibrary("SDL2_ttf");
+        System.loadLibrary("SDL2_gfx");
         //System.loadLibrary("SDL2_mixer");
         //System.loadLibrary("SDL2_net");
         //System.loadLibrary("SDL2_ttf");
+        System.loadLibrary("python2.7");
+        System.loadLibrary("pymodules");
         System.loadLibrary("main");
     }
 
