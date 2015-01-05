@@ -613,12 +613,17 @@ def build(iface, directory, commands, launch=False):
     if launch:
         iface.info("Launching app.")
 
+        if expansion_file:
+            launch_activity = "DownloaderActivity"
+        else:
+            launch_activity = "PythonSDLActivity"
+
         iface.call([
             plat.adb, "shell",
             "am", "start",
             "-W",
             "-a", "android.intent.action.MAIN",
-            "{}/org.renpy.android.PythonSDLActivity".format(config.package),
+            "{}/org.renpy.android.{}".format(config.package, launch_activity),
             ], cancel=True)
 
     iface.final_success("The build seems to have succeeded.")
