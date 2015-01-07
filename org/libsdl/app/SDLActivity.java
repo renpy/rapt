@@ -47,11 +47,11 @@ public class SDLActivity extends Activity {
     // Load the .so
     static {
         System.loadLibrary("png16");
-        System.loadLibrary("avutil");
-        System.loadLibrary("avcodec");
-        System.loadLibrary("avformat");
-        System.loadLibrary("avresample");
-        System.loadLibrary("swscale");
+//        System.loadLibrary("avutil");
+//        System.loadLibrary("avcodec");
+//        System.loadLibrary("avformat");
+//        System.loadLibrary("avresample");
+//        System.loadLibrary("swscale");
         System.loadLibrary("SDL2");
         System.loadLibrary("SDL2_image");
         System.loadLibrary("SDL2_ttf");
