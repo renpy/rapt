@@ -20,7 +20,6 @@
     <activity android:name="org.renpy.android.PythonSDLActivity"
               android:label="@string/iconName"
               android:launchMode="singleTop"
-              android:process=":python"
               android:screenOrientation="{{ config.orientation }}"
               android:configChanges="keyboardHidden|orientation"
               >
@@ -83,5 +82,5 @@
   <uses-permission android:name="android.permission.{{ perm }}" />
   {% endfor %}
 
-{{ manifest_extra }}
+{{ manifest_extra or '' }}
 </manifest>
