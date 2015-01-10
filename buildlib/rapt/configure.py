@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import plat
 
 class Configuration(object):
@@ -91,13 +92,19 @@ This is usually of the form com.domain.program or com.domain.email.program. It m
     version = interface.input("""\
 What is the application's version?
 
-This should be the human-readable version that you would present to a person.""", config.version)
+This should be the human-readable version that you would present to a person. It must contain only numbers and dots.""", config.version)
+
+    if not re.match(r'^[\d\.]+$', version):
+        interface.fail("The version number must contain only numbers and dots.")
 
     set_version(config, version)
 
     config.numeric_version = interface.input("""What is the version code?
 
-This should be an integer number, and the value should increase between versions.""", config.numeric_version)
+This must be a positive integer number, and the value should increase between versions.""", config.numeric_version)
+
+    if not re.match(r'^[\d]+$', config.numeric_version):
+        interface.fail("The numeric version must contain only numbers.")
 
     config.orientation = interface.choice("How would you like your application to be displayed?", [
             ("sensorLandscape", "In landscape orientation."),

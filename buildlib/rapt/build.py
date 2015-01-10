@@ -431,7 +431,9 @@ def build(iface, directory, commands, launch=False):
             public_dir = join_and_check(directory, "external")
             assets_dir = join_and_check(directory, "assets")
 
-    versioned_name = config.name.replace(" ", "").replace("'", "") + "-" + config.version
+    versioned_name = config.name
+    versioned_name = re.sub(r'[^\w]', '', versioned_name)
+    versioned_name += "-" + config.version
 
     # Annoying fixups.
     config.name = config.name.replace("'", "\\'")
