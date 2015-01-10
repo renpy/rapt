@@ -125,8 +125,12 @@ public class devicePurchaseGoogle {
 
    public void cleanup () {
       if (m_iabHelper != null) {
-         m_iabHelper.dispose ();
-         m_iabHelper = null;
+
+          try {
+              m_iabHelper.dispose();
+          } catch (Exception e) { }
+
+          m_iabHelper = null;
       }
    }
 
