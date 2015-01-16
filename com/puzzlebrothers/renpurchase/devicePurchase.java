@@ -51,6 +51,17 @@ public class devicePurchase {
 
 		String store = org.renpy.android.Constants.store;
 
+		if (store.equals("all")) {
+		    PackageManager pkgManager = activity.getPackageManager();
+		    String installerPackageName = pkgManager.getInstallerPackageName(activity.getPackageName());
+
+		    if ((installerPackageName != null) && installerPackageName.startsWith("com.amazon")) {
+		        store = "amazon";
+		    } else {
+		        store = "play";
+		    }
+		}
+
 		if (store.equals("play")) {
 			m_store = PLAY;
 			devicePurchaseGoogle.create(activity);
