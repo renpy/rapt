@@ -34,7 +34,7 @@
 
     </activity>
 
-{% if config.store == "amazon" %}
+{% if config.store == "amazon" or config.store == "all" %}
     <receiver android:name = "com.amazon.device.iap.ResponseReceiver" >
       <intent-filter>
         <action android:name = "com.amazon.inapp.purchasing.NOTIFY" android:permission = "com.amazon.inapp.purchasing.Permission.NOTIFY" />
@@ -64,7 +64,7 @@
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-{% if config.expansion or config.store == "play" %}
+{% if config.expansion or config.store == "play" or config.store == "all" %}
   <uses-permission android:name="com.android.vending.CHECK_LICENSE"/>
 {% endif %}
 
@@ -74,7 +74,7 @@
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 {% endif %}
 
-{% if config.store == "play" %}
+{% if config.store == "play" or config.store == "all" %}
   <uses-permission android:name="com.android.vending.BILLING"/>
 {% endif %}
 

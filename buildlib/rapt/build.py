@@ -335,12 +335,17 @@ def copy_presplash(directory, name, default):
     Copies the presplash file.
     """
 
-    fn = os.path.join(directory, name)
+    for ext in [ ".png", ".jpg" ]:
 
-    if not os.path.exists(fn):
+        fn = os.path.join(directory, name + ext)
+
+        if os.path.exists(fn):
+            break
+    else:
         fn = default
+        ext = os.path.splitext(fn)[1]
 
-    shutil.copy(fn, plat.path("assets/" + name))
+    shutil.copy(fn, plat.path("assets/" + name + ext))
 
 def split_renpy(directory):
     """
@@ -398,6 +403,9 @@ def build(iface, directory, commands, launch=False):
     config = configure.Configuration(directory)
     if config.package is None:
         iface.fail("Run configure before attempting to build the app.")
+
+    if (config.store == "play" or config.store == "all") and (config.google_play_key is None):
+        iface.fail("Google Play support is enabled, but build.google_play_key is not set. Please set in your game.")
 
     global blacklist
     global whitelist
@@ -577,9 +585,7 @@ def build(iface, directory, commands, launch=False):
     copy_icon(directory, "icon.png", default_icon)
 
     # Copy the presplash files.
-    copy_presplash(directory, "android-presplash.jpg", default_presplash)
-
-    copy_icon(directory, "presplash.jpg", default_presplash)
+    copy_presplash(directory, "android-presplash", default_presplash)
 
     # Copy over the OUYA icon.
     ouya_icon = join_and_check(directory, "ouya-icon.png") or join_and_check(directory, "ouya_icon.png")

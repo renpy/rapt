@@ -116,6 +116,7 @@ This must be a positive integer number, and the value should increase between ve
         config.store = interface.choice("Which app store would you like to support in-app purchasing through?", [
             ("play", "Google Play."),
             ("amazon", "Amazon App Store."),
+            ("all", "Both, in one app."),
             ("none", "Neither."),
             ], config.store)
 
