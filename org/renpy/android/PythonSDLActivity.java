@@ -2,8 +2,6 @@ package org.renpy.android;
 
 import org.libsdl.app.SDLActivity;
 
-import com.puzzlebrothers.renpurchase.devicePurchase;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+import org.renpy.iap.Store;
 
 public class PythonSDLActivity extends SDLActivity {
 
@@ -238,36 +237,22 @@ public class PythonSDLActivity extends SDLActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        devicePurchase.create (this);
-    }
-
-    @Override
-    protected void onStart () {
-       super.onStart();
-       devicePurchase.start (this);
-    }
-
-    @Override
-    protected void onStop () {
-       super.onStop();
-       devicePurchase.stop ();
+        Store.create(this);
     }
 
     @Override
     protected void onDestroy() {
     	super.onDestroy();
-    	devicePurchase.destroy();
+    	Store.getStore().destroy();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-    	if (devicePurchase.onActivityResult (requestCode, resultCode, intent)) {
-        	return;
+    	if (Store.getStore().onActivityResult(requestCode, resultCode, intent)) {
+    	    return;
         }
 
     	super.onActivityResult(requestCode, resultCode, intent);
     }
-
-
 
     // Code to support public APIs. ////////////////////////////////////////////
 
