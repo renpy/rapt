@@ -23,14 +23,14 @@ public class Store {
             if ((installerPackageName != null) && installerPackageName.startsWith("com.amazon")) {
                 storeName = "amazon";
             } else {
-                storeName = "play";
+                storeName = "none";
             }
         }
 
         if (storeName.equals("play")) {
             store = new PlayStore(activity);
         } else if (storeName.equals("amazon")) {
-            store = new Store();
+            store = new AmazonStore(activity);
         } else {
             store = new Store();
         }
