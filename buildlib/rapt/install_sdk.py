@@ -109,7 +109,16 @@ def unpack_sdk(interface):
             tf.close()
         else:
             zf = zipfile.ZipFile(plat.path(archive))
-            zf.extractall(plat.path("."))
+
+            # We have to do this because Python has a small (260?) path length
+            # limit on windows, and the Android SDK has a
+            old_cwd = os.getcwd()
+            os.chdir(plat.path("."))
+
+            zf.extractall(".")
+
+            os.chdir(old_cwd)
+
             zf.close()
 
     interface.background(extract)
