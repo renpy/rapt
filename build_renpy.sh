@@ -54,6 +54,8 @@ tryrm () {
 
 tryrm "$DISTROROOT/local.properties"
 
+tryrm "$DISTROROOT/lib/armeabi/"*.a
+
 tryrm "$DISTROROOT/python-install"
 # tryrm "$DISTROROOT/libs/armeabi/libSDL2_ttf.so"
 
