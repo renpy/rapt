@@ -9,6 +9,7 @@ linux = False
 import os
 import platform
 import traceback
+import shutil
 
 if "ANT_HOME" in os.environ:
     del os.environ["ANT_HOME"]
@@ -101,7 +102,8 @@ android = path(android)
 ant = path(ant)
 adb = path(adb)
 
-renpy = os.path.exists(path("private/lib/python2.7/site-packages/renpy"))
+# This gets set in the Ren'Py launcher if we're a Ren'Py build.
+renpy = False
 
 def rename(src, dst):
     """

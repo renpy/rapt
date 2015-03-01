@@ -23,5 +23,5 @@ try touch "android.keystore"
 # ./android.py build /home/tom/ab/android/tests/color_touch debug install
 # adb shell am start -n org.renpy.ct/org.renpy.android.PythonSDLActivity
 
-./android.py build /home/tom/ab/android/tests/split debug install
-adb shell am start -n com.domain.split/org.renpy.android.PythonSDLActivity
+./android.py --launch build "$1" debug install
+# adb shell am start -n com.domain.split/org.renpy.android.PythonSDLActivity
