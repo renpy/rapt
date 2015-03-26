@@ -21,7 +21,7 @@
               android:label="@string/iconName"
               android:launchMode="singleTop"
               android:screenOrientation="{{ config.orientation }}"
-              android:configChanges="keyboardHidden|orientation"
+              android:configChanges="keyboardHidden|orientation|screenSize"
               >
 
 {% if not config.expansion %}
