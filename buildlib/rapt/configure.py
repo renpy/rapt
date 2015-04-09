@@ -3,6 +3,22 @@ import os
 import re
 import plat
 
+
+# Taken from https://docs.oracle.com/javase/tutorial/java/nutsandbolts/_keywords.html
+JAVA_KEYWORDS = """
+abstract    continue    for    new    switch
+assert***    default    goto*    package    synchronized
+boolean    do    if    private    this
+break    double    implements    protected    throw
+byte    else    import    public    throws
+case    enum****    instanceof    return    transient
+catch    extends    int    short    try
+char    final    interface    static    void
+class    finally    long    strictfp**    volatile
+const*    float    native    super    while
+true false null
+""".replace("*", "").split()
+
 class Configuration(object):
 
     def __init__(self, directory):
@@ -85,9 +101,15 @@ This is usually of the form com.domain.program or com.domain.email.program. It m
     if "." not in config.package:
         interface.fail("The package name must contain at least one dot.")
 
-    if config.package[-1] == '.':
-        interface.fail("The package name may not end with a dot.")
+    for part in config.package.split('.'):
+        if not part:
+            interface.fail("The package name may not contain two dots in a row, or begin or end with a dot.")
 
+        if not re.match(r"[a-zA-Z_]\w*$", part):
+            interface.fail("Each part of the package name must start with a letter, and contain only letters, numbers, and underscores.")
+
+        if part in JAVA_KEYWORDS:
+            interface.fail("{} is a Java keyword, and can't be used as part of a package name.".format(part))
 
     version = interface.input("""\
 What is the application's version?
