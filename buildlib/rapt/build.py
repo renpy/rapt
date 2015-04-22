@@ -386,7 +386,7 @@ def split_renpy(directory):
     return private, assets
 
 
-def build(iface, directory, commands, launch=False):
+def build(iface, directory, commands, launch=False, finished=None):
 
     # Are we doing a Ren'Py build?
 
@@ -599,11 +599,15 @@ def build(iface, directory, commands, launch=False):
     # Build.
     iface.info("I'm using Ant to build the package.")
 
+    files = [ ]
+
     try:
 
         # Clean is required, so we don't use old code. (Not true anymore?)
         # iface.call([plat.ant, "clean" ] +  commands, cancel=True)
         iface.call([ plat.ant ] +  commands, cancel=True)
+
+        files.append(plat.path("bin/" + versioned_name + "-release.apk"))
 
         if (expansion_file is not None) and ("install" in commands):
             iface.info("Uploading expansion file.")
@@ -614,6 +618,8 @@ def build(iface, directory, commands, launch=False):
 
         if expansion_file is not None:
             plat.rename(plat.path(expansion_file), plat.path("bin/" + expansion_file))
+
+            files.append(plat.path("bin/" + expansion_file))
 
     except subprocess.CalledProcessError:
         iface.fail("The build seems to have failed.")
@@ -634,7 +640,11 @@ def build(iface, directory, commands, launch=False):
             "{}/org.renpy.android.{}".format(config.package, launch_activity),
             ], cancel=True)
 
+    if finished is not None:
+        finished(files)
+
     iface.final_success("The build seems to have succeeded.")
+
 
 def connect(interface, address):
     """
