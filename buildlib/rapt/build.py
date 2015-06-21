@@ -123,7 +123,7 @@ def compile_dir(iface, dfn):
     """
 
     # -OO = strip docstrings
-    iface.call([PYTHON,'-OO','-m','compileall','-f',dfn])
+    iface.call([PYTHON,'-O','-m','compileall','-f',dfn])
 
 def make_tar(iface, fn, source_dirs):
     """
@@ -665,4 +665,46 @@ def disconnect(interface):
     interface.info("Disconnecting from remote ADB.")
     interface.call([ plat.adb, "disconnect" ], cancel=True)
     interface.final_success("Disconnected from remote ADB.")
+
+def distclean(interface):
+    """
+    Cleans everything back to as it was when RAPT was first distributed.
+    """
+
+    if os.path.exists(plat.path("build_renpy.sh")):
+        raise Exception("Can't clean android directory!")
+
+    def rmdir(name, make):
+        path = plat.path(name)
+
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+
+        if make:
+            os.mkdir(path)
+
+    def rm(name):
+        path = plat.path(name)
+
+        if os.path.exists(path):
+            os.unlink(path)
+
+    rm("android.keystore")
+    rm("AndroidManifest.xml")
+    rmdir("assets", True)
+    rmdir("bin", True)
+    rm("default.properties")
+    rm("build.xml")
+    rmdir("gen", False)
+    rm("local.properties")
+    rm("proguard-project.txt")
+    rm("project.properties")
+
+    rm("android-sdk")
+    rm("apache-ant")
+
+
+
+
+
 

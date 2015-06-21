@@ -53,6 +53,9 @@ def main():
 
         build.build(iface, args.argument[0], args.argument[1:], launch=args.launch)
 
+    elif args.command == "distclean":
+        build.distclean(iface)
+
     elif args.command == "logcat":
         subprocess.call([ plat.adb, "logcat", "-s", "python:*"] + args.argument)
 
