@@ -11,7 +11,10 @@ export RENPYROOT="${2:-/home/tom/ab/renpy}"
 export PYGAME_SDL2_ROOT="${3:-/home/tom/ab/pygame_sdl2}"
 
 try cd $RENPYROOT
-try ./run.sh the_question compile
+
+if [ -n "$VIRTUAL_ENV" ] ; then
+    try ./run.sh the_question compile
+fi
 
 rm -Rf "$RENPYROOT/module/build/lib.android"
 
