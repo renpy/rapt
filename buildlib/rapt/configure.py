@@ -144,7 +144,7 @@ This must be a positive integer number, and the value should increase between ve
 
     if config.store in [ "play", "none" ]:
         config.expansion = interface.choice("Would you like to create an expansion APK?", [
-            (False, "No. Size limit of 50 MB on Google Play, but can be distributed through other stores and sideloaded."),
+            (False, "No. Size limit of 100 MB on Google Play, but can be distributed through other stores and sideloaded."),
             (True, "Yes. 2 GB size limit, but won't work outside of Google Play. (Read the documentation to get this to work.)")
             ], config.expansion)
 
