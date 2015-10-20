@@ -50,6 +50,22 @@ public class PythonSDLActivity extends SDLActivity {
 
 	ResourceManager resourceManager;
 
+
+    protected String[] getLibraries() {
+   	return new String[] {
+   	        "png16",
+   	        "SDL2",
+   	        "SDL2_image",
+   	        "SDL2_ttf",
+   	        "SDL2_gfx",
+   	        "SDL2_mixer",
+   	        "python2.7",
+   	        "pymodules",
+   	        "main",
+    	};
+    }
+
+
 	// GUI code. /////////////////////////////////////////////////////////////
 
 
