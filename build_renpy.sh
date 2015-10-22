@@ -137,7 +137,6 @@ try cp "whitelist-renpy.txt" "$DISTROROOT/whitelist.txt"
 try cp "blacklist-renpy.txt" "$DISTROROOT/blacklist.txt"
 
 # Copy the SDKs over.
-try cp "$ROOT/ouya-sdk.jar" "$DISTROROOT/libs/"
 try cp "$ROOT/amazon-iap-2.0.1.jar" "$DISTROROOT/libs/"
 
 # echo Done adding renpy.

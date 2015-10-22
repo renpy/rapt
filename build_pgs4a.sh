@@ -40,7 +40,6 @@ try mv "$ROOT/python-for-android/dist/$DISTRO" "$DISTROROOT"
 try ./copy_scripts.sh "$DISTROROOT"
 
 # Copy the SDKs over.
-try cp "$ROOT/ouya-sdk.jar" "$DISTROROOT/libs/"
 try cp "$ROOT/amazon-iap-2.0.1.jar" "$DISTROROOT/libs/"
 
 # Build the documentation.
