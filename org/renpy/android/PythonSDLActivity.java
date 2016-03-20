@@ -58,7 +58,7 @@ public class PythonSDLActivity extends SDLActivity {
    	        "SDL2_image",
    	        "SDL2_ttf",
    	        "SDL2_gfx",
-   	        // "SDL2_mixer",
+   	        "SDL2_mixer",
    	        "python2.7",
    	        "pymodules",
    	        "main",
