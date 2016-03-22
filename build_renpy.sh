@@ -24,8 +24,8 @@ export PYGAME_SDL2_ANDROID="$ROOT"
 export RENPY_PYARGS="-O"
 
 export ANDROIDSDK="$ROOT/android-sdk"
-export ANDROIDNDK="$ROOT/android-ndk-r10c"
-export ANDROIDNDKVER=r10c
+export ANDROIDNDK="$ROOT/android-ndk-r11b"
+export ANDROIDNDKVER=r11b
 export ANDROIDAPI=9
 
 # Build the python-for-android distro.

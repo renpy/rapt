@@ -74,10 +74,10 @@ else:
 
 RAPT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-sdk_version = "r23"
+sdk_version = "r24.4.1"
 ant_version = "1.9.3"
-build_version = "20.0.0"
-target = "android-19"
+build_version = "23.0.1"
+target = "android-22"
 
 def path(path, replace=True, relative=False):
     """
