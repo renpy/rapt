@@ -15,7 +15,9 @@ import android.os.PowerManager;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnSystemUiVisibilityChangeListener;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -89,26 +91,45 @@ public class PythonSDLActivity extends SDLActivity {
         super.setContentView(mVbox);
     }
 
+
+    private void setupMainWindowDisplayMode() {
+        View decorView = setSystemUiVisibilityMode();
+        decorView.setOnSystemUiVisibilityChangeListener(new OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                setSystemUiVisibilityMode(); // Needed to avoid exiting immersive_sticky when keyboard is displayed
+            }
+        });
+    }
+
+    private View setSystemUiVisibilityMode() {
+        View decorView = getWindow().getDecorView();
+        int options;
+        options =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+
+        decorView.setSystemUiVisibility(options);
+        return decorView;
+    }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        try {
-
-            if (hasFocus) {
-                getWindow().getDecorView().setSystemUiVisibility(
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-
-            }
-
-        } catch (Exception e) {
+        if (hasFocus) {
+            setupMainWindowDisplayMode();
         }
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupMainWindowDisplayMode();
     }
 
     // Code to unpack python and get things running ///////////////////////////
