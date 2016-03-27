@@ -29,67 +29,67 @@ import org.renpy.iap.Store;
 
 public class PythonSDLActivity extends SDLActivity {
 
-	/**
-	 * This exists so python code can access this activity.
-	 */
-	public static PythonSDLActivity mActivity = null;
+    /**
+     * This exists so python code can access this activity.
+     */
+    public static PythonSDLActivity mActivity = null;
 
-	/**
-	 * The layout that contains the SDL view. VideoPlayer uses this to add
-	 * its own view on on top of the SDL view.
-	 */
-	public FrameLayout mFrameLayout;
+    /**
+     * The layout that contains the SDL view. VideoPlayer uses this to add
+     * its own view on on top of the SDL view.
+     */
+    public FrameLayout mFrameLayout;
 
 
-	/**
-	 * A layout that contains mLayout. This is a 3x3 grid, with the layout
-	 * in the center. The idea is that if someone wants to show an ad, they
-	 * can stick it in one of the other cells..
-	 */
-	public LinearLayout mVbox;
+    /**
+     * A layout that contains mLayout. This is a 3x3 grid, with the layout
+     * in the center. The idea is that if someone wants to show an ad, they
+     * can stick it in one of the other cells..
+     */
+    public LinearLayout mVbox;
 
-	ResourceManager resourceManager;
+    ResourceManager resourceManager;
 
 
     protected String[] getLibraries() {
-   	return new String[] {
-   	        "png16",
-   	        "SDL2",
-   	        "SDL2_image",
-   	        "SDL2_ttf",
-   	        "SDL2_gfx",
-   	        "SDL2_mixer",
-   	        "python2.7",
-   	        "pymodules",
-   	        "main",
-    	};
+        return new String[] {
+            "png16",
+            "SDL2",
+            "SDL2_image",
+            "SDL2_ttf",
+            "SDL2_gfx",
+            "SDL2_mixer",
+            "python2.7",
+            "pymodules",
+            "main",
+        };
     }
 
 
-	// GUI code. /////////////////////////////////////////////////////////////
+    // GUI code. /////////////////////////////////////////////////////////////
 
 
-	public void addView(View view, int index) {
-		mVbox.addView(view, index, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, (float) 0.0));
-	}
+    public void addView(View view, int index) {
+        mVbox.addView(view, index, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, (float) 0.0));
+    }
 
-	public void removeView(View view) {
-		mVbox.removeView(view);
-	}
+    public void removeView(View view) {
+        mVbox.removeView(view);
+    }
 
-	@Override
-	public void setContentView(View view) {
-		mFrameLayout = new FrameLayout(this);
-		mFrameLayout.addView(view);
+    @Override
+    public void setContentView(View view) {
+        mFrameLayout = new FrameLayout(this);
+        mFrameLayout.addView(view);
 
-		mVbox = new LinearLayout(this);
-		mVbox.setOrientation(LinearLayout.VERTICAL);
-		mVbox.addView(mFrameLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, (float) 1.0));
+        mVbox = new LinearLayout(this);
+        mVbox.setOrientation(LinearLayout.VERTICAL);
+        mVbox.addView(mFrameLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, (float) 1.0));
 
-		super.setContentView(mVbox);
-	}
+        super.setContentView(mVbox);
+    }
 
-	// Code to unpack python and get things running ///////////////////////////
+    // Code to unpack python and get things running ///////////////////////////
 
     public void recursiveDelete(File f) {
         if (f.isDirectory()) {
@@ -106,11 +106,11 @@ public class PythonSDLActivity extends SDLActivity {
      */
     public void unpackData(final String resource, File target) {
 
-    	/**
-    	 * Delete main.pyo unconditionally. This fixes a problem where we have
-    	 * a main.py newer than main.pyo, but start.c won't run it.
-    	 */
-    	new File(target, "main.pyo").delete();
+        /**
+         * Delete main.pyo unconditionally. This fixes a problem where we have
+         * a main.py newer than main.pyo, but start.c won't run it.
+         */
+        new File(target, "main.pyo").delete();
 
         // The version of data in memory and on disk.
         String data_version = resourceManager.getString(resource + "_version");
@@ -189,38 +189,38 @@ public class PythonSDLActivity extends SDLActivity {
         }
     }
 
-	public native void nativeSetEnv(String variable, String value);
+    public native void nativeSetEnv(String variable, String value);
 
     public void preparePython() {
-    	Log.v("python", "Starting preparePython.");
+        Log.v("python", "Starting preparePython.");
 
-    	mActivity = this;
+        mActivity = this;
 
-    	resourceManager = new ResourceManager(this);
+        resourceManager = new ResourceManager(this);
 
         File oldExternalStorage = new File(Environment.getExternalStorageDirectory(), getPackageName());
         File externalStorage = getExternalFilesDir(null);
         File path;
 
         if (externalStorage == null) {
-        	externalStorage = oldExternalStorage;
+            externalStorage = oldExternalStorage;
         }
 
         if (resourceManager.getString("public_version") != null) {
             path = externalStorage;
         } else {
-        	path = getFilesDir();
+            path = getFilesDir();
         }
 
         unpackData("private", getFilesDir());
         unpackData("public", externalStorage);
 
-    	nativeSetEnv("ANDROID_ARGUMENT", path.getAbsolutePath());
-		nativeSetEnv("ANDROID_PRIVATE", getFilesDir().getAbsolutePath());
-    	nativeSetEnv("ANDROID_PUBLIC",  externalStorage.getAbsolutePath());
-    	nativeSetEnv("ANDROID_OLD_PUBLIC", oldExternalStorage.getAbsolutePath());
+        nativeSetEnv("ANDROID_ARGUMENT", path.getAbsolutePath());
+        nativeSetEnv("ANDROID_PRIVATE", getFilesDir().getAbsolutePath());
+        nativeSetEnv("ANDROID_PUBLIC",  externalStorage.getAbsolutePath());
+        nativeSetEnv("ANDROID_OLD_PUBLIC", oldExternalStorage.getAbsolutePath());
 
-    	// Figure out the APK path.
+        // Figure out the APK path.
         String apkFilePath;
         ApplicationInfo appInfo;
         PackageManager packMgmr = getApplication().getPackageManager();
@@ -232,17 +232,17 @@ public class PythonSDLActivity extends SDLActivity {
             apkFilePath = "";
         }
 
-    	nativeSetEnv("ANDROID_APK", apkFilePath);
+        nativeSetEnv("ANDROID_APK", apkFilePath);
 
-    	String expansionFile = getIntent().getStringExtra("expansionFile");
+        String expansionFile = getIntent().getStringExtra("expansionFile");
 
-    	if (expansionFile != null) {
-    		nativeSetEnv("ANDROID_EXPANSION", expansionFile);
-    	}
+        if (expansionFile != null) {
+            nativeSetEnv("ANDROID_EXPANSION", expansionFile);
+        }
 
-    	nativeSetEnv("PYTHONOPTIMIZE", "2");
-    	nativeSetEnv("PYTHONHOME", getFilesDir().getAbsolutePath());
-    	nativeSetEnv("PYTHONPATH", path.getAbsolutePath() + ":" + getFilesDir().getAbsolutePath() + "/lib");
+        nativeSetEnv("PYTHONOPTIMIZE", "2");
+        nativeSetEnv("PYTHONHOME", getFilesDir().getAbsolutePath());
+        nativeSetEnv("PYTHONPATH", path.getAbsolutePath() + ":" + getFilesDir().getAbsolutePath() + "/lib");
 
         Log.v("python", "Finished preparePython.");
 
@@ -258,16 +258,16 @@ public class PythonSDLActivity extends SDLActivity {
 
     @Override
     protected void onDestroy() {
-    	super.onDestroy();
-    	Store.getStore().destroy();
+        super.onDestroy();
+        Store.getStore().destroy();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-    	if (Store.getStore().onActivityResult(requestCode, resultCode, intent)) {
-    	    return;
+        if (Store.getStore().onActivityResult(requestCode, resultCode, intent)) {
+            return;
         }
 
-    	super.onActivityResult(requestCode, resultCode, intent);
+        super.onActivityResult(requestCode, resultCode, intent);
     }
 
     // Code to support public APIs. ////////////////////////////////////////////
@@ -288,25 +288,25 @@ public class PythonSDLActivity extends SDLActivity {
     }
 
     public int getDPI() {
-    	DisplayMetrics metrics = new DisplayMetrics();
+        DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-    	return metrics.densityDpi;
+        return metrics.densityDpi;
     }
 
     public PowerManager.WakeLock wakeLock = null;
 
     public void setWakeLock(boolean active) {
-    	if (wakeLock == null) {
-			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-			wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "Screen On");
-			wakeLock.setReferenceCounted(false);
-    	}
+        if (wakeLock == null) {
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "Screen On");
+            wakeLock.setReferenceCounted(false);
+        }
 
-    	if (active) {
-    		wakeLock.acquire();
-    	} else {
-    		wakeLock.release();
-    	}
+        if (active) {
+            wakeLock.acquire();
+        } else {
+            wakeLock.release();
+        }
     }
 
 }
