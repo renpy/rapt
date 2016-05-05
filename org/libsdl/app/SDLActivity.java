@@ -174,7 +174,7 @@ public class SDLActivity extends Activity {
         mLayout.addView(mSurface);
 
         setContentView(mLayout);
-        
+
         // Get filename from "Open with" of another application
         Intent intent = getIntent();
 
@@ -1064,7 +1064,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         SDLActivity.onNativeResize(width, height, sdlFormat, mDisplay.getRefreshRate());
         Log.v("SDL", "Window size: " + width + "x" + height);
 
- 
+
         boolean skip = false;
         int requestedOrientation = SDLActivity.mSingleton.getRequestedOrientation();
 
@@ -1087,7 +1087,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         if (skip) {
            double min = Math.min(mWidth, mHeight);
            double max = Math.max(mWidth, mHeight);
-           
+
            if (max / min < 1.20) {
               Log.v("SDL", "Don't skip on such aspect-ratio. Could be a square resolution.");
               skip = false;
@@ -1191,7 +1191,12 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         float x,y,p;
 
         // !!! FIXME: dump this SDK check after 2.0.4 ships and require API14.
-        if (event.getSource() == InputDevice.SOURCE_MOUSE && SDLActivity.mSeparateMouseAndTouch) {
+
+        // RAPT: Got rid of the mSeparateMouseAndTouch check. We want mouse events (since we'd like
+        // to know about the right mouse button), but we also want to generate mouse events for
+        // touches, so we can't use the hint.
+
+        if (event.getSource() == InputDevice.SOURCE_MOUSE) {
             if (Build.VERSION.SDK_INT < 14) {
                 mouseButton = 1;    // For Android==12 all mouse buttons are the left button
             } else {
@@ -1498,10 +1503,10 @@ class SDLJoystickHandler_API12 extends SDLJoystickHandler {
                 joystick = new SDLJoystick();
                 InputDevice joystickDevice = InputDevice.getDevice(deviceIds[i]);
 
-                if ( 
-                      (joystickDevice.getSources() & InputDevice.SOURCE_CLASS_JOYSTICK) != 0 
+                if (
+                      (joystickDevice.getSources() & InputDevice.SOURCE_CLASS_JOYSTICK) != 0
                    ||
-                      (joystickDevice.getSources() & InputDevice.SOURCE_CLASS_BUTTON) != 0 
+                      (joystickDevice.getSources() & InputDevice.SOURCE_CLASS_BUTTON) != 0
                   )
                 {
                     joystick.device_id = deviceIds[i];
