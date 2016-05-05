@@ -491,7 +491,7 @@ def build(iface, directory, commands, launch=False, finished=None):
 
     iface.call([plat.android, "update", "project",
         "-p", '.', '-t', plat.target, '-n', versioned_name,
-        "--library", plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library", relative=True),
+        "--library", plat.path("extras/google/market_apk_expansion/downloader_library", relative=True),
         ])
 
 

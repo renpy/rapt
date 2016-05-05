@@ -159,20 +159,11 @@ def get_packages(interface):
     if not os.path.exists(plat.path("android-sdk/build-tools/" + plat.build_version)):
         packages.append("build-tools-" + plat.build_version)
 
-#     if not os.path.exists(plat.path("android-sdk/platforms/android-8")):
-#         packages.append("android-8")
-
     if not os.path.exists(plat.path("android-sdk/platforms/" + plat.target)):
         packages.append(plat.target)
 
     if not os.path.exists(plat.path("android-sdk/platform-tools/")):
         packages.append("platform-tools")
-
-    if not os.path.exists(plat.path("android-sdk/extras/google/play_licensing")):
-        packages.append("extra-google-play_licensing")
-
-    if not os.path.exists(plat.path("android-sdk/extras/google/play_apk_expansion")):
-        packages.append("extra-google-play_apk_expansion")
 
     if packages:
 
@@ -183,20 +174,8 @@ def get_packages(interface):
 
     interface.info("I'm updating the library packages.")
 
-    with open(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties"), "r") as f:
-        data = f.read()
-
-    data = data.replace("../market_licensing", "../../play_licensing/library")
-    data = data.replace("..\\market_licensing", "..\\..\\play_licensing/library")
-
-    with open(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/project.properties"), "w") as f:
-        f.write(data)
-
-    run(interface, plat.android, "update", "project", "-p", plat.path("android-sdk/extras/google/play_licensing/library"), "--target", plat.target)
-    run(interface, plat.android, "update", "project", "-p", plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library"), "--target", plat.target)
-
-    if os.path.exists(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9")):
-        shutil.rmtree(plat.path("android-sdk/extras/google/play_apk_expansion/downloader_library/res/values-v9"))
+    run(interface, plat.android, "update", "project", "-p", plat.path("extras/google/market_licensing/library"), "--target", plat.target)
+    run(interface, plat.android, "update", "project", "-p", plat.path("extras/google/market_apk_expansion/downloader_library"), "--target", plat.target)
 
     interface.success("I've finished installing the required Android packages.")
 
