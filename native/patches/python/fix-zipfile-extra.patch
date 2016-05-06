@@ -1,0 +1,12 @@
+diff -r b4d1e51d91f8 Lib/zipfile.py
+--- a/Lib/zipfile.py	Wed Mar 14 08:18:59 2012 +0100
++++ b/Lib/zipfile.py	Sat Mar 17 11:39:55 2012 +0200
+@@ -370,7 +370,7 @@
+         # Try to decode the extra field.
+         extra = self.extra
+         unpack = struct.unpack
+-        while extra:
++        while len(extra) >= 4:
+             tp, ln = unpack('<HH', extra[:4])
+             if tp == 1:
+                 if ln >= 24:

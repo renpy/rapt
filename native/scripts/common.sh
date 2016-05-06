@@ -38,3 +38,13 @@ run_once () {
         touch "$finished"
     fi
 }
+
+
+activate_toolchain () {
+    export PATH="$INSTALLDIR/toolchain/bin:$PATH"
+
+    export CC="ccache $GCC_ARCH-gcc"
+    export CXX="ccache $GCC_ARCH-g++"
+    export LD="ccache $GCC_ARCH-gcc"
+    export LDXX="ccache $GCC_ARCH-g++"
+}
