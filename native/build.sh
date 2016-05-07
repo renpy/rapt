@@ -4,7 +4,7 @@ export NATIVE="$(dirname $(readlink -f $0))"
 export SOURCE="$NATIVE/source"
 export NDK="$NATIVE/android-ndk"
 export SDK="$NATIVE/../android-sdk"
-export ANDROID_PLATFORM=android-15
+export ANDROID_PLATFORM=android-9
 
 . "$NATIVE/scripts/common.sh"
 
@@ -32,9 +32,9 @@ build_platform () {
 
     run_once python unpack
     run_once python apply_patches
+    run_once python build
 
-    run python build
-
+    run jni build
 }
 
 build_arm () {
