@@ -11,14 +11,17 @@ export ANDROID_PLATFORM=android-15
 mkdir -p "$NATIVE/build/complete"
 
 
-# Build for host.
-export PLATFORM=host
-export CC="ccache gcc"
-export LD="ccache gcc"
+build_host() {
 
-run_once python unpack
-run_once python hostbuild
+    # Build for host.
+    export PLATFORM=host
+    export CC="ccache gcc"
+    export LD="ccache gcc"
 
+    run_once python unpack
+    run_once python hostbuild
+
+}
 
 build_platform () {
     export INSTALL_LIBS="$NATIVE/libs/$PLATFORM"
@@ -34,8 +37,30 @@ build_platform () {
 
 }
 
-export PLATFORM=armeabi
-export NDK_ARCH=arm
-export GCC_ARCH=arm-linux-androideabi
+build_arm () {
 
-build_platform
+    export PLATFORM=armeabi
+    export NDK_ARCH=arm
+    export GCC_ARCH=arm-linux-androideabi
+
+    build_platform
+}
+
+
+build_x86 () {
+
+    export PLATFORM=x86
+    export NDK_ARCH=x86
+    export GCC_ARCH=i686-linux-android
+
+    build_platform
+
+}
+
+build_ () {
+    build_host
+    build_arm
+    build_x86
+}
+
+build_$1
