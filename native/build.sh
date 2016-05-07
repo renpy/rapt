@@ -6,6 +6,9 @@ export NDK="$NATIVE/android-ndk"
 export SDK="$NATIVE/../android-sdk"
 export ANDROID_PLATFORM=android-9
 
+export PYGAME_SDL2_ROOT="${PYGAME_SDL2_ROOT:-/home/tom/ab/pygame_sdl2}"
+export RENPY_ROOT="${RENPY_ROOT:-/home/tom/ab/renpy}"
+
 . "$NATIVE/scripts/common.sh"
 
 mkdir -p "$NATIVE/build/complete"
@@ -38,7 +41,7 @@ build_platform () {
     run biglink link
     run jni build
 
-
+    run pygame_sdl2 build
 
     # Do a final biglink and jni build, that includes the full libpymodules.
     run biglink link

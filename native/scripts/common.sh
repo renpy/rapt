@@ -56,16 +56,22 @@ activate_toolchain () {
     export LD="ccache $GCC_ARCH-gcc"
     export LDXX="ccache $GCC_ARCH-g++"
 
+    export CFLAGS=""
+    export LDFLAGS=""
+
     libdir "$INSTALLDIR/lib"
     libdir "$NATIVE/obj/local/$PLATFORM"
 
     includedir "$INSTALLDIR/include"
     includedir "$INSTALLDIR/python2.7"
 
+    includedir "$NATIVE/jni/png"
+    includedir "$NATIVE/jni/jpeg"
+    includedir "$NATIVE/jni/freetype/include"
     includedir "$NATIVE/jni/sdl2/include"
     includedir "$NATIVE/jni/sdl2_image"
-    includedir "$NATIVE/jni/png"
-    includedir "$NATIVE/jni/freetype/include"
+    includedir "$NATIVE/jni/sdl2_ttf"
+    includedir "$NATIVE/jni/sdl2_mixer"
 
 }
 
