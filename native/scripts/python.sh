@@ -74,7 +74,6 @@ build () {
     make install HOSTPYTHON="$B/hostpython" HOSTPGEN="$B/hostpgen" CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so
 
     cp hostpython "$INSTALLDIR/bin"
-    cp libpython2.7.so "$INSTALL_LIBS"
 
     # reduce python
     rm -rf "$INSTALLDIR/lib/python2.7/test"

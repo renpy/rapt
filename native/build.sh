@@ -25,7 +25,6 @@ build_host() {
 
 build_platform () {
     export INSTALL_LIBS="$NATIVE/libs/$PLATFORM"
-
     mkdir -p $INSTALL_LIBS
 
     run_once toolchain create
