@@ -19,10 +19,10 @@ hostbuild () {
 
     cp "$SOURCE/python-Setup" "Modules/Setup"
 
-    ./configure --prefix="$INSTALLDIR/python"
+    ./configure --prefix="$INSTALLDIR"
     make
     make install
-    cp -a Parser/pgen "$INSTALLDIR/python/bin/pgen"
+    cp -a Parser/pgen "$INSTALLDIR/bin/pgen"
 
     popd
 }
@@ -59,11 +59,11 @@ build () {
     activate_toolchain
 
     cp "$SOURCE/python-Setup" "Modules/Setup"
-    cp "$NATIVE/install/host/python/bin/python" hostpython
-    cp "$NATIVE/install/host/python/bin/pgen" hostpgen
+    cp "$NATIVE/install/host/bin/python" hostpython
+    cp "$NATIVE/install/host/bin/pgen" hostpgen
 
     ./configure --host=$GCC_ARCH \
-        --prefix="$INSTALLDIR/python" \
+        --prefix="$INSTALLDIR" \
         --enable-shared \
         --disable-toolbox-glue \
         --disable-framework
@@ -73,20 +73,20 @@ build () {
     make HOSTPYTHON="$B/hostpython" HOSTPGEN="$B/hostpgen" CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so || true
     make install HOSTPYTHON="$B/hostpython" HOSTPGEN="$B/hostpgen" CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so
 
-    cp hostpython "$INSTALLDIR/python/bin"
+    cp hostpython "$INSTALLDIR/bin"
     cp libpython2.7.so "$INSTALL_LIBS"
 
     # reduce python
-    rm -rf "$INSTALLDIR/python/lib/python2.7/test"
-    rm -rf "$INSTALLDIR/python/lib/python2.7/json/tests"
-    rm -rf "$INSTALLDIR/python/lib/python2.7/lib-tk"
-    rm -rf "$INSTALLDIR/python/lib/python2.7/sqlite3/test"
-    rm -rf "$INSTALLDIR/python/lib/python2.7/unittest/test"
-    rm -rf "$INSTALLDIR/python/lib/python2.7/lib2to3/tests"
-    rm -rf "$INSTALLDIR/python/lib/python2.7/bsddb/tests"
-    rm -rf "$INSTALLDIR/python/lib/python2.7/distutils/tests"
-    rm -rf "$INSTALLDIR/python/lib/python2.7/email/test"
-    rm -rf "$INSTALLDIR/python/lib/python2.7/curses"
+    rm -rf "$INSTALLDIR/lib/python2.7/test"
+    rm -rf "$INSTALLDIR/lib/python2.7/json/tests"
+    rm -rf "$INSTALLDIR/lib/python2.7/lib-tk"
+    rm -rf "$INSTALLDIR/lib/python2.7/sqlite3/test"
+    rm -rf "$INSTALLDIR/lib/python2.7/unittest/test"
+    rm -rf "$INSTALLDIR/lib/python2.7/lib2to3/tests"
+    rm -rf "$INSTALLDIR/lib/python2.7/bsddb/tests"
+    rm -rf "$INSTALLDIR/lib/python2.7/distutils/tests"
+    rm -rf "$INSTALLDIR/lib/python2.7/email/test"
+    rm -rf "$INSTALLDIR/lib/python2.7/curses"
 
     popd
 }
