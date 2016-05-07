@@ -34,6 +34,14 @@ build_platform () {
     run_once python build
 
     run jni build
+
+
+
+
+
+
+    # Install the pymodules.
+    # run jni pymodules
 }
 
 build_arm () {
