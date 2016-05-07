@@ -40,6 +40,14 @@ run_once () {
 }
 
 
+includedir () {
+    CFLAGS="$CFLAGS -I$1"
+}
+
+libdir () {
+    LDFLAGS="$LDFLAGS -L$1"
+}
+
 activate_toolchain () {
     export PATH="$INSTALLDIR/toolchain/bin:$PATH"
 
@@ -47,4 +55,25 @@ activate_toolchain () {
     export CXX="ccache $GCC_ARCH-g++"
     export LD="ccache $GCC_ARCH-gcc"
     export LDXX="ccache $GCC_ARCH-g++"
+
+    libdir "$INSTALLDIR/lib"
+    libdir "$NATIVE/obj/local/$PLATFORM"
+
+    includedir "$INSTALLDIR/include"
+    includedir "$INSTALLDIR/python2.7"
+
+    includedir "$NATIVE/jni/sdl2/include"
+    includedir "$NATIVE/jni/sdl2_image"
+    includedir "$NATIVE/jni/png"
+    includedir "$NATIVE/jni/freetype/include"
+
+}
+
+setup_py () {
+    activate_toolchain
+
+    export LDSHARED="$NATIVE/scripts/liblink.py"
+    export HOSTPYTHON="$INSTALLDIR/bin/hostpython"
+
+    $HOSTPYTHON setup.py build -b "$BUILD/$1/lib" -t "$BUILD/$1/tmp" install -O2
 }

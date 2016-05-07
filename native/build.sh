@@ -10,7 +10,6 @@ export ANDROID_PLATFORM=android-9
 
 mkdir -p "$NATIVE/build/complete"
 
-
 build_host() {
 
     # Build for host.
@@ -20,28 +19,30 @@ build_host() {
 
     run_once python unpack
     run_once python hostbuild
-
 }
 
 build_platform () {
-    export INSTALL_LIBS="$NATIVE/libs/$PLATFORM"
-    mkdir -p $INSTALL_LIBS
+    mkdir -p "$NATIVE/build/$PLATFORM/pymodules"
 
+    # Set up the toolchain.
     run_once toolchain create
 
+    # Use the toolchain to build python.
     run_once python unpack
     run_once python apply_patches
     run_once python build
 
+    # Build and biglink the android module alone, so we have a libpymodules
+    # that will let us build the full jni.
+    run android build
+    run biglink link
     run jni build
 
 
 
-
-
-
-    # Install the pymodules.
-    # run jni pymodules
+    # Do a final biglink and jni build, that includes the full libpymodules.
+    run biglink link
+    run jni build
 }
 
 build_arm () {
