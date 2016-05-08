@@ -41,6 +41,10 @@ build_platform () {
     run biglink link
     run jni build
 
+    # ffmpeg takes forever.
+    run_once ffmpeg unpack
+    run_once ffmpeg build
+
     run pygame_sdl2 build
 
     # Do a final biglink and jni build, that includes the full libpymodules.
@@ -52,6 +56,7 @@ build_arm () {
 
     export PLATFORM=armeabi
     export NDK_ARCH=arm
+    export FFMPEG_ARCH=arm
     export GCC_ARCH=arm-linux-androideabi
 
     build_platform
@@ -62,6 +67,7 @@ build_x86 () {
 
     export PLATFORM=x86
     export NDK_ARCH=x86
+    export FFMPEG_ARCH=x86
     export GCC_ARCH=i686-linux-android
 
     build_platform

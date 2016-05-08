@@ -21,7 +21,9 @@ run () {
     echo
     green "$PLATFORM $1 $2: starting."
 
+    pushd "$BUILD"
     bash "$NATIVE/scripts/$1.sh" $2
+    popd
 
     green "$PLATFORM $1 $2: finished."
 }
