@@ -1,7 +1,6 @@
 *.pyo
 *.pyc
 jnius/jnius.c
-jnius/config.pxi
 jnius/jnius.so
 build
 .*.swp

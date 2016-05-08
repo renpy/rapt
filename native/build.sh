@@ -48,6 +48,8 @@ build_platform () {
     run_once fribidi unpack
     run_once fribidi build
 
+    run_once pyjnius build
+
     run pygame_sdl2 build
     run renpy build
 
