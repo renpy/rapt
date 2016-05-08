@@ -46,9 +46,10 @@ build_platform () {
     run_once ffmpeg build
 
     run_once fribidi unpack
-    run fribidi build
+    run_once fribidi build
 
     run pygame_sdl2 build
+    run renpy build
 
     # Do a final biglink and jni build, that includes the full libpymodules.
     run biglink link

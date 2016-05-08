@@ -58,7 +58,7 @@ activate_toolchain () {
     export LD="ccache $GCC_ARCH-gcc"
     export LDXX="ccache $GCC_ARCH-g++"
 
-    export CFLAGS=""
+    export CFLAGS="-DANDROID"
     export LDFLAGS=""
 
     libdir "$INSTALLDIR/lib"
