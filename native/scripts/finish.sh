@@ -58,15 +58,7 @@ dist () {
     rm -Rf "$PYLIB/multiprocessing/dummy"*
 
     # unused binary python modules
-    rm -Rf "$PYLIB/lib-dynload/_sqlite3.so"
-    rm -Rf "$PYLIB/lib-dynload/_lsprof.so"
-    rm -Rf "$PYLIB/lib-dynload/*audioop.so"
-    rm -Rf "$PYLIB/lib-dynload/_hotshot.so"
-    rm -Rf "$PYLIB/lib-dynload/_csv.so"
-    rm -Rf "$PYLIB/lib-dynload/_lsprof.so"
-    rm -Rf "$PYLIB/lib-dynload/_heapq.so"
-    rm -Rf "$PYLIB/lib-dynload/grp.so"
-    rm -Rf "$PYLIB/lib-dynload/resource.so"
+    rm -Rf "$PYLIB/lib-dynload/"*.so
 
     # odd files
     rm -Rf "$PYLIB/plat-linux"*/regen

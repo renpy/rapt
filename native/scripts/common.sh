@@ -74,7 +74,6 @@ activate_toolchain () {
     includedir "$NATIVE/jni/sdl2_image"
     includedir "$NATIVE/jni/sdl2_ttf"
     includedir "$NATIVE/jni/sdl2_mixer"
-
 }
 
 setup_py () {
