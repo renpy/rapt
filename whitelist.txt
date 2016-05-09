@@ -90,7 +90,8 @@
 /lib/python2.7/gettext.pyo
 /lib/python2.7/decimal.pyo
 
-/lib/python2.7/site-packages/pygame/**
+/lib/python2.7/site-packages/pygame_sdl2/**
+/lib/python2.7/site-packages/renpy/**
 /lib/python2.7/site-packages/pyjnius/**
 /lib/python2.7/site-packages/android/**
 
@@ -107,6 +108,4 @@
 /lib/python2.7/encodings/utf_16_be.pyo
 /lib/python2.7/encodings/utf_32_be.pyo
 /lib/python2.7/encodings/latin_1.pyo
-
-/main.py
 
