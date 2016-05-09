@@ -2,6 +2,7 @@ android-ndk*
 android-sdk*
 apache-ant*
 dist
+dist.old
 .classpath
 .project
 

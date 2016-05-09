@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export NATIVE="$(dirname $(readlink -f $0))"
+export ANDROID="$(dirname $NATIVE)"
 export SOURCE="$NATIVE/source"
 export NDK="$NATIVE/android-ndk"
 export SDK="$NATIVE/../android-sdk"
@@ -8,6 +9,8 @@ export ANDROID_PLATFORM=android-9
 
 export PYGAME_SDL2_ROOT="${PYGAME_SDL2_ROOT:-/home/tom/ab/pygame_sdl2}"
 export RENPY_ROOT="${RENPY_ROOT:-/home/tom/ab/renpy}"
+
+cd "$NATIVE"
 
 . "$NATIVE/scripts/common.sh"
 
@@ -77,13 +80,16 @@ build_x86 () {
     export GCC_ARCH=i686-linux-android
 
     build_platform
-
 }
 
 build_ () {
+    run finish clean
+
     build_host
     build_arm
     build_x86
+
+    run finish dist
 }
 
 build_$1
