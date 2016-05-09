@@ -10,8 +10,8 @@ clean () {
 dist () {
 
     # Copy the native libs.
-    cp -a "$NATIVE/libs" "$DIST"
-
+    mkdir -p "$DIST"
+    cp -a "$NATIVE/libs" "$DIST/libs"
 
     mkdir -p "$DIST/private/include/python2.7"
     cp -a "$NATIVE/install/armeabi/include/python2.7/pyconfig.h" "$DIST/private/include/python2.7"
