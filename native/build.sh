@@ -42,7 +42,7 @@ build_platform () {
     # that will let us build the full jni.
     run android build
     run biglink link
-    run jni build
+    run jni platform
 
     # ffmpeg takes forever.
     run_once ffmpeg unpack
@@ -56,9 +56,8 @@ build_platform () {
     run pygame_sdl2 build
     run renpy build
 
-    # Do a final biglink and jni build, that includes the full libpymodules.
+    # Do a final biglink that includes the full libpymodules.
     run biglink link
-    run jni build
 }
 
 build_arm () {
@@ -86,9 +85,10 @@ build_ () {
     run finish clean
 
     build_host
-    build_arm
     build_x86
+    build_arm
 
+    run jni all
     run finish dist
 }
 

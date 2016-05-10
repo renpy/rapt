@@ -1,14 +1,15 @@
 . "$NATIVE/scripts/common.sh"
 
-build () {
+platform () {
     export NDK_CCACHE=$(which ccache)
     "$NDK/ndk-build" V=1 ARCH="$PLATFORM"
 }
 
-pymodules () {
+all () {
     export NDK_CCACHE=$(which ccache)
-    "$NDK/ndk-build" V=1 ARCH="$PLATFORM" APP_MODULES=pymodules
+    "$NDK/ndk-build" V=1 ARCH="armeabi x86"
 }
+
 
 
 "$1"
