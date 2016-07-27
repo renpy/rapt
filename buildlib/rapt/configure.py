@@ -28,7 +28,7 @@ class Configuration(object):
         self.icon_name = None
         self.version = None
         self.numeric_version = None
-        self.orientation = None
+        self.orientation = "sensorLandscape"
         self.permissions = [ "VIBRATE" ]
         self.include_pil = False
         self.include_sqlite = False
@@ -37,7 +37,7 @@ class Configuration(object):
         self.expansion = False
         self.google_play_key = None
         self.google_play_salt = None
-        self.target_version = 8
+        self.target_version = 14
         self.store = "none"
 
         try:
@@ -75,9 +75,13 @@ def set_version(config, value):
     except:
         pass
 
-def configure(interface, directory):
+def configure(interface, directory, default_name=None, default_version=None):
 
     config = Configuration(directory)
+
+    if config.name is None:
+        config.name = default_name
+
     config.name = interface.input("""What is the full name of your application? This name will appear in the list of installed applications.""", config.name)
 
     if config.icon_name is None:
@@ -110,6 +114,9 @@ This is usually of the form com.domain.program or com.domain.email.program. It m
 
         if part in JAVA_KEYWORDS:
             interface.fail("{} is a Java keyword, and can't be used as part of a package name.".format(part))
+
+    if config.version is None:
+        config.version = default_version
 
     version = interface.input("""\
 What is the application's version?
