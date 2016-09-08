@@ -34,7 +34,7 @@ LOCAL_STATIC_LIBRARIES :=
 LOCAL_SHARED_LIBRARIES := png16 jpeg SDL2
 
 ifeq ($(SUPPORT_JPG),true)
-    LOCAL_C_INCLUDES += $(LOCAL_PATH)/$(JPG_LIBRARY_PATH)
+    LOCAL_C_INCLUDES += $(LOCAL_PATH)/../jpeg
     LOCAL_CFLAGS += -DLOAD_JPG
     # We can include the sources directly so the user doesn't have to...
     #LOCAL_STATIC_LIBRARIES += jpeg
@@ -95,7 +95,7 @@ ifeq ($(SUPPORT_JPG),true)
 endif
 
 ifeq ($(SUPPORT_PNG),true)
-    LOCAL_C_INCLUDES += $(LOCAL_PATH)/$(PNG_LIBRARY_PATH)
+    LOCAL_C_INCLUDES += $(LOCAL_PATH)/../png
     LOCAL_CFLAGS += -DLOAD_PNG
     # We can include the sources directly so the user doesn't have to...
     #LOCAL_STATIC_LIBRARIES += png
