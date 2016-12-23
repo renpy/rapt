@@ -23,6 +23,7 @@ if sys.version_info.major == 2 and sys.version_info.minor == 7:
 else:
     PYTHON = None
 
+
 class PatternList(object):
     """
     Used to load in the blacklist and whitelist patterns.
@@ -46,10 +47,9 @@ class PatternList(object):
             if p.match(s):
                 return True
             if p.match(slash_s):
-                return  True
+                return True
 
         return False
-
 
     def load(self, fn):
 
@@ -98,9 +98,9 @@ class PatternList(object):
         return re.compile(regexp, re.I)
 
 
-
 # Used by render.
 environment = jinja2.Environment(loader=jinja2.FileSystemLoader(plat.path('templates')))
+
 
 def render(template, dest, **kwargs):
     """
@@ -117,13 +117,15 @@ def render(template, dest, **kwargs):
     f.write(text.encode("utf-8"))
     f.close()
 
+
 def compile_dir(iface, dfn):
     """
     Compile *.py in directory `dfn` to *.pyo
     """
 
     # -OO = strip docstrings
-    iface.call([PYTHON,'-O','-m','compileall','-f',dfn])
+    iface.call([PYTHON, '-O', '-m', 'compileall', '-f', dfn])
+
 
 def make_tar(iface, fn, source_dirs):
     """
@@ -165,7 +167,6 @@ def make_tar(iface, fn, source_dirs):
                 added.add(relfn)
                 tf.add(fn, relfn, recursive=False)
 
-
     for sd in source_dirs:
 
         if PYTHON and not RENPY:
@@ -173,7 +174,7 @@ def make_tar(iface, fn, source_dirs):
 
         sd = os.path.abspath(sd)
 
-        for dir, dirs, files in os.walk(sd): #@ReservedAssignment
+        for dir, dirs, files in os.walk(sd):  # @ReservedAssignment
 
             for _fn in dirs:
                 fn = os.path.join(dir, _fn)
@@ -190,6 +191,7 @@ def make_tar(iface, fn, source_dirs):
                     add(fn, relfn)
 
     tf.close()
+
 
 def make_tree(src, dest):
 
@@ -217,6 +219,7 @@ def make_tree(src, dest):
         return rv
 
     shutil.copytree(src, dest, ignore=ignore)
+
 
 def join_and_check(base, sub):
     """
@@ -251,6 +254,7 @@ def edit_file(fn, pattern, line):
     with open(fn, "w") as f:
         f.write(''.join(lines))
 
+
 def zip_directory(zf, dn):
     """
     Zips up the directory `dn`. `zf` is the file to place the
@@ -264,6 +268,7 @@ def zip_directory(zf, dn):
             fn = os.path.join(dirname, fn)
             archive_fn = os.path.join(dn, os.path.relpath(fn, base_dirname))
             zf.write(fn, archive_fn)
+
 
 def copy_icon(directory, name, default):
     """
@@ -322,7 +327,6 @@ def copy_icon(directory, name, default):
 
         found = True
 
-
     if found:
         return
 
@@ -346,6 +350,7 @@ def copy_presplash(directory, name, default):
         ext = os.path.splitext(fn)[1]
 
     shutil.copy(fn, plat.path("assets/" + name + ext))
+
 
 def split_renpy(directory):
     """
@@ -398,7 +403,6 @@ def build(iface, directory, commands, launch=False, finished=None):
 
     if RENPY and not os.path.isdir(os.path.join(directory, "game")):
         iface.fail("{} does not contain a Ren'Py game.".format(directory))
-
 
     config = configure.Configuration(directory)
     if config.package is None:
@@ -462,16 +466,16 @@ def build(iface, directory, commands, launch=False, finished=None):
     render(
         "AndroidManifest.tmpl.xml",
         "AndroidManifest.xml",
-        config = config,
-        manifest_extra = manifest_extra,
+        config=config,
+        manifest_extra=manifest_extra,
         )
 
     render(
         "strings.xml",
         "res/values/strings.xml",
-        public_version = public_version,
-        private_version = private_version,
-        config = config)
+        public_version=public_version,
+        private_version=private_version,
+        config=config)
 
     try:
         os.unlink(plat.path("build.xml"))
@@ -490,10 +494,9 @@ def build(iface, directory, commands, launch=False, finished=None):
         os.unlink(plat.path("project.properties"))
 
     iface.call([plat.android, "update", "project",
-        "-p", '.', '-t', plat.target, '-n', versioned_name,
-        "--library", plat.path("extras/google/market_apk_expansion/downloader_library", relative=True),
-        ])
-
+                "-p", '.', '-t', plat.target, '-n', versioned_name,
+                "--library", plat.path("extras/google/market_apk_expansion/downloader_library", relative=True),
+                ])
 
     iface.info("Creating assets directory.")
 
@@ -558,9 +561,8 @@ def build(iface, directory, commands, launch=False, finished=None):
     render(
         "Constants.java",
         "src/org/renpy/android/Constants.java",
-        config = config,
-        file_size = file_size)
-
+        config=config,
+        file_size=file_size)
 
     iface.info("Packaging internal data.")
 
@@ -657,6 +659,7 @@ def connect(interface, address):
     interface.call([ plat.adb, "connect", address ], cancel=True)
     interface.final_success("Connected to remote ADB.")
 
+
 def disconnect(interface):
     """
     Causes ADB to disconnect from a remote address.
@@ -665,6 +668,7 @@ def disconnect(interface):
     interface.info("Disconnecting from remote ADB.")
     interface.call([ plat.adb, "disconnect" ], cancel=True)
     interface.final_success("Disconnected from remote ADB.")
+
 
 def distclean(interface):
     """
@@ -700,11 +704,9 @@ def distclean(interface):
     rm("proguard-project.txt")
     rm("project.properties")
 
-    rm("android-sdk")
-    rm("apache-ant")
+    rmdir("android-sdk", False)
+    rmdir("apache-ant", False)
 
-
-
-
-
-
+    for i in os.listdir(plat.path('.')):
+        if i.endswith(".tgz") or i.endswith(".tar.gz") or i.endswith(".zip"):
+            os.unlink(plat.path(i, replace=False))

@@ -74,6 +74,7 @@ without having the JDK. Without a working JDK, I can't continue.
     os.unlink(plat.path("test.java"))
     os.unlink(plat.path("test.class"))
 
+
 def unpack_sdk(interface):
 
     if os.path.exists(plat.path("android-sdk")):
@@ -97,18 +98,18 @@ def unpack_sdk(interface):
 
     interface.info("I'm downloading the Android SDK. This might take a while.")
 
-    interface.download(url, plat.path(archive))
+    interface.download(url, plat.path(archive, replace=False))
 
     interface.info("I'm extracting the Android SDK.")
 
     def extract():
 
         if archive.endswith(".tgz"):
-            tf = tarfile.open(plat.path(archive), "r:*")
+            tf = tarfile.open(plat.path(archive, replace=False), "r:*")
             tf.extractall(plat.path("."))
             tf.close()
         else:
-            zf = zipfile.ZipFile(plat.path(archive))
+            zf = zipfile.ZipFile(plat.path(archive, replace=False))
 
             # We have to do this because Python has a small (260?) path length
             # limit on windows, and the Android SDK has a
@@ -126,6 +127,7 @@ def unpack_sdk(interface):
     plat.rename(plat.path(unpacked, replace=False), plat.path("android-sdk"))
 
     interface.success("I've finished unpacking the Android SDK.")
+
 
 def unpack_ant(interface):
     if os.path.exists(plat.path("apache-ant")):
@@ -151,6 +153,7 @@ def unpack_ant(interface):
     interface.background(extract)
 
     interface.success("I've finished unpacking Apache Ant.")
+
 
 def get_packages(interface):
 
@@ -178,6 +181,7 @@ def get_packages(interface):
     run(interface, plat.android, "update", "project", "-p", plat.path("extras/google/market_apk_expansion/downloader_library"), "--target", plat.target)
 
     interface.success("I've finished installing the required Android packages.")
+
 
 def generate_keys(interface):
 
@@ -228,8 +232,8 @@ Will you make a backup of android.keystore, and keep it in a safe place?"""):
     if not run(interface, plat.keytool, "-genkey", "-keystore", "android.keystore", "-alias", "android", "-keyalg", "RSA", "-keysize", "2048", "-keypass", "android", "-storepass", "android", "-dname", dname, "-validity", "20000", use_path=True):
         interface.fail("Could not create android.keystore. Is keytool in your path?")
 
-
     interface.success("""I've finished creating android.keystore. Please back it up, and keep it in a safe place.""")
+
 
 def install_sdk(interface):
     check_java(interface)
@@ -243,4 +247,3 @@ def install_sdk(interface):
     generate_keys(interface)
 
     interface.final_success("It looks like you're ready to start packaging games.")
-
