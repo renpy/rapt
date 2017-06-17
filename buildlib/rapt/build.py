@@ -408,8 +408,8 @@ def build(iface, directory, commands, launch=False, finished=None):
     if config.package is None:
         iface.fail("Run configure before attempting to build the app.")
 
-    if (config.store == "play" or config.store == "all") and (config.google_play_key is None):
-        iface.fail("Google Play support is enabled, but build.google_play_key is not set. Please set in your game.")
+    if (config.store == "play" or config.store == "all") and ((config.google_play_key is None) or (len(config.google_play_key) < 32)):
+        iface.fail("Google Play support is enabled, but build.google_play_key is not defined.")
 
     global blacklist
     global whitelist
