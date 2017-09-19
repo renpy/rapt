@@ -19,6 +19,7 @@ const*    float    native    super    while
 true false null
 """.replace("*", "").split()
 
+
 class Configuration(object):
 
     def __init__(self, directory):
@@ -56,6 +57,7 @@ class Configuration(object):
         with file(os.path.join(directory, ".android.json"), "w") as f:
             json.dump(self.__dict__, f)
 
+
 def set_version(config, value):
     """
     Sets the version, and tries to set the numeric versions based on the
@@ -74,6 +76,7 @@ def set_version(config, value):
         config.numeric_version = str(v)
     except:
         pass
+
 
 def configure(interface, directory, default_name=None, default_version=None):
 
@@ -94,7 +97,7 @@ What is the name of the package?
 
 This is usually of the form com.domain.program or com.domain.email.program. It may only contain ASCII letters and dots. It must contain at least one dot.""", config.package)
 
-    config.package = config.package.strip()
+    config.package = config.package.strip().lower()
 
     if not config.package:
         interface.fail("The package name may not be empty.")
@@ -136,9 +139,9 @@ This must be a positive integer number, and the value should increase between ve
         interface.fail("The numeric version must contain only numbers.")
 
     config.orientation = interface.choice("How would you like your application to be displayed?", [
-            ("sensorLandscape", "In landscape orientation."),
-            ("portrait", "In portrait orientation."),
-            ("sensor", "In the user's preferred orientation."),
+        ("sensorLandscape", "In landscape orientation."),
+        ("portrait", "In portrait orientation."),
+        ("sensor", "In the user's preferred orientation."),
         ], config.orientation)
 
     if plat.renpy:
@@ -189,7 +192,7 @@ Please enter a space-separated list of permissions.""", permissions)
             internet = "INTERNET" in config.permissions
             internet = interface.yesno_choice("Do you want to allow the app to access the Internet?", internet)
         else:
-            internet = False # included in template.
+            internet = False  # included in template.
 
         permissions = [ i for i in config.permissions if i not in [ "INTERNET" ] ]
 
@@ -198,8 +201,8 @@ Please enter a space-separated list of permissions.""", permissions)
 
         config.permissions = permissions
 
-
     config.save(directory)
+
 
 def set_config(iface, directory, var, value):
 
@@ -215,10 +218,3 @@ def set_config(iface, directory, var, value):
         iface.fail("Unknown configuration variable: {}".format(var))
 
     config.save(directory)
-
-
-
-
-
-
-
