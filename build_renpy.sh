@@ -2,6 +2,9 @@
 
 set -e
 
+unset RENPY_STEAM_PLATFORM
+unset RENPY_STEAM_SDK
+
 export ROOT=$(dirname $(readlink -f $0))
 export DIST="$ROOT/dist"
 export RENPY_ROOT="${2:-/home/tom/ab/renpy}"
