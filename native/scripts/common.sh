@@ -65,6 +65,7 @@ activate_toolchain () {
     libdir "$NATIVE/obj/local/$PLATFORM"
 
     includedir "$INSTALLDIR/include"
+    includedir "$INSTALLDIR/include/openssl"
     includedir "$INSTALLDIR/python2.7"
 
     includedir "$NATIVE/jni/png"

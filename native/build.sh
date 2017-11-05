@@ -33,6 +33,10 @@ build_platform () {
     # Set up the toolchain.
     run_once toolchain create
 
+    # Build openssl.
+    run_once openssl unpack
+    run_once openssl build
+
     # Use the toolchain to build python.
     run_once python unpack
     run_once python apply_patches
