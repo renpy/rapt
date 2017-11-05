@@ -1,7 +1,8 @@
 import os
 import struct
 import zipfile
-import cStringIO
+import io
+
 
 class SubFile(object):
 
@@ -130,7 +131,6 @@ class SubFile(object):
         raise Exception("Write not supported by SubFile")
 
 
-
 class APK(object):
 
     def __init__(self, apk=None, prefix="assets/"):
@@ -202,4 +202,4 @@ class APK(object):
                 self.offset[fn],
                 info.file_size)
 
-        return cStringIO.StringIO(self.zf.read(info))
+        return io.BytesIO(self.zf.read(info))
