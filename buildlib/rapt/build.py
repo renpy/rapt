@@ -498,14 +498,15 @@ def build(iface, directory, commands, launch=False, finished=None):
                 "--library", plat.path("extras/google/market_apk_expansion/downloader_library", relative=True),
                 ])
 
-    with open(plat.path("ant.properties"), "w") as f:
-        f.write("""
-java.target=1.6
-java.source=1.6
-""")
+    antdirs = [
+        "",
+        "extras/google/market_apk_expansion/downloader_library/",
+        "extras/google/market_licensing/library/",
+        ]
 
-    with open(plat.path("extras/google/market_apk_expansion/downloader_library/ant.properties"), "w") as f:
-        f.write("""
+    for i in antdirs:
+        with open(plat.path(i + "ant.properties"), "w") as f:
+            f.write("""
 java.target=1.6
 java.source=1.6
 """)

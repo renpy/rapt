@@ -112,7 +112,7 @@ def unpack_sdk(interface):
             zf = zipfile.ZipFile(plat.path(archive, replace=False))
 
             # We have to do this because Python has a small (260?) path length
-            # limit on windows, and the Android SDK has a
+            # limit on windows, and the Android SDK has very long filenames.
             old_cwd = os.getcwd()
             os.chdir(plat.path("."))
 
