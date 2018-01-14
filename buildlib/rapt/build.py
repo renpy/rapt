@@ -498,6 +498,18 @@ def build(iface, directory, commands, launch=False, finished=None):
                 "--library", plat.path("extras/google/market_apk_expansion/downloader_library", relative=True),
                 ])
 
+    with open(plat.path("ant.properties"), "w") as f:
+        f.write("""
+java.target=1.6
+java.source=1.6
+""")
+
+    with open(plat.path("extras/google/market_apk_expansion/downloader_library/ant.properties"), "w") as f:
+        f.write("""
+java.target=1.6
+java.source=1.6
+""")
+
     iface.info("Creating assets directory.")
 
     if os.path.isdir(plat.path("assets")):
