@@ -120,4 +120,14 @@ def rename(src, dst):
     elif os.path.exists(dst):
         os.unlink(dst)
 
+    import time
+
+    for _ in range(0, 120):
+
+        try:
+            os.rename(src, dst)
+            return
+        except:
+            time.sleep(.5)
+
     os.rename(src, dst)

@@ -368,7 +368,7 @@ def split_renpy(directory):
     os.mkdir(assets)
     os.mkdir(os.path.join(assets, "renpy"))
 
-    os.rename(os.path.join(directory, "renpy", "common"), os.path.join(assets, "renpy", "common"))
+    plat.rename(os.path.join(directory, "renpy", "common"), os.path.join(assets, "renpy", "common"))
 
     for fn in filenames:
         full_fn = os.path.join(directory, fn)
@@ -379,14 +379,14 @@ def split_renpy(directory):
             continue
 
         if fn.endswith(".py"):
-            os.rename(full_fn, os.path.join(private, "main.py"))
+            plat.rename(full_fn, os.path.join(private, "main.py"))
             continue
 
         if fn == "renpy":
-            os.rename(full_fn, os.path.join(private, fn))
+            plat.rename(full_fn, os.path.join(private, fn))
             continue
 
-        os.rename(full_fn, os.path.join(assets, fn))
+        plat.rename(full_fn, os.path.join(assets, fn))
 
     return private, assets
 
