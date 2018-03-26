@@ -1,5 +1,7 @@
 # This sets up various variables and commands based on the platform we're on.
 
+from __future__ import print_function
+
 ##############################################################################
 # These are set based on the platform we're on.
 windows = False
@@ -120,14 +122,9 @@ def rename(src, dst):
     elif os.path.exists(dst):
         os.unlink(dst)
 
-    import time
-
-    for _ in range(0, 120):
-
-        try:
-            os.rename(src, dst)
-            return
-        except:
-            time.sleep(.5)
-
-    os.rename(src, dst)
+    if os.path.isdir(src):
+        shutil.copytree(src, dst)
+        shutil.rmtree(src)
+    else:
+        shutil.copy(src, dst)
+        os.unlink(src)
