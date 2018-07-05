@@ -17,9 +17,9 @@ hostbuild () {
     pushd "$BUILD/Python-$version"
 
 
-    cp "$SOURCE/python-Setup" "Modules/Setup"
+    cp "$SOURCE/hostpython-Setup" "Modules/Setup"
 
-    ./configure --prefix="$INSTALLDIR"
+    ./configure --prefix="$INSTALLDIR" --without-ssl
     make
     make install
     cp -a Parser/pgen "$INSTALLDIR/bin/pgen"
