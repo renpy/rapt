@@ -90,6 +90,11 @@
 /lib/python2.7/gettext.pyo
 /lib/python2.7/decimal.pyo
 
+/lib/python2.7/cgi.pyo
+/lib/python2.7/Cookie.pyo
+/lib/python2.7/hmac.pyo
+/lib/python2.7/uuid.pyo
+
 /lib/python2.7/site-packages/pygame_sdl2/**
 /lib/python2.7/site-packages/renpy/**
 /lib/python2.7/site-packages/pyjnius/**
