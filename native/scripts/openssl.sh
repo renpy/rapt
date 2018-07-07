@@ -16,8 +16,7 @@ build () {
 
     ./Configure --prefix="$INSTALLDIR" \
         no-asm no-shared no-comp no-hw no-engine \
-        $OPENSSL_ARCH -fPIC \
-        -D__ANDROID_API__=${ANDROID_PLATFORM#android-}
+        $OPENSSL_ARCH -fPIC -D__ANDROID_API__=${ANDROID_PLATFORM#android-}
 
     make depend CFLAGS="$CFLAGS"
     make

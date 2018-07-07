@@ -53,13 +53,13 @@ libdir () {
 activate_toolchain () {
     export PATH="$INSTALLDIR/toolchain/bin:$PATH"
 
-    export CC="ccache $GCC_ARCH-gcc"
-    export CXX="ccache $GCC_ARCH-g++"
-    export LD="ccache $GCC_ARCH-gcc"
-    export LDXX="ccache $GCC_ARCH-g++"
+    export CC="ccache $GCC_ARCH-gcc -isysroot $INSTALLDIR/toolchain/sysroot"
+    export CXX="ccache $GCC_ARCH-g++ -isysroot $INSTALLDIR/toolchain/sysroot"
+    export LD="ccache $GCC_ARCH-gcc -isysroot $INSTALLDIR/toolchain/sysroot"
+    export LDXX="ccache $GCC_ARCH-g++ -isysroot $INSTALLDIR/toolchain/sysroot"
     export RANLIB="$GCC_ARCH-ranlib"
 
-    export CFLAGS="-DANDROID"
+    export CFLAGS="-DANDROID -D__ANDROID_API__=${ANDROID_PLATFORM#android-}"
     export LDFLAGS=""
 
     libdir "$INSTALLDIR/lib"

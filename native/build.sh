@@ -37,12 +37,12 @@ build_platform () {
     run_once openssl unpack
     run_once openssl build
 
-    exit
-
     # Use the toolchain to build python.
     run_once python unpack
     run_once python apply_patches
     run_once python build
+
+    exit
 
     # Build and biglink the android module alone, so we have a libpymodules
     # that will let us build the full jni.

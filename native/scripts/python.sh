@@ -68,6 +68,9 @@ build () {
         --disable-toolbox-glue \
         --disable-framework
 
+    # On Android, we're missing nl_langinfo
+    sed -i "s/#define HAVE_LANGINFO_H 1/#undef HAVE_LANGINFO_H/" pyconfig.h
+
     mkdir -p Lib/plat-linux4
 
     make HOSTPYTHON="$B/hostpython" HOSTPGEN="$B/hostpgen" CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so || true
