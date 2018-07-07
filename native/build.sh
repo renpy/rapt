@@ -3,9 +3,8 @@
 export NATIVE="$(dirname $(readlink -f $0))"
 export ANDROID="$(dirname $NATIVE)"
 export SOURCE="$NATIVE/source"
-export NDK="$NATIVE/android-ndk"
-export SDK="$NATIVE/../android-sdk"
-export ANDROID_PLATFORM=android-9
+export SDK="${ANDROID_HOME:-/home/tom/Android/Sdk}"
+export NDK="${ANDROID_NDK:-$SDK/ndk-bundle}"
 
 export PYGAME_SDL2_ROOT="${PYGAME_SDL2_ROOT:-/home/tom/ab/pygame_sdl2}"
 export RENPY_ROOT="${RENPY_ROOT:-/home/tom/ab/renpy}"
@@ -20,6 +19,7 @@ build_host() {
 
     # Build for host.
     export PLATFORM=host
+
     export CC="ccache gcc"
     export LD="ccache gcc"
 
@@ -36,6 +36,8 @@ build_platform () {
     # Build openssl.
     run_once openssl unpack
     run_once openssl build
+
+    exit
 
     # Use the toolchain to build python.
     run_once python unpack
@@ -66,10 +68,12 @@ build_platform () {
 
 build_arm () {
 
-    export PLATFORM=armeabi
+    export ANDROID_PLATFORM=android-15
+    export PLATFORM=armeabi-v7a
     export NDK_ARCH=arm
     export FFMPEG_ARCH=arm
     export GCC_ARCH=arm-linux-androideabi
+    export OPENSSL_ARCH="android -march=armv7-a"
 
     build_platform
 }
@@ -77,10 +81,12 @@ build_arm () {
 
 build_x86 () {
 
+    export ANDROID_PLATFORM=android-15
     export PLATFORM=x86
     export NDK_ARCH=x86
     export FFMPEG_ARCH=x86
     export GCC_ARCH=i686-linux-android
+    export OPENSSL_ARCH="android-x86"
 
     build_platform
 }
@@ -89,6 +95,7 @@ build_ () {
     run finish clean
 
     build_host
+
     build_x86
     build_arm
 

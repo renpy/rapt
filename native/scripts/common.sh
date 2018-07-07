@@ -57,6 +57,7 @@ activate_toolchain () {
     export CXX="ccache $GCC_ARCH-g++"
     export LD="ccache $GCC_ARCH-gcc"
     export LDXX="ccache $GCC_ARCH-g++"
+    export RANLIB="$GCC_ARCH-ranlib"
 
     export CFLAGS="-DANDROID"
     export LDFLAGS=""

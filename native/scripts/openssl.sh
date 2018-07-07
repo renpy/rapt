@@ -12,9 +12,14 @@ build () {
 
     pushd "openssl-$version"
 
-    ./Configure --prefix="$INSTALLDIR" -fPIC no-asm no-shared no-comp no-hw no-engine android
+    export CROSS_SYSROOT="$INSTALLDIR/toolchain/sysroot"
 
-    make depend
+    ./Configure --prefix="$INSTALLDIR" \
+        no-asm no-shared no-comp no-hw no-engine \
+        $OPENSSL_ARCH -fPIC \
+        -D__ANDROID_API__=${ANDROID_PLATFORM#android-}
+
+    make depend CFLAGS="$CFLAGS"
     make
     make install
 
