@@ -115,6 +115,7 @@ int start_python(void) {
         "    def __init__(self):\n" \
         "        self.buffer = ''\n" \
         "    def write(self, s):\n" \
+        "        s = s.replace(\"\\0\", \"\\\\0\")\n" \
         "        s = self.buffer + s\n" \
         "        lines = s.split(\"\\n\")\n" \
         "        for l in lines[:-1]:\n" \
