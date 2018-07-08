@@ -41,11 +41,10 @@ while args:
 
 print('Biglink create %s library' % sys.argv[1])
 
-args = os.environ['LD'].split() + ['-shared', '-O3', '-o', sys.argv[1] ] + unique_args
+args = os.environ['LD'].split() + os.environ["LDFLAGS"].split() + [ '-Wl,-Bsymbolic', '-shared', '-O3', '-o', sys.argv[1] ] + unique_args
 
 for i in args:
     print(i)
 
 rv = subprocess.call(args)
 sys.exit(rv)
-

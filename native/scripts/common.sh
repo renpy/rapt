@@ -59,8 +59,8 @@ activate_toolchain () {
     export LDXX="ccache $GCC_ARCH-g++ -isysroot $INSTALLDIR/toolchain/sysroot"
     export RANLIB="$GCC_ARCH-ranlib"
 
-    export CFLAGS="-DANDROID -D__ANDROID_API__=${ANDROID_PLATFORM#android-}"
-    export LDFLAGS=""
+    export CFLAGS="-DANDROID -D__ANDROID_API__=${ANDROID_PLATFORM#android-} $PICFLAG"
+    export LDFLAGS="$PICFLAG"
 
     libdir "$INSTALLDIR/lib"
     libdir "$NATIVE/obj/local/$PLATFORM"

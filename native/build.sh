@@ -37,6 +37,13 @@ build_platform () {
     run_once openssl unpack
     run_once openssl build
 
+    # ffmpeg takes forever.
+    run_once ffmpeg unpack
+    run_once ffmpeg build
+
+    run_once fribidi unpack
+    run_once fribidi build
+
     # Use the toolchain to build python.
     run_once python unpack
     run_once python apply_patches
@@ -47,13 +54,6 @@ build_platform () {
     run android build
     run biglink link
     run jni platform
-
-    # ffmpeg takes forever.
-    run_once ffmpeg unpack
-    run_once ffmpeg build
-
-    run_once fribidi unpack
-    run_once fribidi build
 
     run_once pyjnius build
 
@@ -66,16 +66,31 @@ build_platform () {
 
 build_arm () {
 
+    # The version of Android use.
     export ANDROID_PLATFORM=android-15
+
+    # The binary platform.
     export PLATFORM=armeabi-v7a
+
+    # The arch, as given to the toolchain.
     export NDK_ARCH=arm
+
+    # The arch, as  given to ffmpeg.
     export FFMPEG_ARCH=arm
+
+    # The prefix used for GCC.
     export GCC_ARCH=arm-linux-androideabi
+
+    # The arch arguments provided to openssl.
     export OPENSSL_ARCH="android -march=armv7-a"
+
+    # The -fPIC flag, if needed.
+    export PICFLAG=""
 
     build_platform
 }
 
+# ARM64 uses OPENSSL_ARCH="linux-generic64 -DB_ENDIAN"
 
 build_x86 () {
 
@@ -85,19 +100,36 @@ build_x86 () {
     export FFMPEG_ARCH=x86
     export GCC_ARCH=i686-linux-android
     export OPENSSL_ARCH="android-x86"
+    export PICFLAG=""
 
     build_platform
 }
+
+build_x86_64 () {
+
+    export ANDROID_PLATFORM=android-21
+    export PLATFORM=x86_64
+    export NDK_ARCH=x86_64
+    export FFMPEG_ARCH=x86_64
+    export GCC_ARCH=x86_64-linux-android
+    export OPENSSL_ARCH="linux-generic64"
+    export PICFLAG="-fPIC"
+
+    build_platform
+}
+
 
 build_ () {
     run finish clean
 
     build_host
 
+    build_x86_64
     build_x86
     build_arm
 
     export ANDROID_PLATFORM=android-15
+    export ALL_PLATFORMS="armeabi-v7a x86 x86_64"
 
     run jni all
     run finish dist

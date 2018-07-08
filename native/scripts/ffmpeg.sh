@@ -22,6 +22,7 @@ build () {
        --extra-ldexeflags=-pie \
        --enable-cross-compile \
        --disable-shared \
+       --enable-pic \
        --enable-static \
        --enable-runtime-cpudetect \
        --enable-avresample \
@@ -85,7 +86,7 @@ build () {
     # This can be gotten rid of when we're on android-21.
     sed -i "s/-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE//" config.mak
 
-    make
+    make install V=1
     make install
 
     popd
