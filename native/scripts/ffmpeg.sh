@@ -82,6 +82,9 @@ build () {
        --disable-stripping \
        --disable-iconv
 
+    # This can be gotten rid of when we're on android-21.
+    sed -i "s/-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE//" config.mak
+
     make
     make install
 
