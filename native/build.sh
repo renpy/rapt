@@ -62,8 +62,6 @@ build_platform () {
 
     # Do a final biglink that includes the full libpymodules.
     run biglink link
-
-    exit
 }
 
 build_arm () {
@@ -98,6 +96,8 @@ build_ () {
 
     build_x86
     build_arm
+
+    export ANDROID_PLATFORM=android-15
 
     run jni all
     run finish dist

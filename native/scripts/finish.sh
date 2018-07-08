@@ -14,10 +14,10 @@ dist () {
     cp -a "$NATIVE/libs" "$DIST/libs"
 
     mkdir -p "$DIST/private/include/python2.7"
-    cp -a "$NATIVE/install/armeabi/include/python2.7/pyconfig.h" "$DIST/private/include/python2.7"
+    cp -a "$NATIVE/install/armeabi-v7a/include/python2.7/pyconfig.h" "$DIST/private/include/python2.7"
 
     mkdir -p "$DIST/private/lib"
-    cp -a "$NATIVE/install/armeabi/lib/python2.7" "$PYLIB"
+    cp -a "$NATIVE/install/armeabi-v7a/lib/python2.7" "$PYLIB"
 
     # unused encodings
     rm -Rf "$PYLIB/lib-dynload/"*codec*
