@@ -14,6 +14,16 @@ android {
             minifyEnabled false
         }
     }
+
+    splits {
+        abi {
+            enable true;
+            reset();
+
+            include "x86", "x86_64", "armeabi-v7a"
+            universalApk false
+        }
+    }
 }
 
 dependencies {
