@@ -124,9 +124,9 @@ build_ () {
 
     build_host
 
+    build_arm
     build_x86_64
     build_x86
-    build_arm
 
     export ANDROID_PLATFORM=android-15
     export ALL_PLATFORMS="armeabi-v7a x86 x86_64"

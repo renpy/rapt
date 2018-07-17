@@ -70,6 +70,7 @@ build () {
 
     # On Android, we're missing nl_langinfo
     sed -i "s/#define HAVE_LANGINFO_H 1/#undef HAVE_LANGINFO_H/" pyconfig.h
+    sed -i 's/$(BLDSHARED) -o $@ $(LIBRARY_OBJS)/$(BLDSHARED) -Wl,-h$(INSTSONAME) -o $@ $(LIBRARY_OBJS)/' Makefile
 
     mkdir -p Lib/plat-linux4
 
