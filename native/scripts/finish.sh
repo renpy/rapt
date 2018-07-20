@@ -1,22 +1,25 @@
 . "$NATIVE/scripts/common.sh"
 
-DIST="$ANDROID/dist"
-PYLIB="$DIST/private/lib/python2.7"
+PROJECT="$ANDROID/project"
+JNILIBS="$PROJECT/renpyandroid/src/main/jniLibs"
+PRIVATE="$PROJECT/renpyandroid/src/main/private"
+PYLIB="$PRIVATE/lib/python2.7"
 
 clean () {
-    rm -Rf "$DIST" || true
+    rm -Rf "$JNILIBS" || true
+    rm -Rf "$PRIVATE" || true
 }
 
 dist () {
 
     # Copy the native libs.
-    mkdir -p "$DIST"
-    cp -a "$NATIVE/libs" "$DIST/libs"
+    mkdir -p "JNILIBS"
+    cp -a "$NATIVE/libs"* "$JNILIBS"
 
-    mkdir -p "$DIST/private/include/python2.7"
-    cp -a "$NATIVE/install/armeabi-v7a/include/python2.7/pyconfig.h" "$DIST/private/include/python2.7"
+    mkdir -p "$PRIVATE/include/python2.7"
+    cp -a "$NATIVE/install/armeabi-v7a/include/python2.7/pyconfig.h" "$PRIVATE/include/python2.7"
 
-    mkdir -p "$DIST/private/lib"
+    mkdir -p "$PRIVATE/lib"
     cp -a "$NATIVE/install/armeabi-v7a/lib/python2.7" "$PYLIB"
 
     # unused encodings
@@ -56,6 +59,9 @@ dist () {
     rm -Rf "$PYLIB/sunaudio.pyo"
     rm -Rf "$PYLIB/os2emxpath.pyo"
     rm -Rf "$PYLIB/multiprocessing/dummy"*
+    rm -Rf "$PYLIB/lib2to3"
+    rm -Rf "$PYLIB/idlelib"
+
 
     # unused binary python modules
     rm -Rf "$PYLIB/lib-dynload/"*.so
@@ -65,6 +71,10 @@ dist () {
     rm -Rf "$PYLIB/site-packages/pygame_sdl2/threads/Py25Queue.pyo"
     rm -Rf "$PYLIB/unittest/"*
     rm -Rf "$PYLIB/distutils/"*.exe
+
+    find "$PYLIB" -name \*.pyc -delete
+    find "$PYLIB" -name \*.egg-info -delete
+
 
 }
 
