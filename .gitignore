@@ -12,10 +12,15 @@ bin/
 dl/
 doc/_build/
 local.properties
-renpy
 build_moonlight.sh
 
 project/.idea/caches/
 project/app/src/main/assets/
 project/renpyandroid/src/main/jniLibs/
 project/renpyandroid/src/main/private/
+project/app/src/main/AndroidManifest.xml
+project/app/src/main/res/values/strings.xml
+project/renpyandroid/src/main/AndroidManifest.xml
+project/renpyandroid/src/main/java/org/renpy/android/Constants.java
+project/renpyandroid/src/main/res/values/strings.xml
+renpy/

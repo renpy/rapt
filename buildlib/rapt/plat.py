@@ -79,24 +79,15 @@ else:
 
 RAPT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-sdk_version = "r24.4.1"
-ant_version = "1.9.3"
-build_version = "23.0.1"
-target = "android-22"
 
-
-def path(path, replace=True, relative=False):
+def path(path, relative=False):
     """
     Turns a relative path into an absolute path relative to the RAPT
     directory.
-
-    `replace`
-        If true, replaces apache-ant and android-sdk with versioned paths.
     """
 
-    if replace:
-        path = path.replace("android-sdk", "android-sdk-" + sdk_version)
-        path = path.replace("apache-ant", "apache-ant-" + ant_version)
+    if not path:
+        return RAPT_PATH
 
     if not relative:
         path = os.path.join(RAPT_PATH, path)
