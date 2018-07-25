@@ -347,7 +347,7 @@ def copy_presplash(directory, name, default):
         fn = default
         ext = os.path.splitext(fn)[1]
 
-    shutil.copy(fn, plat.path("assets/" + name + ext))
+    shutil.copy(fn, plat.path("project/app/src/main/assets/" + name + ext))
 
 
 def split_renpy(directory):
@@ -448,19 +448,6 @@ def build(iface, directory, commands, launch=False, finished=None):
     # Figure out versions of the private and public data.
     private_version = str(time.time())
 
-    for template, i in [
-            ("templates/app-AndroidManifest.xml", "project/app/src/main/AndroidManifest.xml"),
-            ("templates/app-strings.xml", "project/app/src/main/res/values/strings.xml"),
-            ("templates/renpyandroid-AndroidManifest.xml", "project/renpyandroid/src/main/AndroidManifest.xml"),
-            ("templates/renpyandroid-strings.xml", "project/renpyandroid/src/main/res/values/strings.xml"),
-            ]:
-
-        render(
-            template,
-            i,
-            private_version=private_version,
-            config=config)
-
     iface.info("Updating source code.")
 
     # edit_file("src/org/renpy/android/DownloaderActivity.java", r'import .*\.R;', 'import {}.R;'.format(config.package))
@@ -527,11 +514,22 @@ def build(iface, directory, commands, launch=False, finished=None):
     if not config.google_play_salt:
         config.google_play_salt = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20"
 
-    render(
-        "templates/Constants.java",
-        "project/renpyandroid/src/main/java/org/renpy/android/Constants.java",
-        config=config,
-        file_size=file_size)
+    for template, i in [
+            ("templates/app-build.gradle", "project/app/build.gradle"),
+            ("templates/app-AndroidManifest.xml", "project/app/src/main/AndroidManifest.xml"),
+            ("templates/app-strings.xml", "project/app/src/main/res/values/strings.xml"),
+            ("templates/renpyandroid-AndroidManifest.xml", "project/renpyandroid/src/main/AndroidManifest.xml"),
+            ("templates/renpyandroid-strings.xml", "project/renpyandroid/src/main/res/values/strings.xml"),
+            ("templates/Constants.java", "project/renpyandroid/src/main/java/org/renpy/android/Constants.java"),
+            ]:
+
+        render(
+            template,
+            i,
+            private_version=private_version,
+            file_size=file_size,
+            config=config
+            )
 
     iface.info("Packaging internal data.")
 
@@ -547,9 +545,9 @@ def build(iface, directory, commands, launch=False, finished=None):
 
 #     # Copy over the icon files.
 #     copy_icon(directory, "icon.png", default_icon)
-#
-#     # Copy the presplash files.
-#     copy_presplash(directory, "android-presplash", default_presplash)
+
+    # Copy the presplash files.
+    copy_presplash(directory, "android-presplash", default_presplash)
 
     # Build.
     # iface.info("I'm using Ant to build the package.")

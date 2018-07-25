@@ -24,3 +24,4 @@ project/renpyandroid/src/main/AndroidManifest.xml
 project/renpyandroid/src/main/java/org/renpy/android/Constants.java
 project/renpyandroid/src/main/res/values/strings.xml
 renpy/
+project/app/build.gradle

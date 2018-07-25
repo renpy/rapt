@@ -3,12 +3,13 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "org.renpy.aaaexperiment"
+        applicationId "{{ config.package }}"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionCode {{ config.numeric_version }}
+        versionName "{{ config.version }}"
     }
+
     buildTypes {
         release {
             minifyEnabled false
