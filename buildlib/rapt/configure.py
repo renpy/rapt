@@ -40,6 +40,7 @@ class Configuration(object):
         self.google_play_salt = None
         self.target_version = 14
         self.store = "none"
+        self.update_icons = True
 
         try:
             with file(os.path.join(directory, ".android.json"), "r") as f:

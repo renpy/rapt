@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
 
+import pygame_sdl2
 import sys
 
 import re
@@ -268,68 +269,79 @@ def zip_directory(zf, prefix, dn):
             zf.write(fn, archive_fn)
 
 
-def copy_icon(directory, name, default):
+def copy_icon(directory, dpi, size, name, default):
     """
-    Copys icon ending with `name` found in `directory` to
-    the appropriate res/drawables directory. If the file doesn't exist,
-    copies in default instead.
+    Finds the icon for dpi and name, and copies it into place. It's scaled
+    to size x size when necessary. If the file cannot be generated, default
+    is used.
     """
 
-    def copy(src, dst):
-        try:
-            os.makedirs(os.path.dirname(dst))
-        except:
-            pass
+    # Find the icon.
 
-        shutil.copy(src, dst)
+    search = [
+        "android-" + name + "-" + dpi + ".png",
+        "android-" + name + ".png",
+        "android-icon-" + dpi + ".png",
+        "android-icon.png",
+        ]
 
-    res = plat.path("res")
-
-    # Clean out old files.
-    for i in os.listdir(res):
-        if not i.startswith("drawable"):
-            continue
-
-        fn = os.path.join(res, i, name)
-
+    for fn in search:
+        fn = os.path.join(directory, fn)
         if os.path.exists(fn):
-            os.unlink(fn)
+            break
 
-    found = False
+    else:
 
-    # Copy files, if any are found.
-    for i in os.listdir(directory):
+        fn = default
 
-        fullfn = os.path.join(directory, i)
-        fn = i.lower()
+    # Scale it to the correct size.
 
-        if not fn.startswith("android-"):
-            continue
+    pygame_sdl2.display.init()
+    pygame_sdl2.display.set_mode((640, 480))
+    pygame_sdl2.event.pump()
 
-        if not fn.endswith("-" + name):
-            continue
+    surf = pygame_sdl2.image.load(fn)
+    surf = surf.convert_alpha()
+    pygame_sdl2.image.save(surf, "input.png")
+    print(surf)
 
-        prefix, rest = fn.split("-", 1)
+    while True:
+        w, h = surf.get_size()
 
-        if "-" in rest:
-            selector, _name = rest.rsplit("-", 1)
+        if (w == size) and (h == size):
+            break
 
-            if selector not in [ "ldpi", "mdpi", "hdpi", "xhdpi", "xxhdpi", "tvdpi" ]:
-                continue
+        w = max(w // 2, size)
+        h = max(h // 2, size)
 
-            dest = os.path.join(res, "drawable-" + selector, name)
-        else:
-            dest = os.path.join(res, "drawable", rest)
+        surf = pygame_sdl2.transform.smoothscale(surf, (w, h))
 
-        copy(fullfn, dest)
+    # Save it in the right place.
 
-        found = True
+    dst = plat.path("project/app/src/main/res/mipmap-" + dpi + "/" + name + ".png")
 
-    if found:
-        return
+    try:
+        os.makedirs(os.path.dirname(dst))
+    except:
+        pass
 
-    # If no files are found, copy over the default.
-    copy(default, os.path.join(res, "drawable", name))
+    pygame_sdl2.image.save(surf, dst)
+
+
+def copy_icons(directory, default):
+
+    sizes = [
+        ("mdpi", 48),
+        ("tvdpi", 64),
+        ("hdpi", 72),
+        ("xhdpi", 96),
+        ("xxhdpi", 144),
+        ("xxxhdpi", 192),
+    ]
+
+    for dpi, size in sizes:
+        copy_icon(directory, dpi, size, "icon", default)
+        copy_icon(directory, dpi, size, "round_icon", default)
 
 
 def copy_presplash(directory, name, default):
@@ -543,8 +555,8 @@ def build(iface, directory, commands, launch=False, finished=None):
 
     iface.background(pack)
 
-#     # Copy over the icon files.
-#     copy_icon(directory, "icon.png", default_icon)
+    if config.update_icons:
+        copy_icons(directory, default_icon)
 
     # Copy the presplash files.
     copy_presplash(directory, "android-presplash", default_presplash)
