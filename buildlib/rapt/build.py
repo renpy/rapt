@@ -10,6 +10,7 @@ import shutil
 import time
 import zipfile
 import subprocess
+import iconmaker
 
 import rapt.plat as plat
 
@@ -269,20 +270,86 @@ def zip_directory(zf, prefix, dn):
             zf.write(fn, archive_fn)
 
 
-def copy_icon(directory, dpi, size, name, default):
+class IconMaker(object):
+
+    def __init__(self, directory):
+        self.directory = directory
+
+    def scale(self, surf, size):
+
+        while True:
+            w, h = surf.get_size()
+
+            if (w == size) and (h == size):
+                break
+
+            w = max(w // 2, size)
+            h = max(h // 2, size)
+
+            surf = pygame_sdl2.transform.smoothscale(surf, (w, h))
+
+        return surf
+
+
+    def load_image(self, fn):
+        fn = os.path.join(self.directory, fn)
+        surf = pygame_sdl2.image.load(fn)
+        surf = surf.convert_alpha()
+
+        return surf
+
+    def load_foreground(self, size):
+        rv = self.load_image("android-icon_foreground.png")
+        return self.scale(rv, size)
+
+    def load_background(self, size):
+        rv = self.load_image("android-icon_background.png")
+        return self.scale(rv, size)
+
+    def load_icon(self, size):
+        bigsize = int(1.5 * size)
+        fg = self.load_foreground(size)
+        icon = self.load_background(bigsize)
+
+        icon.blit(fg, (0, 0))
+
+        offset = int(.25 * size)
+
+        icon = icon.crop((offset, offset, size, size))
+
+        # TODO: Roundrect mask.
+
+        return icon
+
+
+
+
+
+
+
+
+
+    def find_icon(directory, name, dpi, size, default):
+    """
+    Finds an icon with name inside `directory`, and if found, returns it at
+    as a `size` x `size` surface. Returns None if no such file could be found.
+    """
+
+
+def copy_icon(directory, dpi, scale, name, default):
     """
     Finds the icon for dpi and name, and copies it into place. It's scaled
     to size x size when necessary. If the file cannot be generated, default
     is used.
     """
 
+    size = int(108 * scale)
+
     # Find the icon.
 
     search = [
         "android-" + name + "-" + dpi + ".png",
         "android-" + name + ".png",
-        "android-icon-" + dpi + ".png",
-        "android-icon.png",
         ]
 
     for fn in search:
@@ -296,13 +363,8 @@ def copy_icon(directory, dpi, size, name, default):
 
     # Scale it to the correct size.
 
-    pygame_sdl2.display.init()
-    pygame_sdl2.display.set_mode((640, 480))
-    pygame_sdl2.event.pump()
-
     surf = pygame_sdl2.image.load(fn)
     surf = surf.convert_alpha()
-    pygame_sdl2.image.save(surf, "input.png")
     print(surf)
 
     while True:
@@ -328,20 +390,30 @@ def copy_icon(directory, dpi, size, name, default):
     pygame_sdl2.image.save(surf, dst)
 
 
+def merge_icon(directory, dpi):
+
+    def load(name):
+        fn = plat.path("project/app/src/main/res/mipmap-" + dpi + "/" + name + ".png")
+        s = pygame_sdl2.image.load(fn)
+        s = s.convert_alpha()
+
+    foreground = load("icon_foreground")
+    background = load("icon_background")
+
+    background.blit(foreground, (0, 0))
+
+    dst = plat.path("project/app/src/main/res/mipmap-" + dpi + "/icon.png")
+    pygame_sdl2.image.save(background, dst)
+
+
 def copy_icons(directory, default):
 
-    sizes = [
-        ("mdpi", 48),
-        ("tvdpi", 64),
-        ("hdpi", 72),
-        ("xhdpi", 96),
-        ("xxhdpi", 144),
-        ("xxxhdpi", 192),
-    ]
+    pygame_sdl2.display.init()
+    pygame_sdl2.display.set_mode((640, 480))
+    pygame_sdl2.event.pump()
 
-    for dpi, size in sizes:
-        copy_icon(directory, dpi, size, "icon", default)
-        copy_icon(directory, dpi, size, "round_icon", default)
+    iconmaker.IconMaker(directory)
+
 
 
 def copy_presplash(directory, name, default):

@@ -1,6 +1,7 @@
 import pygame_sdl2
 import os
 import plat
+import shutil
 
 
 class IconMaker(object):
@@ -8,6 +9,17 @@ class IconMaker(object):
     def __init__(self, directory):
 
         self.directory = directory
+
+        sizes = [
+            ("mdpi", 1),
+            ("hdpi", 1.5),
+            ("xhdpi", 2),
+            ("xxhdpi", 3),
+            ("xxxhdpi", 4),
+            ]
+
+        for dpi, scale in sizes:
+            self.write_dpi(dpi, scale)
 
     def scale(self, surf, size):
 
@@ -33,8 +45,6 @@ class IconMaker(object):
 
             if os.path.exists(i):
 
-                print(i)
-
                 surf = pygame_sdl2.image.load(i)
                 surf = surf.convert_alpha()
                 return surf
@@ -50,7 +60,7 @@ class IconMaker(object):
         rv = self.load_image("android-icon_background.png")
         return self.scale(rv, size)
 
-    def load_icon(self, size):
+    def make_icon(self, size):
         bigsize = int(1.5 * size)
         fg = self.load_foreground(bigsize)
         icon = self.load_background(bigsize)
@@ -66,9 +76,32 @@ class IconMaker(object):
 
         icon.blit(mask, (0, 0), None, pygame_sdl2.BLEND_RGB_MULT)
 
-        # TODO: Roundrect mask.
-
         return icon
+
+    def write_icon(self, name, dpi, scale, size, generator):
+
+        dst = plat.path("project/app/src/main/res/mipmap-{}/{}.png".format(dpi, name))
+
+        try:
+            os.makedirs(os.path.dirname(dst))
+        except:
+            pass
+
+        # Did the user provide the file?
+        src = os.path.join(self.directory, "android-{}-{}.png".format(name, dpi))
+
+        if os.path.exists(src):
+            shutil.copy(src, dst)
+            return
+
+        surf = generator(int(scale * size))
+
+        pygame_sdl2.image.save(surf, dst)
+
+    def write_dpi(self, dpi, scale):
+        self.write_icon("icon_background", dpi, scale, 108, self.load_background)
+        self.write_icon("icon_foreground", dpi, scale, 108, self.load_foreground)
+        self.write_icon("icon", dpi, scale, 48, self.load_foreground)
 
 
 if __name__ == "__main__":
@@ -78,7 +111,3 @@ if __name__ == "__main__":
     pygame_sdl2.event.pump()
 
     im = IconMaker("/home/tom/ab/renpy/the_question")
-
-    surf = im.load_icon(192)
-
-    pygame_sdl2.image.save(surf, "/tmp/icon.png")
