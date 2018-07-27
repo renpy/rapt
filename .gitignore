@@ -1,17 +1,12 @@
-android-ndk*
-android-sdk*
-apache-ant*
 dist
-dist.old
+
 .classpath
 .project
 
 *.pyc
 *.pyo
 bin/
-dl/
-doc/_build/
-local.properties
+
 build_moonlight.sh
 
 project/.idea/caches/
@@ -23,7 +18,8 @@ project/app/src/main/res/values/strings.xml
 project/renpyandroid/src/main/AndroidManifest.xml
 project/renpyandroid/src/main/java/org/renpy/android/Constants.java
 project/renpyandroid/src/main/res/values/strings.xml
-renpy/
 project/app/build.gradle
-app/src/main/res/mipmap-*dpi/
+project/app/src/main/res/mipmap-*dpi/
+project/app/release
 
+renpy
