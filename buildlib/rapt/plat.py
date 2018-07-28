@@ -53,7 +53,7 @@ if platform.win32_ver()[0]:
     except:
         traceback.print_exc()
 
-    adb = "android-sdk\\platform-tools\\adb.exe"
+    adb = "Sdk\\platform-tools\\adb.exe"
     javac = maybe_java_home("javac.exe")
     keytool = maybe_java_home("keytool.exe")
 
@@ -61,7 +61,7 @@ if platform.win32_ver()[0]:
 
 elif platform.mac_ver()[0]:
     macintosh = True
-    adb = "android-sdk/platform-tools/adb"
+    adb = "Sdk/platform-tools/adb"
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
 
@@ -72,7 +72,7 @@ elif platform.mac_ver()[0]:
 else:
     linux = True
 
-    adb = "android-sdk/platform-tools/adb"
+    adb = "Sdk/platform-tools/adb"
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
 

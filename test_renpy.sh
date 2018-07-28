@@ -11,5 +11,5 @@ cd "$ROOT"
 ln -s "$ROOT/Sdk" "$ROOT/dist/Sdk"
 
 if [ "$1" != "" ]; then
-    /home/tom/ab/renpy/renpy.sh /home/tom/ab/renpy/launcher android_build "$1" installDebug
+    /home/tom/ab/renpy/renpy.sh /home/tom/ab/renpy/launcher android_build "$1" installDebug --launch
 fi

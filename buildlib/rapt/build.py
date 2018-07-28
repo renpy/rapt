@@ -509,8 +509,35 @@ def build(iface, directory, commands, launch=False, finished=None):
 
         iface.call([ plat.gradlew, "-p", plat.path("project") ] + commands, cancel=True)
 
+        if (expansion_file is not None) and any(i.startswith("install") for i in commands):
+            iface.info("Uploading expansion file.")
+
+            dest = "/storage/emulated/0/Android/obb/{}/{}".format(config.package, expansion_file)
+
+            iface.call([ plat.adb, "push", plat.path(expansion_file), dest ], cancel=True)
+
+#         if expansion_file is not None:
+#             plat.rename(plat.path(expansion_file), plat.path("bin/" + expansion_file))
+#             files.append(plat.path("bin/" + expansion_file))
+
     except subprocess.CalledProcessError:
         iface.fail("The build seems to have failed.")
+
+    if launch:
+        iface.info("Launching app.")
+
+        if expansion_file:
+            launch_activity = "DownloaderActivity"
+        else:
+            launch_activity = "PythonSDLActivity"
+
+        iface.call([
+            plat.adb, "shell",
+            "am", "start",
+            "-W",
+            "-a", "android.intent.action.MAIN",
+            "{}/org.renpy.android.{}".format(config.package, launch_activity),
+            ], cancel=True)
 
     if finished is not None:
         finished(files)
