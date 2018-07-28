@@ -163,8 +163,7 @@ public class PythonSDLActivity extends SDLActivity {
          */
         new File(target, "main.pyo").delete();
 
-
-        boolean shouldUnpack = true;
+        boolean shouldUnpack = false;
 
         // The version of data in memory and on disk.
         String data_version = resourceManager.getString(resource + "_version");

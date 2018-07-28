@@ -10,9 +10,10 @@ import shutil
 import time
 import zipfile
 import subprocess
-import iconmaker
+import hashlib
 
 import rapt.plat as plat
+import rapt.iconmaker as iconmaker
 
 sys.path.append(os.path.join(plat.RAPT_PATH, "buildlib", "jinja2.egg"))
 
@@ -392,9 +393,6 @@ def build(iface, directory, commands, launch=False, finished=None):
     if config.store not in [ "play", "none" ]:
         config.expansion = False
 
-    # Figure out versions of the private and public data.
-    private_version = str(time.time())
-
     iface.info("Updating source code.")
 
     # edit_file("src/org/renpy/android/DownloaderActivity.java", r'import .*\.R;', 'import {}.R;'.format(config.package))
@@ -454,6 +452,27 @@ def build(iface, directory, commands, launch=False, finished=None):
         expansion_file = None
         file_size = 0
 
+    iface.info("Packaging internal data.")
+
+    private_dirs = [ 'project/renpyandroid/src/main/private' ]
+
+    if private_dir is not None:
+        private_dirs.append(private_dir)
+
+    # Really, a tar file with the private data in it.
+    private_mp3 = os.path.join(assets, "private.mp3")
+
+    private_version = [ ]
+
+    def pack():
+        make_tar(iface, private_mp3, private_dirs)
+
+        with open(private_mp3, "rb") as f:
+            private_version.append(hashlib.md5(f.read()).hexdigest())
+
+    iface.background(pack)
+    private_version = private_version[0]
+
     # Write out constants.java.
     if not config.google_play_key:
         config.google_play_key = "NOT_SET"
@@ -479,18 +498,6 @@ def build(iface, directory, commands, launch=False, finished=None):
             config=config,
             sdkpath=plat.path("Sdk"),
             )
-
-    iface.info("Packaging internal data.")
-
-    private_dirs = [ 'project/renpyandroid/src/main/private' ]
-
-    if private_dir is not None:
-        private_dirs.append(private_dir)
-
-    def pack():
-        make_tar(iface, os.path.join(assets, "private.mp3"), private_dirs)
-
-    iface.background(pack)
 
     if config.update_icons:
         copy_icons(directory, default_icon)
