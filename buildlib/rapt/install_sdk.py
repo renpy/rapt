@@ -75,84 +75,70 @@ without having the JDK. Without a working JDK, I can't continue.
     os.unlink(plat.path("test.class"))
 
 
+class FixedZipFile(zipfile.ZipFile):
+    """
+    Patches zipfile.zipfile so it sets the executable bit when necessary.
+    """
+
+    def extract(self, member, path=None, pwd=None):
+
+        if not isinstance(member, zipfile.ZipInfo):
+            member = self.getinfo(member)
+
+        if path is None:
+            path = os.getcwd()
+
+        ret_val = self._extract_member(member, path, pwd)
+        attr = member.external_attr >> 16
+
+        if attr:
+            os.chmod(ret_val, attr)
+
+        return ret_val
+
+
 def unpack_sdk(interface):
 
-    if os.path.exists(plat.path("android-sdk")):
+    if os.path.exists(plat.sdkmanager):
         interface.success("The Android SDK has already been unpacked.")
         return
 
     if "PGS4A_NO_TERMS" not in os.environ:
-        interface.terms("http://developer.android.com/sdk/terms.html", "Do you accept the Android SDK Terms and Conditions?")
+        interface.terms("http://developer.android.com/studio/", "Do you accept the Android SDK Terms and Conditions?")
 
     if plat.windows:
-        archive = "android-sdk_{}-windows.zip".format(plat.sdk_version)
-        unpacked = "android-sdk-windows"
+        archive = "sdk-tools-windows-{}.zip".format(plat.sdk_version)
     elif plat.macintosh:
-        archive = "android-sdk_{}-macosx.zip".format(plat.sdk_version)
-        unpacked = "android-sdk-macosx"
+        archive = "sdk-tools-darwin-{}.zip".format(plat.sdk_version)
     elif plat.linux:
-        archive = "android-sdk_{}-linux.tgz".format(plat.sdk_version)
-        unpacked = "android-sdk-linux"
+        archive = "sdk-tools-linux-{}.zip".format(plat.sdk_version)
 
-    url = "http://dl.google.com/android/" + archive
+    url = "https://dl.google.com/android/repository/" + archive
 
     interface.info("I'm downloading the Android SDK. This might take a while.")
 
-    interface.download(url, plat.path(archive, replace=False))
+    interface.download(url, plat.path(archive))
 
     interface.info("I'm extracting the Android SDK.")
 
     def extract():
 
-        if archive.endswith(".tgz"):
-            tf = tarfile.open(plat.path(archive, replace=False), "r:*")
-            tf.extractall(plat.path("."))
-            tf.close()
-        else:
-            zf = zipfile.ZipFile(plat.path(archive, replace=False))
+        zf = FixedZipFile(plat.path(archive))
 
-            # We have to do this because Python has a small (260?) path length
-            # limit on windows, and the Android SDK has very long filenames.
-            old_cwd = os.getcwd()
-            os.chdir(plat.path("."))
+        # We have to do this because Python has a small (260?) path length
+        # limit on windows, and the Android SDK has very long filenames.
+        old_cwd = os.getcwd()
+        os.chdir(plat.path("."))
 
-            zf.extractall(".")
+        zf.extractall("Sdk")
 
-            os.chdir(old_cwd)
+        os.chdir(old_cwd)
 
-            zf.close()
+        zf.close()
 
     interface.background(extract)
-
-    plat.rename(plat.path(unpacked, replace=False), plat.path("android-sdk"))
 
     interface.success("I've finished unpacking the Android SDK.")
-
-
-def unpack_ant(interface):
-    if os.path.exists(plat.path("apache-ant")):
-        interface.success("Apache ANT has already been unpacked.")
-        return
-
-    archive = "apache-ant-1.9.3-bin.tar.gz"
-    unpacked = "apache-ant-1.9.3"
-    url = "http://archive.apache.org/dist/ant/binaries/" + archive
-
-    interface.info("I'm downloading Apache Ant. This might take a while.")
-
-    interface.download(url, plat.path(archive))
-
-    interface.info("I'm extracting Apache Ant.")
-
-    def extract():
-
-        tf = tarfile.open(plat.path(archive), "r:*")
-        tf.extractall(plat.path("."))
-        tf.close()
-
-    interface.background(extract)
-
-    interface.success("I've finished unpacking Apache Ant.")
 
 
 def get_packages(interface):
@@ -237,13 +223,9 @@ Will you make a backup of android.keystore, and keep it in a safe place?"""):
 
 def install_sdk(interface):
     check_java(interface)
-    unpack_ant(interface)
     unpack_sdk(interface)
 
-    if plat.macintosh or plat.linux:
-        os.chmod(plat.path("android-sdk/tools/android"), 0755)
-
-    get_packages(interface)
-    generate_keys(interface)
+#     get_packages(interface)
+#     generate_keys(interface)
 
     interface.final_success("It looks like you're ready to start packaging games.")

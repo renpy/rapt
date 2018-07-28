@@ -13,6 +13,7 @@ import rapt.configure as configure
 import rapt.build as build
 import rapt.plat as plat
 
+
 def main():
 
     # Change into our root directory.
@@ -65,6 +66,6 @@ def main():
     else:
         ap.error("Unknown command: " + args.command)
 
+
 if __name__ == "__main__":
     main()
-

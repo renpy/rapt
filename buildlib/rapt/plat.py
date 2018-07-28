@@ -54,6 +54,8 @@ if platform.win32_ver()[0]:
         traceback.print_exc()
 
     adb = "Sdk\\platform-tools\\adb.exe"
+    sdkmanager = "Sdk\\tools\\sdkmanager.bat"
+
     javac = maybe_java_home("javac.exe")
     keytool = maybe_java_home("keytool.exe")
 
@@ -61,7 +63,10 @@ if platform.win32_ver()[0]:
 
 elif platform.mac_ver()[0]:
     macintosh = True
+
     adb = "Sdk/platform-tools/adb"
+    sdkmanager = "Sdk/tools/sdkmanager"
+
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
 
@@ -73,12 +78,15 @@ else:
     linux = True
 
     adb = "Sdk/platform-tools/adb"
+    sdkmanager = "Sdk/tools/sdkmanager"
+
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
 
     gradlew = "project/gradlew"
 
 
+# The path to RAPT.
 RAPT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
@@ -97,7 +105,10 @@ def path(path, relative=False):
     return path
 
 
+sdk_version = "4333796"
+
 adb = path(adb)
+sdkmanager = path(sdkmanager)
 gradlew = path(gradlew)
 
 # This gets set in the Ren'Py launcher if we're a Ren'Py build.
