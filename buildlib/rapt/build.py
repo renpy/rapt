@@ -468,6 +468,7 @@ def build(iface, directory, commands, launch=False, finished=None):
             ("templates/renpyandroid-AndroidManifest.xml", "project/renpyandroid/src/main/AndroidManifest.xml"),
             ("templates/renpyandroid-strings.xml", "project/renpyandroid/src/main/res/values/strings.xml"),
             ("templates/Constants.java", "project/renpyandroid/src/main/java/org/renpy/android/Constants.java"),
+            ("templates/local.properties", "project/local.properties"),
             ]:
 
         render(
@@ -475,7 +476,8 @@ def build(iface, directory, commands, launch=False, finished=None):
             i,
             private_version=private_version,
             file_size=file_size,
-            config=config
+            config=config,
+            sdkpath=plat.path("Sdk"),
             )
 
     iface.info("Packaging internal data.")

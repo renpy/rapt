@@ -10,24 +10,36 @@ export DIST="$ROOT/dist"
 export RENPY_ROOT="${2:-/home/tom/ab/renpy}"
 export PYGAME_SDL2_ROOT="${3:-/home/tom/ab/pygame_sdl2}"
 
-pushd "$RENPY_ROOT"
-./run.sh the_question compile
-popd
-
-pushd "$ROOT/native"
-./build.sh
-popd
+# pushd "$ROOT/native"
+# ./build.sh
+# popd
 
 cd "$ROOT"
 
-cp -a "$ROOT/src" "$DIST"
-cp -a "$ROOT/res" "$DIST"
-cp -a "$ROOT/buildlib" "$DIST"
-cp -a "$ROOT/android.py" "$DIST"
-cp -a "$ROOT/templates" "$DIST"
-cp -a "$ROOT/whitelist.txt" "$DIST"
-cp -a "$ROOT/blacklist.txt" "$DIST"
+rm -Rf "$DIST"
+mkdir -p "$DIST"
 
-cp "$ROOT/amazon-iap-2.0.1.jar" "$DIST/libs/"
-cp -a "$ROOT/extras" "$DIST"
+for i in android.py blacklist.txt buildlib project templates whitelist.txt; do
+    cp -a "$ROOT/$i" "$DIST/$i"
+done
+
+
+for i in build \
+    .gradle \
+    local.properties \
+    app/build \
+    app/debug \
+    app/src/main/AndroidManifest.xml \
+    app/src/main/assets \
+    app/src/main/res/values/strings.xml \
+    app/src/main/res/mipmap-*dpi \
+    app/release \
+    renpyandroid/src/main/java/org/renpy/android/Constants.java \
+    renpyandroid/src/main/AndroidManifest.xml \
+    renpyandroid/src/main/res/values/strings.xml; do
+
+    rm -Rf "$DIST/project/$i"
+done
+
+
 
