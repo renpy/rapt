@@ -53,29 +53,31 @@ if platform.win32_ver()[0]:
     except:
         traceback.print_exc()
 
-    android = "android-sdk\\tools\\android.bat"
-    ant = "apache-ant\\bin\\ant.bat"
     adb = "android-sdk\\platform-tools\\adb.exe"
     javac = maybe_java_home("javac.exe")
     keytool = maybe_java_home("keytool.exe")
 
+    gradlew = "project/gradlew.bat"
+
 elif platform.mac_ver()[0]:
     macintosh = True
-    android = "android-sdk/tools/android"
-    ant = "apache-ant/bin/ant"
     adb = "android-sdk/platform-tools/adb"
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
 
     os.environ.setdefault("JAVA_HOME", "/usr")
 
+    gradlew = "project/gradlew"
+
 else:
     linux = True
-    android = "android-sdk/tools/android"
-    ant = "apache-ant/bin/ant"
+
     adb = "android-sdk/platform-tools/adb"
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
+
+    gradlew = "project/gradlew"
+
 
 RAPT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -95,9 +97,8 @@ def path(path, relative=False):
     return path
 
 
-android = path(android)
-ant = path(ant)
 adb = path(adb)
+gradlew = path(gradlew)
 
 # This gets set in the Ren'Py launcher if we're a Ren'Py build.
 renpy = False

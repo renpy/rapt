@@ -11,5 +11,5 @@ cd "$ROOT"
 
 if [ "$1" != "" ]; then
     cd "$ROOT"
-    /home/tom/ab/renpy/renpy.sh /home/tom/ab/renpy/launcher android_build "$1" build
+    /home/tom/ab/renpy/renpy.sh /home/tom/ab/renpy/launcher android_build "$1" installDebug
 fi

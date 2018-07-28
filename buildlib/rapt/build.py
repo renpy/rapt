@@ -497,10 +497,18 @@ def build(iface, directory, commands, launch=False, finished=None):
     copy_presplash(directory, "android-presplash", default_presplash)
 
     # Build.
-    # iface.info("I'm using Ant to build the package.")
+    iface.info("I'm using Gradle to build the package.")
 
-    # This is a list of generated files that need to be copied over to the lidsts
+    # This is a list of generated files that need to be copied over to the
+    # dists folder.
     files = [ ]
+
+    try:
+
+        iface.call([ plat.gradlew, "-p", plat.path("project") ] + commands, cancel=True)
+
+    except subprocess.CalledProcessError:
+        iface.fail("The build seems to have failed.")
 
     if finished is not None:
         finished(files)
