@@ -61,6 +61,8 @@ dist () {
     rm -Rf "$PYLIB/multiprocessing/dummy"*
     rm -Rf "$PYLIB/lib2to3"
     rm -Rf "$PYLIB/idlelib"
+    rm -Rf "$PYLIB/ctypes/test"
+    rm -Rf "$PYLIB/distutils"
 
 
     # unused binary python modules
@@ -71,6 +73,8 @@ dist () {
     rm -Rf "$PYLIB/site-packages/pygame_sdl2/threads/Py25Queue.pyo"
     rm -Rf "$PYLIB/unittest/"*
     rm -Rf "$PYLIB/distutils/"*.exe
+    rm -Rf "$PYLIB/distutils/command/"*.exe
+    rm -Rf "$PYLIB/config/"*.a
 
     find "$PYLIB" -name \*.pyc -delete
     find "$PYLIB" -name \*.egg-info -delete
