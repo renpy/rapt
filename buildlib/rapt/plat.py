@@ -54,7 +54,7 @@ if platform.win32_ver()[0]:
         traceback.print_exc()
 
     adb = "Sdk\\platform-tools\\adb.exe"
-    sdkmanager = "Sdk\\tools\\sdkmanager.bat"
+    sdkmanager = "Sdk\\tools\\bin\\sdkmanager.bat"
 
     javac = maybe_java_home("javac.exe")
     keytool = maybe_java_home("keytool.exe")
@@ -65,7 +65,7 @@ elif platform.mac_ver()[0]:
     macintosh = True
 
     adb = "Sdk/platform-tools/adb"
-    sdkmanager = "Sdk/tools/sdkmanager"
+    sdkmanager = "Sdk/tools/bin/sdkmanager"
 
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
@@ -78,7 +78,7 @@ else:
     linux = True
 
     adb = "Sdk/platform-tools/adb"
-    sdkmanager = "Sdk/tools/sdkmanager"
+    sdkmanager = "Sdk/tools/bin/sdkmanager"
 
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")

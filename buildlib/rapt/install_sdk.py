@@ -29,11 +29,8 @@ def run_slow(interface, *args, **kwargs):
     be cancelled.
     """
 
-    try:
-        interface.call(args, cancel=True, **kwargs)
-        return True
-    except (subprocess.CalledProcessError, OSError):
-        return False
+    interface.call(args, cancel=True, **kwargs)
+    return True
 
 
 ##############################################################################
@@ -103,9 +100,6 @@ def unpack_sdk(interface):
         interface.success("The Android SDK has already been unpacked.")
         return
 
-    if "PGS4A_NO_TERMS" not in os.environ:
-        interface.terms("http://developer.android.com/studio/", "Do you accept the Android SDK Terms and Conditions?")
-
     if plat.windows:
         archive = "sdk-tools-windows-{}.zip".format(plat.sdk_version)
     elif plat.macintosh:
@@ -145,26 +139,22 @@ def get_packages(interface):
 
     packages = [ ]
 
-    if not os.path.exists(plat.path("android-sdk/build-tools/" + plat.build_version)):
-        packages.append("build-tools-" + plat.build_version)
+    wanted_packages = [
+        ( "build-tools;28.0.1", "Sdk/build-tools/28.0.1" ),
+        ( "platform-tools", "Sdk/platform-tools"),
+        ( "platforms;android-28", "platforms/android-28"),
+        ]
 
-    if not os.path.exists(plat.path("android-sdk/platforms/" + plat.target)):
-        packages.append(plat.target)
-
-    if not os.path.exists(plat.path("android-sdk/platform-tools/")):
-        packages.append("platform-tools")
+    for i, j in wanted_packages:
+        if not os.path.exists(plat.path(j)):
+            packages.append(i)
 
     if packages:
 
         interface.info("I'm about to download and install the required Android packages. This might take a while.")
 
-        if not run_slow(interface, plat.android, "update", "sdk", "-u", "-f", "-a", "-t", ",".join(packages), yes=True):
+        if not run_slow(interface, plat.sdkmanager, *packages):
             interface.fail("I was unable to install the required Android packages.")
-
-    interface.info("I'm updating the library packages.")
-
-    run(interface, plat.android, "update", "project", "-p", plat.path("extras/google/market_licensing/library"), "--target", plat.target)
-    run(interface, plat.android, "update", "project", "-p", plat.path("extras/google/market_apk_expansion/downloader_library"), "--target", plat.target)
 
     interface.success("I've finished installing the required Android packages.")
 
@@ -223,9 +213,11 @@ Will you make a backup of android.keystore, and keep it in a safe place?"""):
 
 def install_sdk(interface):
     check_java(interface)
+
     unpack_sdk(interface)
 
-#     get_packages(interface)
+    get_packages(interface)
+
 #     generate_keys(interface)
 
     interface.final_success("It looks like you're ready to start packaging games.")
