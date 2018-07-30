@@ -53,8 +53,8 @@ if platform.win32_ver()[0]:
     except:
         traceback.print_exc()
 
-    adb = "Sdk\\platform-tools\\adb.exe"
-    sdkmanager = "Sdk\\tools\\bin\\sdkmanager.bat"
+    adb = "platform-tools\\adb.exe"
+    sdkmanager = "tools\\bin\\sdkmanager.bat"
 
     javac = maybe_java_home("javac.exe")
     keytool = maybe_java_home("keytool.exe")
@@ -64,8 +64,8 @@ if platform.win32_ver()[0]:
 elif platform.mac_ver()[0]:
     macintosh = True
 
-    adb = "Sdk/platform-tools/adb"
-    sdkmanager = "Sdk/tools/bin/sdkmanager"
+    adb = "platform-tools/adb"
+    sdkmanager = "tools/bin/sdkmanager"
 
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
@@ -77,8 +77,8 @@ elif platform.mac_ver()[0]:
 else:
     linux = True
 
-    adb = "Sdk/platform-tools/adb"
-    sdkmanager = "Sdk/tools/bin/sdkmanager"
+    adb = "platform-tools/adb"
+    sdkmanager = "tools/bin/sdkmanager"
 
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
@@ -107,8 +107,15 @@ def path(path, relative=False):
 
 sdk_version = "4333796"
 
-adb = path(adb)
-sdkmanager = path(sdkmanager)
+try:
+    with open(path("sdk.txt")) as f:
+        sdk = f.read().strip()
+except:
+    sdk = path("Sdk")
+
+adb = os.path.join(sdk, adb)
+sdkmanager = os.path.join(sdk, sdkmanager)
+
 gradlew = path(gradlew)
 
 # This gets set in the Ren'Py launcher if we're a Ren'Py build.
