@@ -487,7 +487,6 @@ def build(iface, directory, commands, launch=False, finished=None):
             ("templates/renpyandroid-AndroidManifest.xml", "project/renpyandroid/src/main/AndroidManifest.xml"),
             ("templates/renpyandroid-strings.xml", "project/renpyandroid/src/main/res/values/strings.xml"),
             ("templates/Constants.java", "project/renpyandroid/src/main/java/org/renpy/android/Constants.java"),
-            ("templates/local.properties", "project/local.properties"),
             ]:
 
         render(

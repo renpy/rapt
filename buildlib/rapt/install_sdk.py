@@ -159,23 +159,46 @@ def get_packages(interface):
     interface.success("I've finished installing the required Android packages.")
 
 
+local_properties = plat.path("project/local.properties")
+
+
+def set_property(key, value, replace=False):
+    """
+    Sets the property `key` in local.properties to `value`. If replace is True,
+    replaces the value.
+    """
+
+    lines = [ ]
+
+    try:
+        with open(local_properties, "r") as f:
+            for l in f:
+                k = lines.partition("=")[0].strip()
+
+                if k == key:
+                    if not replace:
+                        return
+                    else:
+                        continue
+
+                lines.append(l)
+
+    except:
+        pass
+
+    with open(local_properties, "w") as f:
+        for l in lines:
+            f.write(l)
+
+        f.write("{}={}\n".format(key, value))
+
+
 def generate_keys(interface):
 
-    update_properties = True
-
-    if os.path.exists(plat.path("local.properties")):
-        with open(plat.path("local.properties")) as f:
-            for l in f:
-                if l.startswith("key.store"):
-                    update_properties = False
-
-    if update_properties:
-        f = file(plat.path("local.properties"), "a")
-        print >>f, "key.alias=android"
-        print >>f, "key.store.password=android"
-        print >>f, "key.alias.password=android"
-        print >>f, "key.store=android.keystore"
-        f.close()
+    set_property("key.alias", "android")
+    set_property("key.store.password", "android")
+    set_property("key.alias.password", "android")
+    set_property("key.store", plat.path("android.keystore"))
 
     if os.path.exists(plat.path("android.keystore")):
         interface.info("You've already created an Android keystore, so I won't create a new one for you.")
@@ -218,6 +241,8 @@ def install_sdk(interface):
 
     get_packages(interface)
 
-#     generate_keys(interface)
+    generate_keys(interface)
+
+    set_property("sdk.dir", plat.sdk)
 
     interface.final_success("It looks like you're ready to start packaging games.")
