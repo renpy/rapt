@@ -193,12 +193,28 @@ def set_property(key, value, replace=False):
         f.write("{}={}\n".format(key, value))
 
 
+def get_property(key):
+
+    with open(local_properties, "r") as f:
+        for l in f:
+            k, _, v = l.partition("=")
+
+            if k.strip() == key:
+                return v.strip()
+
+    return None
+
+
 def generate_keys(interface):
 
     set_property("key.alias", "android")
     set_property("key.store.password", "android")
     set_property("key.alias.password", "android")
     set_property("key.store", plat.path("android.keystore"))
+
+    if get_property("key.store") != plat.path("android.keystore"):
+        interface.info("You set the keystore yourself, so I'll assume it's how you want it.")
+        return
 
     if os.path.exists(plat.path("android.keystore")):
         interface.info("You've already created an Android keystore, so I won't create a new one for you.")
