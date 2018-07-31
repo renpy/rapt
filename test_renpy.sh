@@ -16,5 +16,5 @@ export PGS4A_NO_TERMS=1
 python android.py installsdk
 
 if [ "$1" != "" ]; then
-    /home/tom/ab/renpy/renpy.sh /home/tom/ab/renpy/launcher android_build "$1" installDebug --launch
+    /home/tom/ab/renpy/renpy.sh /home/tom/ab/renpy/launcher android_build "$1" installRelease --launch
 fi
