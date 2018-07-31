@@ -140,13 +140,13 @@ def get_packages(interface):
     packages = [ ]
 
     wanted_packages = [
-        ( "build-tools;28.0.1", "Sdk/build-tools/28.0.1" ),
-        ( "platform-tools", "Sdk/platform-tools"),
+        ( "build-tools;28.0.1", "build-tools/28.0.1" ),
+        ( "platform-tools", "platform-tools"),
         ( "platforms;android-28", "platforms/android-28"),
         ]
 
     for i, j in wanted_packages:
-        if not os.path.exists(plat.path(j)):
+        if not os.path.exists(os.path.join(plat.sdk, j)):
             packages.append(i)
 
     if packages:
