@@ -8,7 +8,8 @@ ROOT="$(dirname $(readlink -f $0))"
 cd "$ROOT"
 "$ROOT/build_renpy.sh"
 
-# ln -s "$ROOT/Sdk" "$ROOT/dist/Sdk"
+ln -s "$ROOT/Sdk" "$ROOT/dist/Sdk"
+cp -a local.properties "$ROOT/dist/project"
 
 cd "$ROOT/dist"
 export PGS4A_NO_TERMS=1

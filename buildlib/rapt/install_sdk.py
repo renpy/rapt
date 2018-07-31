@@ -173,7 +173,7 @@ def set_property(key, value, replace=False):
     try:
         with open(local_properties, "r") as f:
             for l in f:
-                k = lines.partition("=")[0].strip()
+                k = l.partition("=")[0].strip()
 
                 if k == key:
                     if not replace:
@@ -243,6 +243,6 @@ def install_sdk(interface):
 
     generate_keys(interface)
 
-    set_property("sdk.dir", plat.sdk)
+    set_property("sdk.dir", plat.sdk, replace=True)
 
     interface.final_success("It looks like you're ready to start packaging games.")
