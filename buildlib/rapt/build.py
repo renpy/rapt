@@ -393,10 +393,6 @@ def build(iface, directory, commands, launch=False, finished=None):
     if config.store not in [ "play", "none" ]:
         config.expansion = False
 
-    iface.info("Updating source code.")
-
-    # edit_file("src/org/renpy/android/DownloaderActivity.java", r'import .*\.R;', 'import {}.R;'.format(config.package))
-
     iface.info("Creating assets directory.")
 
     assets = plat.path("project/app/src/main/assets")
@@ -518,8 +514,7 @@ def build(iface, directory, commands, launch=False, finished=None):
         if (expansion_file is not None) and any(i.startswith("install") for i in commands):
             iface.info("Uploading expansion file.")
 
-            dest = "/storage/emulated/0/Android/obb/{}/{}".format(config.package, expansion_file)
-
+            dest = "/storage/emulated/0/Android/data/{}/{}".format(config.package, expansion_file)
             iface.call([ plat.adb, "push", plat.path(expansion_file), dest ], cancel=True)
 
 #         if expansion_file is not None:

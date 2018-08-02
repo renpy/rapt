@@ -118,13 +118,6 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
         String fileName = Helpers.getExpansionAPKFileName(this, true, org.renpy.android.Constants.fileVersion);
 
         {
-        	String fullFileName = "/mnt/sdcard/" + fileName;
-        	if (checkExpansionFile(fullFileName, checkLength)) {
-        		return fullFileName;
-        	}
-        }
-
-        {
         	String fullFileName = Helpers.generateSaveFileName(this, fileName);
         	if (checkExpansionFile(fullFileName, checkLength)) {
         		return fullFileName;
@@ -203,7 +196,7 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
     public void startPython() {
 
     	String expansionFile = getExpansionFile(false);
-        Log.i("DownloaderActivity", "DownloaderActivity thinks expansionFile is" + expansionFile);
+        Log.i("DownloaderActivity", "DownloaderActivity thinks expansionFile is " + expansionFile);
 
         if (expansionFile == null) {
         	Toast.makeText(this, "Could not find expansion file. Giving up.", Toast.LENGTH_LONG).show();
@@ -218,7 +211,7 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
         	pythonIntent.putExtra("expansionFile", expansionFile);
         }
 
-		this.startActivity(pythonIntent);
+        this.startActivity(pythonIntent);
         this.finish();
 
     }
