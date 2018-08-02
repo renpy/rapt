@@ -38,7 +38,6 @@ class Configuration(object):
         self.expansion = False
         self.google_play_key = None
         self.google_play_salt = None
-        self.target_version = 14
         self.store = "none"
         self.update_icons = True
 
@@ -159,18 +158,11 @@ This must be a positive integer number, and the value should increase between ve
             (True, "Yes. 2 GB size limit, but won't work outside of Google Play. (Read the documentation to get this to work.)")
             ], config.expansion)
 
-    config.target_version = interface.choice("What version of Android would you like to target?", [
-        (8, "Android 2.2. The menu button will always be shown."),
-        (11, "Android 3.0. The menu button will be shown on phones, but not tablets."),
-        (14, "Android 4.0. The menu button will never be shown."),
-        ], config.target_version)
-
     if not plat.renpy:
 
         config.layout = interface.choice("How is your application laid out?", [
             ("internal", "A single directory, that will be placed on device internal storage."),
-            ("external", "A single directory, that will be placed on device external storage."),
-            ("split", "Multiple directories that correspond to internal, external, and asset storage."),
+            ("split", "Multiple directories that correspond to internal and asset storage."),
             ], config.layout)
 
         config.source = interface.yesno_choice("Do you want to include the Python source code of your application in the archive? If you include it once, you'll need to include it always.", config.source)
@@ -183,9 +175,6 @@ INTERNET (network access), VIBRATE (vibration control).
 
 Please enter a space-separated list of permissions.""", permissions)
         config.permissions = permissions.split()
-
-        config.include_sqlite = interface.yesno_choice("Do you want to include SQLite3 with your application?", config.include_sqlite)
-        config.include_pil = interface.yesno_choice("Do you want to include the Python Imaging Library (PIL) with your application?", config.include_pil)
 
     if plat.renpy:
 
