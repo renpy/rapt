@@ -24,8 +24,12 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.danikula.expansion:expansion:1.3.4@aar'
-    compile 'com.danikula.expansion:license:1.7.0@aar'
-    compile 'com.danikula.expansion:zip:1.2.1@aar'
+
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'uk.uuid.slf4j:slf4j-android:1.7.25-1'
+
+    implementation 'com.danikula.expansion:expansion:1.3.4@aar'
+    implementation 'com.danikula.expansion:license:1.7.0@aar'
+    implementation 'com.danikula.expansion:zip:1.2.1@aar'
 
 }

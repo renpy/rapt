@@ -436,7 +436,7 @@ def build(iface, directory, commands, launch=False, finished=None):
         def make_expansion():
 
             zf = zipfile.ZipFile(plat.path(expansion_file), "w", zipfile.ZIP_STORED)
-            zip_directory(zf, assets)
+            zip_directory(zf, "assets", assets)
             zf.close()
 
             # Delete and re-make the assets directory.
