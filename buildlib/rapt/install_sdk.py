@@ -100,6 +100,9 @@ def unpack_sdk(interface):
         interface.success("The Android SDK has already been unpacked.")
         return
 
+    if "RAPT_NO_TERMS" not in os.environ:
+        interface.terms("https://developer.android.com/studio/terms", "Do you accept the Android SDK Terms and Conditions?")
+
     if plat.windows:
         archive = "sdk-tools-windows-{}.zip".format(plat.sdk_version)
     elif plat.macintosh:
@@ -152,6 +155,9 @@ def get_packages(interface):
     if packages:
 
         interface.info("I'm about to download and install the required Android packages. This might take a while.")
+
+        if not run_slow(interface, plat.sdkmanager, "--licenses", yes=True):
+            interface.fail("I was unable to accept the Android licenses.")
 
         if not run_slow(interface, plat.sdkmanager, *packages):
             interface.fail("I was unable to install the required Android packages.")
