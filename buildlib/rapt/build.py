@@ -273,14 +273,6 @@ def zip_directory(zf, prefix, dn):
 
 def copy_icons(directory, default):
 
-    if not pygame_sdl2.display.get_init():
-        os.environ["SDL_AUDIODRIVER"] = "dummy"
-        os.environ["SDL_VIDEODRIVER"] = "dummy"
-
-        pygame_sdl2.display.init()
-        pygame_sdl2.display.set_mode((640, 480))
-        pygame_sdl2.event.pump()
-
     iconmaker.IconMaker(directory)
 
 

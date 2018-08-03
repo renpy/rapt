@@ -6,6 +6,7 @@ sys.path.insert(0, 'buildlib')
 import os
 import argparse
 import subprocess
+import pygame_sdl2
 
 import rapt.interface as interface
 import rapt.install_sdk as install_sdk
@@ -27,6 +28,11 @@ def main():
     ap.add_argument("--launch", action="store_true", help="If true, launch the app when build completes.")
 
     args = ap.parse_args()
+
+    if not pygame_sdl2.display.get_init():
+        pygame_sdl2.display.init()
+        pygame_sdl2.display.set_mode((640, 480))
+        pygame_sdl2.event.pump()
 
     iface = interface.Interface()
 
@@ -53,9 +59,6 @@ def main():
             iface.fail("The build command expects at least 2 arguments.")
 
         build.build(iface, args.argument[0], args.argument[1:], launch=args.launch)
-
-    elif args.command == "distclean":
-        build.distclean(iface)
 
     elif args.command == "logcat":
         subprocess.call([ plat.adb, "logcat", "-s", "python:*"] + args.argument)
