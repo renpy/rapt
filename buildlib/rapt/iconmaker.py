@@ -8,6 +8,11 @@ class IconMaker(object):
 
     def __init__(self, directory):
 
+        if not pygame_sdl2.display.get_surface():
+            pygame_sdl2.display.init()
+            pygame_sdl2.display.set_mode((640, 480))
+            pygame_sdl2.event.pump()
+
         self.directory = directory
 
         sizes = [

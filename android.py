@@ -29,11 +29,6 @@ def main():
 
     args = ap.parse_args()
 
-    if not pygame_sdl2.display.get_init():
-        pygame_sdl2.display.init()
-        pygame_sdl2.display.set_mode((640, 480))
-        pygame_sdl2.event.pump()
-
     iface = interface.Interface()
 
     def check_args(n):

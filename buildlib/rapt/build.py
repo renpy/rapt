@@ -421,9 +421,12 @@ def build(iface, directory, commands, launch=False, finished=None):
 
     iface.background(make_assets)
 
+    if not os.path.exists(plat.path("bin")):
+        os.mkdir(plat.path("bin"), 0o777)
+
     if config.expansion:
         iface.info("Creating expansion file.")
-        expansion_file = "main.{}.{}.obb".format(config.numeric_version, config.package)
+        expansion_file = "bin/main.{}.{}.obb".format(config.numeric_version, config.package)
 
         def make_expansion():
 
@@ -513,12 +516,40 @@ def build(iface, directory, commands, launch=False, finished=None):
             dest = "/storage/emulated/0/Android/data/{}/{}".format(config.package, expansion_file)
             iface.call([ plat.adb, "push", plat.path(expansion_file), dest ], cancel=True)
 
-#         if expansion_file is not None:
-#             plat.rename(plat.path(expansion_file), plat.path("bin/" + expansion_file))
-#             files.append(plat.path("bin/" + expansion_file))
+        if expansion_file is not None:
+            files.append(plat.path(expansion_file))
 
     except subprocess.CalledProcessError:
         iface.fail("The build seems to have failed.")
+
+    # Copy everything to bin.
+    apkdirs = [ ]
+
+    if any(i.endswith("Debug") for i in commands):
+        apkdirs.append(plat.path("project/app/build/outputs/apk/debug"))
+
+    if any(i.endswith("Release") for i in commands):
+        apkdirs.append(plat.path("project/app/build/outputs/apk/release"))
+
+    for i in apkdirs:
+        for j in os.listdir(i):
+
+            if not j.endswith(".apk"):
+                continue
+
+            sfn = os.path.join(i, j)
+
+            dfn = "bin/{}-{}-{}".format(
+                config.package,
+                config.numeric_version,
+                j[4:])
+
+            dfn = plat.path(dfn)
+
+            shutil.copy(sfn, dfn)
+            files.append(dfn)
+
+    # Launch.
 
     if launch:
         iface.info("Launching app.")
