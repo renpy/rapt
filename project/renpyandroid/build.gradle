@@ -22,7 +22,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation files('libs/in-app-purchasing-2.0.76.jar')
+
     implementation 'com.android.support:appcompat-v7:27.1.1'
 
     implementation 'org.slf4j:slf4j-api:1.7.25'
