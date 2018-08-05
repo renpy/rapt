@@ -513,7 +513,8 @@ def build(iface, directory, commands, launch=False, finished=None):
         if (expansion_file is not None) and any(i.startswith("install") for i in commands):
             iface.info("Uploading expansion file.")
 
-            dest = "/storage/emulated/0/Android/data/{}/{}".format(config.package, expansion_file)
+            dest = "/storage/emulated/0/Android/data/{}/{}".format(config.package, os.path.basename(expansion_file))
+
             iface.call([ plat.adb, "push", plat.path(expansion_file), dest ], cancel=True)
 
         if expansion_file is not None:
