@@ -331,6 +331,16 @@ def split_renpy(directory):
     return private, assets
 
 
+GENERATED = [
+    ("templates/app-build.gradle", "project/app/build.gradle"),
+    ("templates/app-AndroidManifest.xml", "project/app/src/main/AndroidManifest.xml"),
+    ("templates/app-strings.xml", "project/app/src/main/res/values/strings.xml"),
+    ("templates/renpyandroid-AndroidManifest.xml", "project/renpyandroid/src/main/AndroidManifest.xml"),
+    ("templates/renpyandroid-strings.xml", "project/renpyandroid/src/main/res/values/strings.xml"),
+    ("templates/Constants.java", "project/renpyandroid/src/main/java/org/renpy/android/Constants.java"),
+]
+
+
 def build(iface, directory, commands, launch=False, finished=None):
 
     # Are we doing a Ren'Py build?
@@ -475,14 +485,7 @@ def build(iface, directory, commands, launch=False, finished=None):
     if not config.google_play_salt:
         config.google_play_salt = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20"
 
-    for template, i in [
-            ("templates/app-build.gradle", "project/app/build.gradle"),
-            ("templates/app-AndroidManifest.xml", "project/app/src/main/AndroidManifest.xml"),
-            ("templates/app-strings.xml", "project/app/src/main/res/values/strings.xml"),
-            ("templates/renpyandroid-AndroidManifest.xml", "project/renpyandroid/src/main/AndroidManifest.xml"),
-            ("templates/renpyandroid-strings.xml", "project/renpyandroid/src/main/res/values/strings.xml"),
-            ("templates/Constants.java", "project/renpyandroid/src/main/java/org/renpy/android/Constants.java"),
-            ]:
+    for template, i in GENERATED:
 
         render(
             template,
@@ -597,20 +600,16 @@ def distclean(interface):
         if os.path.exists(path):
             os.unlink(path)
 
-    rm("android.keystore")
-    rm("AndroidManifest.xml")
-    rmdir("assets", True)
-    rmdir("bin", True)
-    rm("default.properties")
-    rm("build.xml")
-    rmdir("gen", False)
-    rm("local.properties")
-    rm("proguard-project.txt")
-    rm("project.properties")
+    rm("project/local.properties")
+    rmdir("project/renpyandroid/build")
+    rmdir("project/app/build")
+    rmdir("project/app/src/main/assets")
+    rmdir("project/app/src/main/res/mipmap-mdpi")
+    rmdir("project/app/src/main/res/mipmap-hdpi")
+    rmdir("project/app/src/main/res/mipmap-xhdpi")
+    rmdir("project/app/src/main/res/mipmap-xxhdpi")
+    rmdir("project/app/src/main/res/mipmap-xxxhdpi")
+    rmdir("bin")
 
-    rmdir("android-sdk", False)
-    rmdir("apache-ant", False)
-
-    for i in os.listdir(plat.path('.')):
-        if i.endswith(".tgz") or i.endswith(".tar.gz") or i.endswith(".zip"):
-            os.unlink(plat.path(i, replace=False))
+    for _, i in GENERATED:
+        rm(i)
