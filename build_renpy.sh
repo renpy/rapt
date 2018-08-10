@@ -10,9 +10,9 @@ export DIST="$ROOT/dist"
 export RENPY_ROOT="${2:-/home/tom/ab/renpy}"
 export PYGAME_SDL2_ROOT="${3:-/home/tom/ab/pygame_sdl2}"
 
-# pushd "$ROOT/native"
-# ./build.sh
-# popd
+pushd "$ROOT/native"
+./build.sh
+popd
 
 cd "$ROOT"
 
@@ -40,6 +40,3 @@ for i in build \
 
     rm -Rf "$DIST/project/$i"
 done
-
-
-

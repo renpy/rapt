@@ -22,6 +22,6 @@
 /project/app/src/main/res/mipmap-*dpi/
 /project/app/release
 
-/renpy/
-/Sdk/
+/renpy
+/Sdk
 /local.properties
