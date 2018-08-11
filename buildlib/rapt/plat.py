@@ -25,7 +25,11 @@ def set_win32_java_home():
         return
 
     def scanreg(key, bitflag):
-        p = subprocess.Popen([ "reg", "query", key, "/s", bitflag], stdout=subprocess.PIPE)
+
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+        p = subprocess.Popen([ "reg", "query", key, "/s", bitflag], startupinfo=startupinfo, stdout=subprocess.PIPE)
         output = p.stdout.read()
 
         rv = { }
