@@ -59,20 +59,13 @@ def set_win32_java_home():
     for key, bitflag in SCANS:
         keys = scanreg(key, bitflag)
 
-        cv = key + "\\CurrentVersion"
+        jh = key + "\\1.8\\JavaHome"
 
-        if not cv in keys:
-            continue
+        if jh in keys:
+            print("Found", keys[jh])
 
-        version = keys[cv].decode("ascii")
-
-        jh = key + "\\" + version + "\\JavaHome"
-
-        if not jh in keys:
-            continue
-
-        os.environ["JAVA_HOME"] = keys[jh]
-        return
+            os.environ["JAVA_HOME"] = keys[jh]
+            return
 
 
 def maybe_java_home(s):
