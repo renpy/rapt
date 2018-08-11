@@ -216,7 +216,7 @@ def generate_keys(interface):
     set_property("key.alias", "android")
     set_property("key.store.password", "android")
     set_property("key.alias.password", "android")
-    set_property("key.store", plat.path("android.keystore"))
+    set_property("key.store", plat.path("android.keystore").replace("\\", "/"))
 
     if get_property("key.store") != plat.path("android.keystore"):
         interface.info("You set the keystore yourself, so I'll assume it's how you want it.")
@@ -265,6 +265,6 @@ def install_sdk(interface):
 
     generate_keys(interface)
 
-    set_property("sdk.dir", plat.sdk, replace=True)
+    set_property("sdk.dir", plat.sdk.replace("\\", "/"), replace=True)
 
     interface.final_success("It looks like you're ready to start packaging games.")
