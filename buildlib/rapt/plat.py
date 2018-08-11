@@ -12,25 +12,63 @@ import os
 import platform
 import traceback
 import shutil
-
-if "ANT_HOME" in os.environ:
-    del os.environ["ANT_HOME"]
+import subprocess
 
 
 def set_win32_java_home():
+    """
+    When run on Win32, this is used to set the JAVA_HOME environment variable.
+    It uses the
+    """
 
     if "JAVA_HOME" in os.environ:
         return
 
-    import _winreg
+    def scanreg(key, bitflag):
+        p = subprocess.Popen([ "reg", "query", key, "/s", bitflag], stdout=subprocess.PIPE)
+        output = p.stdout.read()
 
-    with _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\JavaSoft\Java Development Kit") as jdk:  # @UndefinedVariable
-        current_version, _type = _winreg.QueryValueEx(jdk, "CurrentVersion")  # @UndefinedVariable
+        rv = { }
 
-        with _winreg.OpenKey(jdk, current_version) as cv:  # @UndefinedVariable
-            java_home, _type = _winreg.QueryValueEx(cv, "JavaHome")  # @UndefinedVariable
+        prefix = ""
 
-        os.environ["JAVA_HOME"] = java_home
+        for l in output.split(b"\r\n"):
+            if not l:
+                continue
+
+            if not l.startswith(b"    "):
+                prefix = l
+                continue
+
+            a = l.split(b"    ")
+
+            key = prefix + b"\\" + a[1]
+            rv[key.decode("utf-8")] = a[3]
+
+        return rv
+
+    SCANS = [
+        ("HKEY_LOCAL_MACHINE\\SOFTWARE\JavaSoft\\JDK", "/reg:64"),
+        ("HKEY_LOCAL_MACHINE\\SOFTWARE\JavaSoft\\Java Development Kit", "/reg:32"),
+    ]
+
+    for key, bitflag in SCANS:
+        keys = scanreg(key, bitflag)
+
+        cv = key + "\\CurrentVersion"
+
+        if not cv in keys:
+            continue
+
+        version = keys[cv].decode("ascii")
+
+        jh = key + "\\" + version + "\\JavaHome"
+
+        if not jh in keys:
+            continue
+
+        os.environ["JAVA_HOME"] = keys[jh]
+        return
 
 
 def maybe_java_home(s):
