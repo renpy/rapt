@@ -15,6 +15,10 @@ import shutil
 import subprocess
 
 
+def __(s):
+    return s
+
+
 def set_win32_java_home():
     """
     When run on Win32, this is used to set the JAVA_HOME environment variable.

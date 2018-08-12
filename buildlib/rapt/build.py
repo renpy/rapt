@@ -15,6 +15,8 @@ import hashlib
 import rapt.plat as plat
 import rapt.iconmaker as iconmaker
 
+__ = plat.__
+
 sys.path.append(os.path.join(plat.RAPT_PATH, "buildlib", "jinja2.egg"))
 
 import jinja2
@@ -348,7 +350,7 @@ def build(iface, directory, commands, launch=False, finished=None):
     global RENPY
 
     if not os.path.isdir(directory):
-        iface.fail("{} is not a directory.".format(directory))
+        iface.fail(__("{} is not a directory.").format(directory))
 
     if os.path.isdir(os.path.join(directory, "renpy")):
         RENPY = True
@@ -356,14 +358,14 @@ def build(iface, directory, commands, launch=False, finished=None):
         RENPY = False
 
     if RENPY and not os.path.isdir(os.path.join(directory, "game")):
-        iface.fail("{} does not contain a Ren'Py game.".format(directory))
+        iface.fail(__("{} does not contain a Ren'Py game.").format(directory))
 
     config = configure.Configuration(directory)
     if config.package is None:
-        iface.fail("Run configure before attempting to build the app.")
+        iface.fail(__("Run configure before attempting to build the app."))
 
     if (config.store == "play" or config.store == "all") and ((config.google_play_key is None) or (len(config.google_play_key) < 32)):
-        iface.fail("Google Play support is enabled, but build.google_play_key is not defined.")
+        iface.fail(__("Google Play support is enabled, but build.google_play_key is not defined."))
 
     global blacklist
     global whitelist
@@ -399,7 +401,7 @@ def build(iface, directory, commands, launch=False, finished=None):
     if config.store not in [ "play", "none" ]:
         config.expansion = False
 
-    iface.info("Creating assets directory.")
+    iface.info(__("Creating assets directory."))
 
     assets = plat.path("project/app/src/main/assets")
 
@@ -435,7 +437,7 @@ def build(iface, directory, commands, launch=False, finished=None):
         os.mkdir(plat.path("bin"), 0o777)
 
     if config.expansion:
-        iface.info("Creating expansion file.")
+        iface.info(__("Creating expansion file."))
         expansion_file = "bin/main.{}.{}.obb".format(config.numeric_version, config.package)
 
         def make_expansion():
@@ -457,7 +459,7 @@ def build(iface, directory, commands, launch=False, finished=None):
         expansion_file = None
         file_size = 0
 
-    iface.info("Packaging internal data.")
+    iface.info(__("Packaging internal data."))
 
     private_dirs = [ 'project/renpyandroid/src/main/private' ]
 
@@ -503,7 +505,7 @@ def build(iface, directory, commands, launch=False, finished=None):
     copy_presplash(directory, "android-presplash", default_presplash)
 
     # Build.
-    iface.info("I'm using Gradle to build the package.")
+    iface.info(__("I'm using Gradle to build the package."))
 
     # This is a list of generated files that need to be copied over to the
     # dists folder.
@@ -514,7 +516,7 @@ def build(iface, directory, commands, launch=False, finished=None):
         iface.call([ plat.gradlew, "-p", plat.path("project") ] + commands, cancel=True)
 
         if (expansion_file is not None) and any(i.startswith("install") for i in commands):
-            iface.info("Uploading expansion file.")
+            iface.info(__("Uploading expansion file."))
 
             dest = "/storage/emulated/0/Android/data/{}/{}".format(config.package, os.path.basename(expansion_file))
 
@@ -524,7 +526,7 @@ def build(iface, directory, commands, launch=False, finished=None):
             files.append(plat.path(expansion_file))
 
     except subprocess.CalledProcessError:
-        iface.fail("The build seems to have failed.")
+        iface.fail(__("The build seems to have failed."))
 
     # Copy everything to bin.
     apkdirs = [ ]
@@ -556,7 +558,7 @@ def build(iface, directory, commands, launch=False, finished=None):
     # Launch.
 
     if launch:
-        iface.info("Launching app.")
+        iface.info(__("Launching app."))
 
         if expansion_file:
             launch_activity = "DownloaderActivity"
@@ -574,7 +576,7 @@ def build(iface, directory, commands, launch=False, finished=None):
     if finished is not None:
         finished(files)
 
-    iface.final_success("The build seems to have succeeded.")
+    iface.final_success(__("The build seems to have succeeded."))
 
 
 def distclean(interface):

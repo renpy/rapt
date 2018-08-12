@@ -9,8 +9,11 @@ import subprocess
 
 import rapt.plat as plat
 
+__ = plat.__
 
 ##############################################################################
+
+
 def run(interface, *args, **kwargs):
     """
     Runs the supplied arguments.
@@ -39,35 +42,15 @@ def check_java(interface):
     Checks for the presence of a minimally useful java on the user's system.
     """
 
-    interface.info("""\
-I'm compiling a short test program, to see if you have a working JDK on your
-system.
-""")
+    interface.info(__("I'm compiling a short test program, to see if you have a working JDK on your system."))
 
     if not run_slow(interface, plat.javac, plat.path("buildlib/CheckJDK8.java"), use_path=True):
-        interface.fail("""\
-I was unable to use javac to compile a test file. If you haven't installed
-the Java Development Kit yet, please download it from:
-
-http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-
-The JDK is different from the JRE, so it's possible you have Java
-without having the JDK. Without a working JDK, I can't continue.
-""")
+        interface.fail(__("I was unable to use javac to compile a test file. If you haven't installed the Java Development Kit yet, please download it from:\n\nhttp://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html\n\nThe JDK is different from the JRE, so it's possible you have Java without having the JDK. Without a working JDK, I can't continue."))
 
     if not run_slow(interface, plat.java, "-classpath", plat.path("buildlib"), "CheckJDK8", use_path=True):
-        interface.fail("""\
-The version of Java on your computer does not appear to be JDK 8, which is
-the only version supported by the Android SDK. If you need to install JDK 8,
-you can download it from:
+        interface.fail(__("The version of Java on your computer does not appear to be JDK 8, which is the only version supported by the Android SDK. If you need to install JDK 8, you can download it from:\n\nhttp://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html\n\nYou can also set the JAVA_HOME environment variabe to use a different version of Java."))
 
-http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-
-You can also set the JAVA_HOME environment variabe to use a different version of
-Java.
-""")
-
-    interface.success("The JDK is present and working. Good!")
+    interface.success(__("The JDK is present and working. Good!"))
 
 
 class FixedZipFile(zipfile.ZipFile):
@@ -95,11 +78,11 @@ class FixedZipFile(zipfile.ZipFile):
 def unpack_sdk(interface):
 
     if os.path.exists(plat.sdkmanager):
-        interface.success("The Android SDK has already been unpacked.")
+        interface.success(__("The Android SDK has already been unpacked."))
         return
 
     if "RAPT_NO_TERMS" not in os.environ:
-        interface.terms("https://developer.android.com/studio/terms", "Do you accept the Android SDK Terms and Conditions?")
+        interface.terms("https://developer.android.com/studio/terms", __("Do you accept the Android SDK Terms and Conditions?"))
 
     if plat.windows:
         archive = "sdk-tools-windows-{}.zip".format(plat.sdk_version)
@@ -110,11 +93,11 @@ def unpack_sdk(interface):
 
     url = "https://dl.google.com/android/repository/" + archive
 
-    interface.info("I'm downloading the Android SDK. This might take a while.")
+    interface.info(__("I'm downloading the Android SDK. This might take a while."))
 
     interface.download(url, plat.path(archive))
 
-    interface.info("I'm extracting the Android SDK.")
+    interface.info(__("I'm extracting the Android SDK."))
 
     def extract():
 
@@ -133,7 +116,7 @@ def unpack_sdk(interface):
 
     interface.background(extract)
 
-    interface.success("I've finished unpacking the Android SDK.")
+    interface.success(__("I've finished unpacking the Android SDK."))
 
 
 def get_packages(interface):
@@ -141,7 +124,6 @@ def get_packages(interface):
     packages = [ ]
 
     wanted_packages = [
-        ( "build-tools;28.0.1", "build-tools/28.0.1" ),
         ( "platform-tools", "platform-tools"),
         ( "platforms;android-28", "platforms/android-28"),
         ]
@@ -152,15 +134,15 @@ def get_packages(interface):
 
     if packages:
 
-        interface.info("I'm about to download and install the required Android packages. This might take a while.")
+        interface.info(__("I'm about to download and install the required Android packages. This might take a while."))
 
         if not run_slow(interface, plat.sdkmanager, "--licenses", yes=True):
-            interface.fail("I was unable to accept the Android licenses.")
+            interface.fail(__("I was unable to accept the Android licenses."))
 
         if not run_slow(interface, plat.sdkmanager, *packages):
-            interface.fail("I was unable to install the required Android packages.")
+            interface.fail(__("I was unable to install the required Android packages."))
 
-    interface.success("I've finished installing the required Android packages.")
+    interface.success(__("I've finished installing the required Android packages."))
 
 
 local_properties = plat.path("project/local.properties")
@@ -217,41 +199,27 @@ def generate_keys(interface):
     set_property("key.store", plat.path("android.keystore").replace("\\", "/"))
 
     if get_property("key.store") != plat.path("android.keystore"):
-        interface.info("You set the keystore yourself, so I'll assume it's how you want it.")
+        interface.info(__("You set the keystore yourself, so I'll assume it's how you want it."))
         return
 
     if os.path.exists(plat.path("android.keystore")):
-        interface.info("You've already created an Android keystore, so I won't create a new one for you.")
+        interface.info(__("You've already created an Android keystore, so I won't create a new one for you."))
         return
 
-    if not interface.yesno("""\
-I can create an application signing key for you. Signing an application with
-this key allows it to be placed in the Android Market and other app stores.
-
-Do you want to create a key?"""):
+    if not interface.yesno(__("I can create an application signing key for you. Signing an application with this key allows it to be placed in the Android Market and other app stores.\n\nDo you want to create a key?")):
         return
 
-    if not interface.yesno("""\
-I will create the key in the android.keystore file.
-
-You need to back this file up. If you lose it, you will not be able to upgrade
-your application.
-
-You also need to keep the key safe. If evil people get this file, they could
-make fake versions of your application, and potentially steal your users'
-data.
-
-Will you make a backup of android.keystore, and keep it in a safe place?"""):
+    if not interface.yesno(__("I will create the key in the android.keystore file.\n\nYou need to back this file up. If you lose it, you will not be able to upgrade your application.\n\n\You also need to keep the key safe. If evil people get this file, they could make fake versions of your application, and potentially steal your users' data.\n\nWill you make a backup of android.keystore, and keep it in a safe place?")):
         return
 
-    org = interface.input("Please enter your name or the name of your organization.")
+    org = interface.input(__("Please enter your name or the name of your organization."))
 
     dname = "CN=" + org
 
     if not run(interface, plat.keytool, "-genkey", "-keystore", "android.keystore", "-alias", "android", "-keyalg", "RSA", "-keysize", "2048", "-keypass", "android", "-storepass", "android", "-dname", dname, "-validity", "20000", use_path=True):
-        interface.fail("Could not create android.keystore. Is keytool in your path?")
+        interface.fail(__("Could not create android.keystore. Is keytool in your path?"))
 
-    interface.success("""I've finished creating android.keystore. Please back it up, and keep it in a safe place.""")
+    interface.success(__("I've finished creating android.keystore. Please back it up, and keep it in a safe place."))
 
 
 def install_sdk(interface):
@@ -265,4 +233,4 @@ def install_sdk(interface):
 
     set_property("sdk.dir", plat.sdk.replace("\\", "/"), replace=True)
 
-    interface.final_success("It looks like you're ready to start packaging games.")
+    interface.final_success(__("It looks like you're ready to start packaging games."))

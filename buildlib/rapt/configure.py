@@ -3,6 +3,8 @@ import os
 import re
 import plat
 
+__ = plat.__
+
 
 # Taken from https://docs.oracle.com/javase/tutorial/java/nutsandbolts/_keywords.html
 JAVA_KEYWORDS = """
@@ -85,77 +87,69 @@ def configure(interface, directory, default_name=None, default_version=None):
     if config.name is None:
         config.name = default_name
 
-    config.name = interface.input("""What is the full name of your application? This name will appear in the list of installed applications.""", config.name)
+    config.name = interface.input(__("What is the full name of your application? This name will appear in the list of installed applications."), config.name)
 
     if config.icon_name is None:
         config.icon_name = config.name
 
-    config.icon_name = interface.input("What is the short name of your application? This name will be used in the launcher, and for application shortcuts.", config.icon_name)
+    config.icon_name = interface.input(__("What is the short name of your application? This name will be used in the launcher, and for application shortcuts."), config.icon_name)
 
-    config.package = interface.input("""\
-What is the name of the package?
-
-This is usually of the form com.domain.program or com.domain.email.program. It may only contain ASCII letters and dots. It must contain at least one dot.""", config.package)
+    config.package = interface.input(__("What is the name of the package?\n\nThis is usually of the form com.domain.program or com.domain.email.program. It may only contain ASCII letters and dots. It must contain at least one dot."), config.package)
 
     config.package = config.package.strip().lower()
 
     if not config.package:
-        interface.fail("The package name may not be empty.")
+        interface.fail(__("The package name may not be empty."))
 
     if " " in config.package:
-        interface.fail("The package name may not contain spaces.")
+        interface.fail(__("The package name may not contain spaces."))
 
     if "." not in config.package:
-        interface.fail("The package name must contain at least one dot.")
+        interface.fail(__("The package name must contain at least one dot."))
 
     for part in config.package.split('.'):
         if not part:
-            interface.fail("The package name may not contain two dots in a row, or begin or end with a dot.")
+            interface.fail(__("The package name may not contain two dots in a row, or begin or end with a dot."))
 
         if not re.match(r"[a-zA-Z_]\w*$", part):
-            interface.fail("Each part of the package name must start with a letter, and contain only letters, numbers, and underscores.")
+            interface.fail(__("Each part of the package name must start with a letter, and contain only letters, numbers, and underscores."))
 
         if part in JAVA_KEYWORDS:
-            interface.fail("{} is a Java keyword, and can't be used as part of a package name.".format(part))
+            interface.fail(__("{} is a Java keyword, and can't be used as part of a package name.").format(part))
 
     if config.version is None:
         config.version = default_version
 
-    version = interface.input("""\
-What is the application's version?
-
-This should be the human-readable version that you would present to a person. It must contain only numbers and dots.""", config.version)
+    version = interface.input(__("What is the application's version?\n\nThis should be the human-readable version that you would present to a person. It must contain only numbers and dots."), config.version)
 
     if not re.match(r'^[\d\.]+$', version):
-        interface.fail("The version number must contain only numbers and dots.")
+        interface.fail(__("The version number must contain only numbers and dots."))
 
     set_version(config, version)
 
-    config.numeric_version = interface.input("""What is the version code?
-
-This must be a positive integer number, and the value should increase between versions.""", config.numeric_version)
+    config.numeric_version = interface.input(__("What is the version code?\n\nThis must be a positive integer number, and the value should increase between versions."), config.numeric_version)
 
     if not re.match(r'^[\d]+$', config.numeric_version):
-        interface.fail("The numeric version must contain only numbers.")
+        interface.fail(__("The numeric version must contain only numbers."))
 
-    config.orientation = interface.choice("How would you like your application to be displayed?", [
-        ("sensorLandscape", "In landscape orientation."),
-        ("portrait", "In portrait orientation."),
-        ("sensor", "In the user's preferred orientation."),
+    config.orientation = interface.choice(__("How would you like your application to be displayed?"), [
+        ("sensorLandscape", __("In landscape orientation.")),
+        ("portrait", __("In portrait orientation.")),
+        ("sensor", __("In the user's preferred orientation.")),
         ], config.orientation)
 
     if plat.renpy:
-        config.store = interface.choice("Which app store would you like to support in-app purchasing through?", [
-            ("play", "Google Play."),
-            ("amazon", "Amazon App Store."),
-            ("all", "Both, in one app."),
-            ("none", "Neither."),
+        config.store = interface.choice(__("Which app store would you like to support in-app purchasing through?"), [
+            ("play", __("Google Play.")),
+            ("amazon", __("Amazon App Store.")),
+            ("all", __("Both, in one app.")),
+            ("none", __("Neither.")),
             ], config.store)
 
     if config.store in [ "play", "none" ]:
-        config.expansion = interface.choice("Would you like to create an expansion APK?", [
-            (False, "No. Size limit of 100 MB on Google Play, but can be distributed through other stores and sideloaded."),
-            (True, "Yes. 2 GB size limit, but won't work outside of Google Play. (Read the documentation to get this to work.)")
+        config.expansion = interface.choice(__("Would you like to create an expansion APK?"), [
+            (False, __("No. Size limit of 100 MB on Google Play, but can be distributed through other stores and sideloaded.")),
+            (True, __("Yes. 2 GB size limit, but won't work outside of Google Play. (Read the documentation to get this to work.)"))
             ], config.expansion)
 
     if not plat.renpy:
@@ -180,7 +174,7 @@ Please enter a space-separated list of permissions.""", permissions)
 
         if not config.expansion:
             internet = "INTERNET" in config.permissions
-            internet = interface.yesno_choice("Do you want to allow the app to access the Internet?", internet)
+            internet = interface.yesno_choice(__("Do you want to allow the app to access the Internet?"), internet)
         else:
             internet = False  # included in template.
 
@@ -205,6 +199,6 @@ def set_config(iface, directory, var, value):
     elif hasattr(config, var):
         setattr(config, var, value)
     else:
-        iface.fail("Unknown configuration variable: {}".format(var))
+        iface.fail(__("Unknown configuration variable: {}").format(var))
 
     config.save(directory)
