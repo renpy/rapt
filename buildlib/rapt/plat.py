@@ -91,6 +91,7 @@ if platform.win32_ver()[0]:
     adb = "platform-tools\\adb.exe"
     sdkmanager = "tools\\bin\\sdkmanager.bat"
 
+    java = maybe_java_home("java.exe")
     javac = maybe_java_home("javac.exe")
     keytool = maybe_java_home("keytool.exe")
 
@@ -102,6 +103,7 @@ elif platform.mac_ver()[0]:
     adb = "platform-tools/adb"
     sdkmanager = "tools/bin/sdkmanager"
 
+    java = maybe_java_home("java")
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
 
@@ -115,6 +117,7 @@ else:
     adb = "platform-tools/adb"
     sdkmanager = "tools/bin/sdkmanager"
 
+    java = maybe_java_home("java")
     javac = maybe_java_home("javac")
     keytool = maybe_java_home("keytool")
 

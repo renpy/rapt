@@ -25,7 +25,6 @@ for i in android.py blacklist.txt buildlib project templates whitelist.txt; do
     cp -a "$ROOT/$i" "$DIST/$i"
 done
 
-
 for i in build \
     .gradle \
     local.properties \
@@ -38,7 +37,9 @@ for i in build \
     app/release \
     renpyandroid/src/main/java/org/renpy/android/Constants.java \
     renpyandroid/src/main/AndroidManifest.xml \
-    renpyandroid/src/main/res/values/strings.xml; do
+    renpyandroid/src/main/res/values/strings.xml \
+    buildlib/CheckJDK8.class \
+        ; do
 
     rm -Rf "$DIST/project/$i"
 done

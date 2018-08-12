@@ -44,32 +44,30 @@ I'm compiling a short test program, to see if you have a working JDK on your
 system.
 """)
 
-    SOURCE = """\
-class test {
-    public static void main(String args[]) {
-    }
-}
-"""
-
-    f = file(plat.path("test.java"), "w")
-    f.write(SOURCE)
-    f.close()
-
-    if not run_slow(interface, plat.javac, "test.java", use_path=True):
+    if not run_slow(interface, plat.javac, plat.path("buildlib/CheckJDK8.java"), use_path=True):
         interface.fail("""\
 I was unable to use javac to compile a test file. If you haven't installed
 the Java Development Kit yet, please download it from:
 
-http://www.oracle.com/technetwork/java/javase/downloads/index.html
+http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 
 The JDK is different from the JRE, so it's possible you have Java
 without having the JDK. Without a working JDK, I can't continue.
 """)
 
-    interface.success("The JDK is present and working. Good!")
+    if not run_slow(interface, plat.java, "-classpath", plat.path("buildlib"), "CheckJDK8", use_path=True):
+        interface.fail("""\
+The version of Java on your computer does not appear to be JDK 8, which is
+the only version supported by the Android SDK. If you need to install JDK 8,
+you can download it from:
 
-    os.unlink(plat.path("test.java"))
-    os.unlink(plat.path("test.class"))
+http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+
+You can also set the JAVA_HOME environment variabe to use a different version of
+Java.
+""")
+
+    interface.success("The JDK is present and working. Good!")
 
 
 class FixedZipFile(zipfile.ZipFile):
