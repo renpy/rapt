@@ -16,8 +16,10 @@ popd
 
 cd "$ROOT"
 
+rm -Rf "$RENPY_ROOT/rapt"
+mkdir -p "$RENPY_ROOT/rapt"
 rm -Rf "$DIST"
-mkdir -p "$DIST"
+ln -s "$RENPY_ROOT/rapt" "$DIST"
 
 for i in android.py blacklist.txt buildlib project templates whitelist.txt; do
     cp -a "$ROOT/$i" "$DIST/$i"
