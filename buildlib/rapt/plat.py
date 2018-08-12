@@ -15,8 +15,22 @@ import shutil
 import subprocess
 
 
-def __(s):
+def translate(s):
+    """
+    This is intended to be replaced when this module is imported from Ren'Py
+    proper, to translate `s` itself.
+    """
+
     return s
+
+
+def __(s):
+    """
+    This is imported into the other modules. It's called to translate `s`,
+    which is
+    """
+
+    return translate(s)
 
 
 def set_win32_java_home():
