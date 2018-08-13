@@ -587,14 +587,11 @@ def distclean(interface):
     if os.path.exists(plat.path("build_renpy.sh")):
         raise Exception("Can't clean android directory!")
 
-    def rmdir(name, make):
+    def rmdir(name):
         path = plat.path(name)
 
         if os.path.isdir(path):
             shutil.rmtree(path)
-
-        if make:
-            os.mkdir(path)
 
     def rm(name):
         path = plat.path(name)
@@ -602,6 +599,7 @@ def distclean(interface):
         if os.path.exists(path):
             os.unlink(path)
 
+    rm("buildlib/CheckJDK8.java")
     rm("project/local.properties")
     rmdir("project/renpyandroid/build")
     rmdir("project/app/build")
