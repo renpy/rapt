@@ -599,7 +599,7 @@ def distclean(interface):
         if os.path.exists(path):
             os.unlink(path)
 
-    rm("buildlib/CheckJDK8.java")
+    rm("buildlib/CheckJDK8.class")
     rm("project/local.properties")
     rmdir("project/renpyandroid/build")
     rmdir("project/app/build")
