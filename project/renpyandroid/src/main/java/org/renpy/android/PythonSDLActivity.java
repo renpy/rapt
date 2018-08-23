@@ -29,7 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-// import org.renpy.iap.Store;
+import org.renpy.iap.Store;
 
 public class PythonSDLActivity extends SDLActivity {
 
@@ -309,19 +309,19 @@ public class PythonSDLActivity extends SDLActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Store.create(this);
+        Store.create(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Store.getStore().destroy();
+        Store.getStore().destroy();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-//        if (Store.getStore().onActivityResult(requestCode, resultCode, intent)) {
-//            return;
-//        }
+        if (Store.getStore().onActivityResult(requestCode, resultCode, intent)) {
+            return;
+        }
 
         super.onActivityResult(requestCode, resultCode, intent);
     }
