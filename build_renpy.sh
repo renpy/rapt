@@ -21,9 +21,12 @@ mkdir -p "$RENPY_ROOT/rapt"
 rm -Rf "$DIST"
 ln -s "$RENPY_ROOT/rapt" "$DIST"
 
-for i in android.py blacklist.txt buildlib project templates whitelist.txt; do
+for i in android.py blacklist.txt buildlib templates whitelist.txt; do
     cp -a "$ROOT/$i" "$DIST/$i"
 done
+
+cp -a "$ROOT/project" "$DIST/prototype"
+date > "$DIST/prototype/build.txt"
 
 for i in build \
     .gradle \
@@ -41,5 +44,5 @@ for i in build \
     buildlib/CheckJDK8.class \
         ; do
 
-    rm -Rf "$DIST/project/$i"
+    rm -Rf "$DIST/prototype/$i"
 done
