@@ -343,6 +343,45 @@ GENERATED = [
 ]
 
 
+def copy_project(update_always=False):
+    """
+    This updates the project, if necessary.
+    """
+
+    def snarf(fn):
+        fn = plat.path(fn)
+
+        if os.path.exists(fn):
+            return open(fn, "r").read().strip()
+        else:
+            return None
+
+    project = plat.path("project")
+    prototype = plat.path("prototype")
+
+    update = False
+
+    if not os.path.exists(project):
+        update = True
+    elif update_always:
+        if snarf("project/build.txt") != snarf("prototype/build.txt"):
+            update = True
+
+    if not update:
+        return
+
+    lp = snarf("project/local.properties")
+
+    if os.path.exists(project):
+        shutil.rmtree(project)
+
+    shutil.copytree(prototype, project)
+
+    if lp is not None:
+        with open(plat.path("project/local.properties"), "w") as f:
+            f.write(lp + "\n")
+
+
 def build(iface, directory, commands, launch=False, finished=None):
 
     # Are we doing a Ren'Py build?
@@ -400,6 +439,10 @@ def build(iface, directory, commands, launch=False, finished=None):
 
     if config.store not in [ "play", "none" ]:
         config.expansion = False
+
+    iface.info(__("Updating project."))
+
+    copy_project(config.update_always)
 
     iface.info(__("Creating assets directory."))
 

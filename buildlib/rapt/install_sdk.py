@@ -223,6 +223,11 @@ def generate_keys(interface):
 
 
 def install_sdk(interface):
+
+    # Create the project directory.
+    import rapt.build
+    rapt.build.copy_project(False)
+
     check_java(interface)
 
     unpack_sdk(interface)

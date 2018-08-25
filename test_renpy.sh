@@ -9,6 +9,7 @@ cd "$ROOT"
 "$ROOT/build_renpy.sh"
 
 ln -s "$ROOT/Sdk" "$ROOT/dist/Sdk"
+mkdir "$ROOT/dist/project"
 cp -a local.properties "$ROOT/dist/project"
 
 cd "$ROOT/dist"

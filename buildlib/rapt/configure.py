@@ -42,6 +42,7 @@ class Configuration(object):
         self.google_play_salt = None
         self.store = "none"
         self.update_icons = True
+        self.update_always = True
 
         try:
             with file(os.path.join(directory, ".android.json"), "r") as f:
@@ -184,6 +185,12 @@ Please enter a space-separated list of permissions.""", permissions)
             permissions.append("INTERNET")
 
         config.permissions = permissions
+
+    config.update_always = interface.choice(
+        __("Do you want to automatically update the generated project?"), [
+            (True, __("Yes. This is the best choice for most projects.")),
+            (False, __("No. This may require manual updates when Ren'Py or the project configuration changes."))
+            ], config.update_always)
 
     config.save(directory)
 
