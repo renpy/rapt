@@ -107,13 +107,16 @@ class PatternList(object):
 environment = jinja2.Environment(loader=jinja2.FileSystemLoader(plat.path('')))
 
 
-def render(template, dest, **kwargs):
+def render(always, template, dest, **kwargs):
     """
     Using jinja2, render `template` to the filename `dest`, supplying the keyword
     arguments as template parameters.
     """
 
     dest = plat.path(dest)
+
+    if render and os.path.exists(dest):
+        return
 
     template = environment.get_template(template)
     text = template.render(**kwargs)
@@ -273,11 +276,6 @@ def zip_directory(zf, prefix, dn):
             zf.write(fn, archive_fn)
 
 
-def copy_icons(directory, default):
-
-    iconmaker.IconMaker(directory)
-
-
 def copy_presplash(directory, name, default):
     """
     Copies the presplash file.
@@ -342,6 +340,11 @@ GENERATED = [
     ("templates/Constants.java", "project/renpyandroid/src/main/java/org/renpy/android/Constants.java"),
 ]
 
+COPIED = [
+    "renpyandroid/src/main/jniLibs",
+    "renpyandroid/src/main/private",
+]
+
 
 def copy_project(update_always=False):
     """
@@ -382,6 +385,22 @@ def copy_project(update_always=False):
             f.write(lp + "\n")
 
 
+def copy_libs():
+    """
+    This copies updated libraries from the prototype to the project each
+    time a build occurs.
+    """
+
+    for i in COPIED:
+        project = plat.path("project/" + i)
+        prototype = plat.path("prototype/" + i)
+
+        if os.path.exists(project):
+            shutil.rmtree(project)
+
+        shutil.copytree(prototype, project)
+
+
 def build(iface, directory, commands, launch=False, finished=None):
 
     # Are we doing a Ren'Py build?
@@ -413,13 +432,11 @@ def build(iface, directory, commands, launch=False, finished=None):
     whitelist = PatternList("whitelist.txt")
 
     if RENPY:
-        default_icon = plat.path("templates/renpy-icon.png")
         default_presplash = plat.path("templates/renpy-presplash.jpg")
 
         private_dir, assets_dir = split_renpy(directory)
 
     else:
-        default_icon = plat.path("templates/pygame-icon.png")
         default_presplash = plat.path("templates/pygame-presplash.jpg")
 
         if config.layout == "internal":
@@ -443,6 +460,8 @@ def build(iface, directory, commands, launch=False, finished=None):
     iface.info(__("Updating project."))
 
     copy_project(config.update_always)
+
+    copy_libs()
 
     iface.info(__("Creating assets directory."))
 
@@ -533,6 +552,7 @@ def build(iface, directory, commands, launch=False, finished=None):
     for template, i in GENERATED:
 
         render(
+            config.update_always,
             template,
             i,
             private_version=private_version,
@@ -542,7 +562,7 @@ def build(iface, directory, commands, launch=False, finished=None):
             )
 
     if config.update_icons:
-        copy_icons(directory, default_icon)
+        iconmaker.IconMaker(directory, config)
 
     # Copy the presplash files.
     copy_presplash(directory, "android-presplash", default_presplash)

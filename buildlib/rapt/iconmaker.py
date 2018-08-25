@@ -6,7 +6,9 @@ import shutil
 
 class IconMaker(object):
 
-    def __init__(self, directory):
+    def __init__(self, directory, config):
+
+        self.config = config
 
         if not pygame_sdl2.display.get_surface():
             pygame_sdl2.display.init()
@@ -101,7 +103,8 @@ class IconMaker(object):
 
         surf = generator(int(scale * size))
 
-        pygame_sdl2.image.save(surf, dst)
+        if self.config.update_always or not os.path.exists(dst):
+            pygame_sdl2.image.save(surf, dst)
 
     def write_dpi(self, dpi, scale):
         self.write_icon("icon_background", dpi, scale, 108, self.load_background)
