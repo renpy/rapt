@@ -663,16 +663,5 @@ def distclean(interface):
             os.unlink(path)
 
     rm("buildlib/CheckJDK8.class")
-    rm("project/local.properties")
-    rmdir("project/renpyandroid/build")
-    rmdir("project/app/build")
-    rmdir("project/app/src/main/assets")
-    rmdir("project/app/src/main/res/mipmap-mdpi")
-    rmdir("project/app/src/main/res/mipmap-hdpi")
-    rmdir("project/app/src/main/res/mipmap-xhdpi")
-    rmdir("project/app/src/main/res/mipmap-xxhdpi")
-    rmdir("project/app/src/main/res/mipmap-xxxhdpi")
+    rmdir("project")
     rmdir("bin")
-
-    for _, i in GENERATED:
-        rm(i)
