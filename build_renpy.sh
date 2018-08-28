@@ -38,11 +38,12 @@ for i in build \
     app/src/main/res/values/strings.xml \
     app/src/main/res/mipmap-*dpi \
     app/release \
+    renpyandroid/build \
     renpyandroid/src/main/java/org/renpy/android/Constants.java \
     renpyandroid/src/main/AndroidManifest.xml \
     renpyandroid/src/main/res/values/strings.xml \
     buildlib/CheckJDK8.class \
-        ; do
+            ; do
 
     rm -Rf "$DIST/prototype/$i"
 done
