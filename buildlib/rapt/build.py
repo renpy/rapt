@@ -115,7 +115,7 @@ def render(always, template, dest, **kwargs):
 
     dest = plat.path(dest)
 
-    if render and os.path.exists(dest):
+    if (not always) and os.path.exists(dest):
         return
 
     template = environment.get_template(template)
