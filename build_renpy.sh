@@ -32,6 +32,7 @@ for i in build \
     .gradle \
     local.properties \
     app/build \
+    app/build.gradle \
     app/debug \
     app/src/main/AndroidManifest.xml \
     app/src/main/assets \
