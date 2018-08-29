@@ -665,3 +665,8 @@ def distclean(interface):
     rm("buildlib/CheckJDK8.class")
     rmdir("project")
     rmdir("bin")
+
+    try:
+        rmdir("Sdk")
+    except:
+        rm("Sdk")
