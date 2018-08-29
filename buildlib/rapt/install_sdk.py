@@ -196,9 +196,12 @@ def generate_keys(interface):
     set_property("key.alias", "android")
     set_property("key.store.password", "android")
     set_property("key.alias.password", "android")
-    set_property("key.store", plat.path("android.keystore").replace("\\", "/"))
 
-    if get_property("key.store") != plat.path("android.keystore"):
+    default_keystore = plat.path("android.keystore").replace("\\", "/")
+
+    set_property("key.store", default_keystore)
+
+    if get_property("key.store") != default_keystore:
         interface.info(__("You set the keystore yourself, so I'll assume it's how you want it."))
         return
 
