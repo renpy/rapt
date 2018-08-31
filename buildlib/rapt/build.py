@@ -332,12 +332,12 @@ def split_renpy(directory):
 
 
 GENERATED = [
-    ("templates/app-build.gradle", "project/app/build.gradle"),
-    ("templates/app-AndroidManifest.xml", "project/app/src/main/AndroidManifest.xml"),
-    ("templates/app-strings.xml", "project/app/src/main/res/values/strings.xml"),
-    ("templates/renpyandroid-AndroidManifest.xml", "project/renpyandroid/src/main/AndroidManifest.xml"),
-    ("templates/renpyandroid-strings.xml", "project/renpyandroid/src/main/res/values/strings.xml"),
-    ("templates/Constants.java", "project/renpyandroid/src/main/java/org/renpy/android/Constants.java"),
+    (False, "templates/app-build.gradle", "project/app/build.gradle"),
+    (False, "templates/app-AndroidManifest.xml", "project/app/src/main/AndroidManifest.xml"),
+    (False, "templates/app-strings.xml", "project/app/src/main/res/values/strings.xml"),
+    (False, "templates/renpyandroid-AndroidManifest.xml", "project/renpyandroid/src/main/AndroidManifest.xml"),
+    (False, "templates/renpyandroid-strings.xml", "project/renpyandroid/src/main/res/values/strings.xml"),
+    (False, "templates/Constants.java", "project/renpyandroid/src/main/java/org/renpy/android/Constants.java"),
 ]
 
 COPIED = [
@@ -549,10 +549,10 @@ def build(iface, directory, commands, launch=False, finished=None):
     if not config.google_play_salt:
         config.google_play_salt = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20"
 
-    for template, i in GENERATED:
+    for always, template, i in GENERATED:
 
         render(
-            config.update_always,
+            always or config.update_always,
             template,
             i,
             private_version=private_version,
