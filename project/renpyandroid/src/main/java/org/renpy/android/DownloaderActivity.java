@@ -93,6 +93,18 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
         mPauseButton.setText(stringResourceID);
     }
 
+
+
+    String getExpansionFilePath() {
+        String packageName = this.getPackageName();
+        File root = Environment.getExternalStorageDirectory();
+        File expPath = new File(root.toString() + "/Android/obb/" + packageName);
+        String rv = expPath + "/main." + org.renpy.android.Constants.fileVersion + "." + packageName + ".obb";
+
+        return rv;
+    }
+
+
     boolean checkExpansionFile(String filename, boolean checkLength) {
     	File f = new File(filename);
 
@@ -115,16 +127,14 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
      * If not, return null;
      */
     String getExpansionFile(boolean checkLength) {
-        String fileName = Helpers.getExpansionAPKFileName(this, true, org.renpy.android.Constants.fileVersion);
 
-        {
-        	String fullFileName = Helpers.generateSaveFileName(this, fileName);
-        	if (checkExpansionFile(fullFileName, checkLength)) {
-        		return fullFileName;
-        	}
-        }
+    	String fullFileName = getExpansionFilePath();
 
-        return null;
+    	if (checkExpansionFile(fullFileName, checkLength)) {
+		return fullFileName;
+	}
+
+	return null;
     }
 
     /**
