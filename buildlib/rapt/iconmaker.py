@@ -81,7 +81,7 @@ class IconMaker(object):
         mask = self.load_image("android-icon_mask.png")
         mask = self.scale(mask, size)
 
-        icon.blit(mask, (0, 0), None, pygame_sdl2.BLEND_RGB_MULT)
+        icon.blit(mask, (0, 0), None, pygame_sdl2.BLEND_RGBA_MULT)
 
         return icon
 
@@ -109,7 +109,7 @@ class IconMaker(object):
     def write_dpi(self, dpi, scale):
         self.write_icon("icon_background", dpi, scale, 108, self.load_background)
         self.write_icon("icon_foreground", dpi, scale, 108, self.load_foreground)
-        self.write_icon("icon", dpi, scale, 48, self.load_foreground)
+        self.write_icon("icon", dpi, scale, 48, self.make_icon)
 
 
 if __name__ == "__main__":
