@@ -638,7 +638,11 @@ def build(iface, directory, commands, launch=False, finished=None):
     if finished is not None:
         finished(files)
 
-    iface.final_success(__("The build seems to have succeeded."))
+    iface.final_success(
+        __("The build seems to have succeeded.") +
+        "\n\n" +
+        __("The armeabi-v7a version works on most phones on tablets, while the x86_64 version works on the simulator and chromebooks.")
+        )
 
 
 def distclean(interface):
