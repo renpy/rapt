@@ -608,9 +608,8 @@ def build(iface, directory, commands, launch=False, finished=None):
 
             sfn = os.path.join(i, j)
 
-            dfn = "bin/{}-{}-{}".format(
+            dfn = "bin/{}-{}".format(
                 config.package,
-                config.numeric_version,
                 j[4:])
 
             dfn = plat.path(dfn)
