@@ -95,11 +95,12 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
 
 
 
-    String getExpansionFilePath() {
+    String getExpansionFilePath(int platform) {
         String packageName = this.getPackageName();
         File root = Environment.getExternalStorageDirectory();
         File expPath = new File(root.toString() + "/Android/obb/" + packageName);
-        String rv = expPath + "/main." + org.renpy.android.Constants.fileVersion + "." + packageName + ".obb";
+        long version = platform * 100000000 + org.renpy.android.Constants.fileVersion;
+        String rv = expPath + "/main." + version + "." + packageName + ".obb";
 
         return rv;
     }
@@ -128,11 +129,14 @@ public class DownloaderActivity extends Activity implements IDownloaderClient {
      */
     String getExpansionFile(boolean checkLength) {
 
-    	String fullFileName = getExpansionFilePath();
+        // The platform applies the version offset for non-arm platforms.
+        for (int platform = 0; platform < 10; platform++) {
+       	    String fullFileName = getExpansionFilePath(platform);
 
-    	if (checkExpansionFile(fullFileName, checkLength)) {
-		return fullFileName;
-	}
+    	    if (checkExpansionFile(fullFileName, checkLength)) {
+    	        return fullFileName;
+    	    }
+        }
 
 	return null;
     }
