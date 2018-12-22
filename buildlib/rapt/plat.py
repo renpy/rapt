@@ -72,8 +72,6 @@ def set_win32_java_home():
     SCANS = [
         ("HKEY_LOCAL_MACHINE\\SOFTWARE\JavaSoft\\Java Development Kit", "/reg:64"),
         ("HKEY_LOCAL_MACHINE\\SOFTWARE\JavaSoft\\JDK", "/reg:64"),
-        ("HKEY_LOCAL_MACHINE\\SOFTWARE\JavaSoft\\Java Development Kit", "/reg:32"),
-        ("HKEY_LOCAL_MACHINE\\SOFTWARE\JavaSoft\\JDK", "/reg:32"),
     ]
 
     for key, bitflag in SCANS:

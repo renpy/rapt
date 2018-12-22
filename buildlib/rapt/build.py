@@ -567,6 +567,20 @@ def build(iface, directory, commands, launch=False, finished=None):
     # Copy the presplash files.
     copy_presplash(directory, "android-presplash", default_presplash)
 
+    # Find and clean the apkdirs.
+
+    apkdirs = [ ]
+
+    if any(i.endswith("Debug") for i in commands):
+        apkdirs.append(plat.path("project/app/build/outputs/apk/debug"))
+
+    if any(i.endswith("Release") for i in commands):
+        apkdirs.append(plat.path("project/app/build/outputs/apk/release"))
+
+    for i in apkdirs:
+        if os.path.exists(i):
+            shutil.rmtree(i)
+
     # Build.
     iface.info(__("I'm using Gradle to build the package."))
 
@@ -589,16 +603,10 @@ def build(iface, directory, commands, launch=False, finished=None):
             files.append(plat.path(expansion_file))
 
     except subprocess.CalledProcessError:
+
         iface.fail(__("The build seems to have failed."))
 
     # Copy everything to bin.
-    apkdirs = [ ]
-
-    if any(i.endswith("Debug") for i in commands):
-        apkdirs.append(plat.path("project/app/build/outputs/apk/debug"))
-
-    if any(i.endswith("Release") for i in commands):
-        apkdirs.append(plat.path("project/app/build/outputs/apk/release"))
 
     for i in apkdirs:
         for j in os.listdir(i):
@@ -608,9 +616,8 @@ def build(iface, directory, commands, launch=False, finished=None):
 
             sfn = os.path.join(i, j)
 
-            dfn = "bin/{}-{}-{}".format(
+            dfn = "bin/{}-{}".format(
                 config.package,
-                config.numeric_version,
                 j[4:])
 
             dfn = plat.path(dfn)
@@ -639,7 +646,11 @@ def build(iface, directory, commands, launch=False, finished=None):
     if finished is not None:
         finished(files)
 
-    iface.final_success(__("The build seems to have succeeded."))
+    iface.final_success(
+        __("The build seems to have succeeded.") +
+        "\n\n" +
+        __("The armeabi-v7a version works on most phones on tablets, while the x86_64 version works on the simulator and chromebooks.")
+        )
 
 
 def distclean(interface):

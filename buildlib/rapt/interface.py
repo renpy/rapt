@@ -207,7 +207,7 @@ class Interface(object):
 
     def call(self, args, cancel=False, use_path=False, yes=False):
         """
-        Executes `args` as a program. Raises subprocess.CalledProgramError
+        Executes `args` as a program. Raises subprocess.CalledProcessError
         if the program fails.
 
         `cancel`
