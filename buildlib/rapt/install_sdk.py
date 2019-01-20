@@ -142,7 +142,7 @@ def get_packages(interface):
         if not run_slow(interface, plat.sdkmanager, "--licenses", yes=True):
             interface.fail(__("I was unable to accept the Android licenses."))
 
-        if not run_slow(interface, plat.sdkmanager, *packages):
+        if not run_slow(interface, plat.sdkmanager, yes=True, *packages):
             interface.fail(__("I was unable to install the required Android packages."))
 
     interface.success(__("I've finished installing the required Android packages."))
