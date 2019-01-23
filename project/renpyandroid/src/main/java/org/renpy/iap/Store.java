@@ -16,11 +16,20 @@ public class Store {
 
         String storeName = org.renpy.android.Constants.store;
 
+        android.util.Log.e("python", android.os.Build.MANUFACTURER);
+
         if (storeName.equals("all")) {
             PackageManager pkgManager = activity.getPackageManager();
             String installerPackageName = pkgManager.getInstallerPackageName(activity.getPackageName());
 
-            if ((installerPackageName != null) && installerPackageName.startsWith("com.amazon")) {
+            if (installerPackageName == null) {
+                 if (android.os.Build.MANUFACTURER.startsWith("Amazon")) {
+                     storeName = "amazon";
+                 } else {
+                     storeName = "none";
+                 }
+
+            } else if (installerPackageName.startsWith("com.amazon")) {
                 storeName = "amazon";
             } else {
                 storeName = "none";
