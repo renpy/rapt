@@ -11,6 +11,7 @@ import com.amazon.device.iap.model.PurchaseResponse;
 import com.amazon.device.iap.model.PurchaseUpdatesResponse;
 import com.amazon.device.iap.model.Receipt;
 import com.amazon.device.iap.model.UserDataResponse;
+import com.amazon.device.iap.model.FulfillmentResult;
 
 import android.app.Activity;
 
@@ -94,6 +95,9 @@ public class AmazonStore extends Store implements PurchasingListener {
         }
 
         purchased.add(response.getReceipt().getSku());
+
+        PurchasingService.notifyFulfillment(response.getReceipt().getReceiptId(), FulfillmentResult.FULFILLED);
+
         finished = true;
     }
 
