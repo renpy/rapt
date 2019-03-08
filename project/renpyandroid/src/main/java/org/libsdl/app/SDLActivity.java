@@ -28,6 +28,7 @@ import android.graphics.drawable.Drawable;
 import android.media.*;
 import android.hardware.*;
 import android.content.pm.ActivityInfo;
+import android.text.InputType;
 
 /**
     SDL Activity
