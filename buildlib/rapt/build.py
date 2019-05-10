@@ -332,7 +332,7 @@ def split_renpy(directory):
 
 
 GENERATED = [
-    (False, "templates/app-build.gradle", "project/app/build.gradle"),
+    (True, "templates/app-build.gradle", "project/app/build.gradle"),
     (False, "templates/app-AndroidManifest.xml", "project/app/src/main/AndroidManifest.xml"),
     (False, "templates/app-strings.xml", "project/app/src/main/res/values/strings.xml"),
     (False, "templates/renpyandroid-AndroidManifest.xml", "project/renpyandroid/src/main/AndroidManifest.xml"),
