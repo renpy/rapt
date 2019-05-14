@@ -67,7 +67,7 @@ build_platform () {
 build_arm () {
 
     # The version of Android use.
-    export ANDROID_PLATFORM=android-15
+    export ANDROID_PLATFORM=android-21
 
     # The binary platform.
     export PLATFORM=armeabi-v7a
@@ -89,6 +89,34 @@ build_arm () {
 
     build_platform
 }
+
+build_arm64 () {
+
+    # The version of Android use.
+    export ANDROID_PLATFORM=android-21
+
+    # The binary platform.
+    export PLATFORM=arm64-v8a
+
+    # The arch, as given to the toolchain.
+    export NDK_ARCH=arm64
+
+    # The arch, as  given to ffmpeg.
+    export FFMPEG_ARCH=arm64
+
+    # The prefix used for GCC.
+    export GCC_ARCH=aarch64-linux-android
+
+    # The arch arguments provided to openssl.
+    # export OPENSSL_ARCH="android -march=armv7-a"
+    export OPENSSL_ARCH="linux-generic64 -DB_ENDIAN"
+
+    # The -fPIC flag, if needed.
+    export PICFLAG="-fPIC"
+
+    build_platform
+}
+
 
 # ARM64 uses OPENSSL_ARCH="linux-generic64 -DB_ENDIAN"
 
@@ -128,11 +156,12 @@ build_ () {
 
     build_host
 
+    build_arm64
     build_arm
     build_x86_64
 
-    export ANDROID_PLATFORM=android-15
-    export ALL_PLATFORMS="armeabi-v7a x86_64"
+    export ANDROID_PLATFORM=android-21
+    export ALL_PLATFORMS="armeabi-v7a x86_64 arm64-v8a"
 
     run jni all
     run finish dist
