@@ -590,7 +590,7 @@ def build(iface, directory, commands, launch=False, finished=None):
 
     try:
 
-        iface.call([ plat.gradlew, "-p", plat.path("project") ] + commands, cancel=True)
+        iface.call([ plat.gradlew, "--stacktrace", "-p", plat.path("project") ] + commands, cancel=True)
 
         if (expansion_file is not None) and any(i.startswith("install") for i in commands):
             iface.info(__("Uploading expansion file."))
