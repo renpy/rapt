@@ -1379,7 +1379,7 @@ class DummyEdit extends View implements View.OnKeyListener {
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
         ic = new SDLInputConnection(this, true);
 
-        outAttrs.inputType = InputType.TYPE_CLASS_TEXT;
+        outAttrs.inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
         outAttrs.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_FLAG_NO_FULLSCREEN | EditorInfo.IME_ACTION_GO;
 
         return ic;
@@ -1392,6 +1392,17 @@ class SDLInputConnection extends BaseInputConnection {
         super(targetView, fullEditor);
 
     }
+
+    @Override
+    public boolean performEditorAction(int actionCode) {
+        nativeCommitText("", 1);
+
+        SDLActivity.onNativeKeyDown(KeyEvent.KEYCODE_ENTER);
+        SDLActivity.onNativeKeyUp(KeyEvent.KEYCODE_ENTER);
+
+        return true;
+    }
+
 
     @Override
     public boolean sendKeyEvent(KeyEvent event) {
