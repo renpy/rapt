@@ -649,7 +649,9 @@ def build(iface, directory, commands, launch=False, finished=None):
     iface.final_success(
         __("The build seems to have succeeded.") +
         "\n\n" +
-        __("The arm64-v8a version works on newer Android devices, the armeabi-v7a version works on older devices, and the x86_64 version works on the simulator and chromebooks.")
+        __("The arm64-v8a version works on newer Android devices, the armeabi-v7a version works on older devices, and the x86_64 version works on the simulator and chromebooks.") +
+        "\n\n" +
+        __("The universal version works everywhere but is larger.")
         )
 
 
