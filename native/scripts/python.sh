@@ -77,6 +77,10 @@ build () {
     sed -i 's/$(BLDSHARED) -o $@ $(LIBRARY_OBJS)/$(BLDSHARED) -Wl,-h$(INSTSONAME) -o $@ $(LIBRARY_OBJS)/' Makefile
 
     mkdir -p Lib/plat-linux4
+    mkdir -p Lib/plat-linux5
+    mkdir -p Lib/plat-linux6
+    mkdir -p Lib/plat-linux7
+    mkdir -p Lib/plat-linux8
 
     make HOSTPYTHON="$B/hostpython" HOSTPGEN="$B/hostpgen" CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so || true
     make install HOSTPYTHON="$B/hostpython" HOSTPGEN="$B/hostpgen" CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so
