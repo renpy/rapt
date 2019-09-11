@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "{{ config.package }}"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode {{ config.numeric_version }}
         versionName "{{ config.version }}"
