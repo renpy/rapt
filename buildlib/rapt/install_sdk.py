@@ -7,7 +7,7 @@ import tarfile
 import shutil
 import subprocess
 
-import rapt.plat as plat
+from . import plat
 
 __ = plat.__
 
@@ -127,8 +127,8 @@ def get_packages(interface):
     packages = [ ]
 
     wanted_packages = [
-        ( "platform-tools", "platform-tools"),
-        ( "platforms;android-28", "platforms/android-28"),
+        ("platform-tools", "platform-tools"),
+        ("platforms;android-28", "platforms/android-28"),
         ]
 
     for i, j in wanted_packages:

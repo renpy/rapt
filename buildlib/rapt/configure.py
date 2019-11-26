@@ -1,10 +1,9 @@
 import json
 import os
 import re
-import plat
+from . import plat
 
 __ = plat.__
-
 
 # Taken from https://docs.oracle.com/javase/tutorial/java/nutsandbolts/_keywords.html
 JAVA_KEYWORDS = """
@@ -177,7 +176,7 @@ Please enter a space-separated list of permissions.""", permissions)
             internet = "INTERNET" in config.permissions
             internet = interface.yesno_choice(__("Do you want to allow the app to access the Internet?"), internet)
         else:
-            internet = False  # included in template.
+            internet = False # included in template.
 
         permissions = [ i for i in config.permissions if i not in [ "INTERNET" ] ]
 

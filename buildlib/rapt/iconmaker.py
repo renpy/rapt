@@ -1,6 +1,6 @@
 import pygame_sdl2
 import os
-import plat
+from . import plat
 import shutil
 
 

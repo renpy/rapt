@@ -12,6 +12,9 @@ import zipfile
 import subprocess
 import hashlib
 
+from . import plat
+from . import iconmaker
+
 import rapt.plat as plat
 import rapt.iconmaker as iconmaker
 
@@ -182,7 +185,7 @@ def make_tar(iface, fn, source_dirs):
 
         sd = os.path.abspath(sd)
 
-        for dir, dirs, files in os.walk(sd):  # @ReservedAssignment
+        for dir, dirs, files in os.walk(sd): # @ReservedAssignment
 
             for _fn in dirs:
                 fn = os.path.join(dir, _fn)

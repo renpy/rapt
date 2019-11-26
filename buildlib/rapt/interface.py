@@ -5,12 +5,13 @@ import time
 import subprocess
 import urllib
 
-import plat
+from . import plat
 
 import colorama
 from colorama import Fore, Back, Style
 
 colorama.init()
+
 
 class Interface(object):
 
@@ -54,7 +55,6 @@ class Interface(object):
         self.write(prompt, Fore.GREEN + Style.BRIGHT)
         print
 
-
     def yesno(self, prompt):
         """
         Prompts the user for a response to a yes or no question.
@@ -94,8 +94,6 @@ class Interface(object):
 
         print
 
-
-
     def terms(self, url, prompt):
         """
         Displays `url` to the user, and then prompts the user to accept the
@@ -112,8 +110,7 @@ class Interface(object):
         if not self.yesno(prompt):
             self.fail("You must accept the terms and conditions to proceed.")
 
-
-    def input(self, prompt, empty=None): #@ReservedAssignment
+    def input(self, prompt, empty=None): # @ReservedAssignment
         """
         Prompts the user for input. The input is expected to be a string, which
         is stripped of leading and trailing whitespace. If `empty` is true,
