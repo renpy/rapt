@@ -121,21 +121,18 @@ build_arm64 () {
 # ARM64 uses OPENSSL_ARCH="linux-generic64 -DB_ENDIAN"
 
 
-# x86 FFMPEG doesn't work on modern android, and neither side wants to
-# do the work to fix it. So we'll drop support.
+build_x86 () {
 
-# build_x86 () {
-#
-#     export ANDROID_PLATFORM=android-15
-#     export PLATFORM=x86
-#     export NDK_ARCH=x86
-#     export FFMPEG_ARCH=x86
-#     export GCC_ARCH=i686-linux-android
-#     export OPENSSL_ARCH="android-x86"
-#     export PICFLAG="-fPIC"
-#
-#     build_platform
-# }
+    export ANDROID_PLATFORM=android-21
+    export PLATFORM=x86
+    export NDK_ARCH=x86
+    export FFMPEG_ARCH=x86
+    export GCC_ARCH=i686-linux-android
+    export OPENSSL_ARCH="linux-generic32"
+    export PICFLAG="-fPIC"
+
+    build_platform
+}
 
 build_x86_64 () {
 
@@ -158,10 +155,11 @@ build_ () {
 
     build_arm64
     build_arm
+    build_x86
     build_x86_64
 
     export ANDROID_PLATFORM=android-21
-    export ALL_PLATFORMS="armeabi-v7a x86_64 arm64-v8a"
+    export ALL_PLATFORMS="armeabi-v7a x86_64 x86 arm64-v8a"
 
     run jni all
     run finish dist
