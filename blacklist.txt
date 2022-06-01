@@ -3,7 +3,6 @@
 
 **~
 **.bak
-**.rpy
 **.swp
 **.pyc
 **.pyx
